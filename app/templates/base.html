@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+    <head>
+    {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/pico.red.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='scss/styles.css') }}">
+        <title>SSP Toolkit | {% block title %}{% endblock %}</title>
+    {% endblock %}
+    </head>
+    <body>
+        <main class="container">
+            {% include "nav.html" %}
+            {% block content %} {% endblock %}
+        </main>
+    </body>
+</html>
