@@ -1,0 +1,10 @@
+{%- macro render_maintainers_form(subform, index) %}
+<div
+    id="maintainer-{{ index }}-form"
+    class="{% if index != '_' %}subform{% else %}is-hidden{% endif %}"
+    data-index="{{ index }}
+">
+    {{ subform.csrf_token }}
+    {{ subform.maintainer }}
+</div>
+{%- endmacro %}

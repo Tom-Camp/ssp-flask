@@ -371,6 +371,20 @@ files = [
 ]
 
 [[package]]
+name = "rtyaml"
+version = "1.0.0"
+description = "All the annoying things to make YAML usable in a source controlled environment."
+optional = false
+python-versions = "*"
+files = [
+    {file = "rtyaml-1.0.0-py2.py3-none-any.whl", hash = "sha256:589129e75ecb2ba0def3dcc094bb462f68faed48e42a8fa0fcf4a9d6119fd725"},
+    {file = "rtyaml-1.0.0.tar.gz", hash = "sha256:66aa6e2f2c8c29ccab9d1713072a4e06c52c6cdcfe27ebd50706df09638c4586"},
+]
+
+[package.dependencies]
+pyyaml = "*"
+
+[[package]]
 name = "typing-extensions"
 version = "4.12.2"
 description = "Backported and Experimental Type Hints for Python 3.8+"
@@ -418,4 +432,4 @@ email = ["email-validator"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "88a8177d6561222b9100a1dd2b9eb5410595fdf1ecc3594c2e1b5776fb2d4ff0"
+content-hash = "322c4e0f338df5aa396c55c86ce386e7aa6f3a391758e49a6ec54fb1615f0e75"

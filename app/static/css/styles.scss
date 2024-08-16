@@ -1,0 +1,28 @@
+@use "colors" as *;
+
+.flashes {
+  article {
+    color: #ffffff;
+    &.error {
+      background-color: $red-500;
+    }
+    &.warn {
+      background-color: $pumpkin-250;
+    }
+    &.success {
+      background-color: $green-450;
+    }
+  }
+}
+
+input {
+  &.add-another {
+    color: #000000;
+    width: auto;
+    height: auto;
+    margin: .5em;
+    padding: .1em .3em;
+    background-color: $sand-200;
+    float: right;
+  }
+}

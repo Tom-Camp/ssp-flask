@@ -1,0 +1,39 @@
+{% extends 'project/projects.html' %}
+{% import "project/maintainers.html" as macros %}
+
+{% block content %}
+    <card>
+        <form method="POST">
+            {{ form.csrf_token }}
+            {{ form.name.label }} {{ form.name(size=20) }}
+            {{ form.description.label }} {{ form.description() }}
+            {{ form.maintainers.label }}
+            <section id="formContainer">
+                {% for maintainers in form.maintainers %}
+                    {{ macros.render_maintainers_form(maintainers, loop.index0) }}
+                {% endfor %}
+            </section>
+            <input type="button" value="Add another" class="add-another" onclick="addSubForm()">
+            <input type="submit" value="Create">
+        </form>
+    </card>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let index = {{ form.maintainers|length }};
+    const formContainer = document.getElementById('formContainer');
+
+    function addSubForm() {
+        const newForm = `<div id="maintainer-${index}-form" class="subform" data-index="${index}">
+            <input
+                id="maintainers-${index}-maintainer"
+                name="maintainers-${index}-maintainer"
+                type="text" value=""
+            >
+        </div>`;
+        formContainer.insertAdjacentHTML('beforeend', newForm);
+        index++;
+    }
+</script>
+{% endblock %}
