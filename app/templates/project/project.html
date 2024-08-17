@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ data.project.name }}{% endblock %}
+
+{% block content %}
+    <h1>{{ data.project.name }}</h1>
+    <p>{{ data.project.description }}</p>
+    <article >
+        <header><h2>Project</h2></header>
+        <p>
+            <b>Name:</b> {{ data.project.name }}<br>
+            <b>Data location:</b> /project_data/{{ data.project.machine_name }}
+        </p>
+        <h3>Maintainers</h3>
+        <ul>
+            {% for maintainer in data.project.maintainers %}
+                <li>{{ maintainer }}</li>
+            {% endfor %}
+        </ul>
+    </article>
+
+    <article>
+        <header><h2>OpenControl</h2></header>
+        <p><b>Schema version:</b> {{ data.opencontrol.schema_version }}</p>
+        <h3>Components</h3>
+        {% if data.opencontrol.components %}
+            <ul>
+            {% for component in data.opencontrol.components %}
+                <li>{{ component }}</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No components</p>
+        {% endif %}
+
+        <h3>Certifications</h3>
+        {% if data.opencontrol.certifications %}
+            <ul>
+            {% for certification in data.opencontrol.certifications %}
+                <li>{{ certification }}</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No certifications</p>
+        {% endif %}
+
+        <h3>Standards</h3>
+        {% if data.opencontrol.standards %}
+            <ul>
+            {% for standard in data.opencontrol.standards %}
+                <li>{{ standard }}</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No standards</p>
+        {% endif %}
+        <a href="{{ url_for( "project.project_add_standards", project_name=data.project.machine_name) }}">
+            Add standard
+        </a>
+    </article>
+
+    <article>
+        <header><h2>Configuration</h2></header>
+        <h3>Files</h3>
+        <p><b>Main config:</b> {{ data.config.configuration }}</p>
+        <h4>Key files</h4>
+        {% if data.config.config_files %}
+            <ul>
+            {% for keyfile in data.config.config_files %}
+                <li>{{ keyfile }}</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No other configuration files.</p>
+        {% endif %}
+    </article>
+{% endblock %}

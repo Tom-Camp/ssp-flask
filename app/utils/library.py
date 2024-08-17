@@ -9,6 +9,24 @@ from flask import flash
 class Library:
     project_path: str
 
+    @staticmethod
+    def list_files(dirname: str) -> list:
+        files: list = []
+        try:
+            files = [
+                (file.name, file.as_posix().replace("libary/", ""))
+                for file in Path("library").joinpath(dirname).glob("*")
+            ]
+        except FileNotFoundError:
+            flash(f"{dirname} was not found.")
+        except PermissionError:
+            print(f"Permission denied. Cannot read {dirname}.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+        finally:
+            pass
+        return files
+
     def copy(self, filename: str, dest: str | None):
         source = Path("library").joinpath(filename)
         destination = (
@@ -25,5 +43,14 @@ class Library:
             )
         except Exception as e:
             print(f"An error occurred: {e}")
+        finally:
+            pass
+
+    def remove(self, filename: str):
+        try:
+            Path(self.project_path).joinpath(filename).unlink(missing_ok=False)
+            flash(f"File {filename} removed from project.", "success")
+        except FileNotFoundError:
+            flash(f"The file {filename} was not found.", "error")
         finally:
             pass

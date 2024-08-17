@@ -1,0 +1,46 @@
+{% extends 'project/projects.html' %}
+
+{% block title %}Creat Project{% endblock %}
+
+{% block content %}
+    <article>
+        <h2>Current values in {{ filename }}:</h2>
+        {% if standards %}
+            <ul>
+            {% for standard in standards %}
+                <li>{{ standard }}
+                    <a href="{{
+                            url_for(
+                                "project.project_delete_standards",
+                                project_name=project_name,
+                                filename=standard
+                            )
+                }}">remove</a>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            None
+        {% endif %}
+    </article>
+    <article>
+        <h2>Library files:</h2>
+        <form method="POST">
+            <fieldset>
+                <legend>Add selected files:</legend>
+                {% for file in file_list %}
+                    {% if file[0] not in standards %}
+                    <label>
+                        <input type="checkbox" name="files" value="{{ file[1] }}">
+                        <b>{{ file[0] }}</b> ({{ file[1] }})
+                    </label>
+                    {% endif %}
+                {% endfor %}
+            </fieldset>
+            <input
+                type="submit"
+                value="Add files"
+            />
+        </form>
+    </article>
+{% endblock %}
