@@ -6,6 +6,8 @@ import rtyaml
 from flask import flash
 from pydantic import BaseModel
 
+from app.utils.helpers import get_machine_name
+
 
 class Metadata(BaseModel):
     description: str
@@ -50,7 +52,7 @@ class Project(BaseModel):
     project_dir: str | None
 
     def create(self):
-        self._get_machine_name()
+        self.machine_name = get_machine_name(name=self.name)
         self.project_dir = Path("project_data").joinpath(self.machine_name).as_posix()
         self._create_dir(dir_path=self.project_dir, parents=True)
         self._create_structure()
@@ -114,13 +116,6 @@ class Project(BaseModel):
         )
         with Path(self.oc_file).open("w+") as oc:
             oc.write(rtyaml.dump(opencontrol.model_dump()))
-
-    def _get_machine_name(self):
-        to_replace = "~`!@#$%^&*()+=[]{}|:;\"'?/>.<,"
-        name = self.name
-        for x in to_replace:
-            name = name.replace(x, "")
-        self.machine_name = name.replace(" ", "_").lower()
 
     def _write_project(self):
         with Path(self.project_dir).joinpath("project").with_suffix(".yaml").open(
