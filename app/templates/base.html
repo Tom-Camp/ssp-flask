@@ -10,19 +10,24 @@
     {% endblock %}
     </head>
     <body>
-        <main class="container">
-            {% include "nav.html" %}
-            {% with messages = get_flashed_messages(with_categories=true) %}
-              {% if messages %}
-                <section class=flashes>
-                {% for category, message in messages %}
-                  <article class="{{ category }}">{{ message }}</article>
-                {% endfor %}
-                </section>
-              {% endif %}
-            {% endwith %}
-            {% block content %} {% endblock %}
+        <header>{% include "nav.html" %}</header>
+        <main>
+            <section class="container">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    <section class=flashes>
+                    {% for category, message in messages %}
+                      <article class="{{ category }}">{{ message }}</article>
+                    {% endfor %}
+                    </section>
+                  {% endif %}
+                {% endwith %}
+            </section>
+            <section class="container">
+                {% block content %} {% endblock %}
+            </section>
         </main>
+        <footer>{% include "footer.html" %}</footer>
         {% block scripts %} {% endblock %}
     </body>
 </html>

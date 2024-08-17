@@ -1,3 +1,4 @@
+from dataclasses import asdict
 from pathlib import Path
 from typing import List
 
@@ -5,7 +6,8 @@ import rtyaml
 from flask import flash
 from pydantic import BaseModel
 
-from app.utils.helpers import get_machine_name
+from app.toolkit.base.config import Config
+from app.utils.helpers import get_machine_name, load_yaml
 from app.utils.library import Library
 
 project_directories = [
@@ -43,7 +45,26 @@ class Project(BaseModel):
     description: str
     maintainers: List[str] | None
     oc_file: str | None
-    project_dir: str | None
+    project_dir: str = ""
+
+    def load(self) -> dict:
+        project: dict = {}
+        project_path = Path(self.project_dir)
+        project["project"] = self.model_dump()
+        project["opencontrol"] = load_yaml(
+            project_path.joinpath("opencontrol").with_suffix(".yaml").as_posix()
+        )
+        self._check_oc(project.get("opencontrol", {}))
+        project["config"] = asdict(
+            Config(
+                config=project_path.joinpath("configuration")
+                .with_suffix(".yaml")
+                .as_posix(),
+                keys=project_path.joinpath("keys").as_posix(),
+            )
+        )
+
+        return project
 
     def create(self):
         self.machine_name = get_machine_name(name=self.name)
@@ -55,7 +76,7 @@ class Project(BaseModel):
 
     def _create_structure(self):
         project_path = Path(self.project_dir)
-        Library(project_path=project_path).copy(
+        Library(project_path=project_path.as_posix()).copy(
             filename="configuration.yaml", dest=None
         )
         for directory in project_directories:
@@ -100,3 +121,18 @@ class Project(BaseModel):
             "w+"
         ) as pr:
             pr.write(rtyaml.dump(self.model_dump()))
+
+    @staticmethod
+    def _check_oc(opencontrol: dict):
+        if not opencontrol.get("standards", None):
+            flash(
+                "The opencontrol file does not contain standards. At least one is "
+                "required.",
+                "error",
+            )
+        if not opencontrol.get("certifications", None):
+            flash(
+                "The opencontrol file does not contain certifications. At least one "
+                "is required.",
+                "error",
+            )
