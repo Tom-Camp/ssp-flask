@@ -5,7 +5,21 @@
     <card>
         <form method="POST">
             {{ form.csrf_token }}
-            {{ form.name.label }} {{ form.name(size=20) }}
+            <label for="{{ form.name.id }}">Name</label>
+            <input type="text"
+               id="{{ form.name.id }}"
+               name="{{ form.name.name }}"
+               value="{{ form.name.data }}"
+               aria-invalid="{{ 'true' if form.name.errors else 'false' }}"
+               aria-describedby="{{ 'invalid-name' if form.name.errors else 'valid-name' }}"
+            >
+            {% if form.name.errors %}
+                {% for error in form.name.errors %}
+                    <small id="invalid-name">{{ error }}</small>
+                {% endfor %}
+            {% else %}
+                <small id="valid-name">{{ form.name.data }} is available</small>
+            {% endif %}
             {{ form.description.label }} {{ form.description() }}
             {{ form.maintainers.label }}
             <section id="formContainer">
