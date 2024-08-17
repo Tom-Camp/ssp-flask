@@ -3,8 +3,9 @@
 .flashes {
   article {
     color: #ffffff;
+    padding: .1em .3em;
     &.error {
-      background-color: $red-500;
+      background-color: $red-450;
     }
     &.warn {
       background-color: $pumpkin-250;

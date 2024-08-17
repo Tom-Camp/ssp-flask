@@ -1,4 +1,3 @@
-from datetime import datetime
 from pathlib import Path
 from typing import List
 
@@ -7,27 +6,26 @@ from flask import flash
 from pydantic import BaseModel
 
 from app.utils.helpers import get_machine_name
+from app.utils.library import Library
+
+project_directories = [
+    "certifications",
+    "keys",
+    "standards",
+    "rendered/appendices",
+    "rendered/components",
+    "rendered/frontmatter",
+    "rendered/tailoring",
+    "templates/appendices",
+    "templates/components",
+    "templates/frontmatter",
+    "templates/tailoring",
+]
 
 
 class Metadata(BaseModel):
     description: str
     maintainers: List[str]
-
-
-class SspDate(BaseModel):
-    iso_date: str = "iso-date3"
-    text: datetime | None
-
-
-class SspCertifications(BaseModel):
-    name: str
-    abbr: str
-
-
-class SystemSecurityPlan(BaseModel):
-    title: str
-    date: SspDate
-    certifications: SspCertifications
 
 
 class OpenControl(BaseModel):
@@ -45,51 +43,31 @@ class Project(BaseModel):
     description: str
     maintainers: List[str] | None
     oc_file: str | None
-    config_file: str | None
-    certifications: str | None
-    standards: str | None
-    keys: str | None
     project_dir: str | None
 
     def create(self):
         self.machine_name = get_machine_name(name=self.name)
         self.project_dir = Path("project_data").joinpath(self.machine_name).as_posix()
         self._create_dir(dir_path=self.project_dir, parents=True)
+
         self._create_structure()
         self._create_open_control()
 
     def _create_structure(self):
         project_path = Path(self.project_dir)
+        Library(project_path=project_path).copy(
+            filename="configuration.yaml", dest=None
+        )
+        for directory in project_directories:
+            self._create_dir(
+                Path(project_path).joinpath(directory).as_posix(), parents=True
+            )
+
         self.oc_file = (
             project_path.joinpath("opencontrol").with_suffix(".yaml").as_posix()
         )
-        self.keys = project_path.joinpath("keys").as_posix()
-        self._create_dir(dir_path=self.keys, parents=False)
-        self.certifications = (
-            project_path.joinpath("keys").joinpath("certifications").as_posix()
-        )
-        self._create_dir(dir_path=self.certifications, parents=False)
-        self.standards = project_path.joinpath("keys").joinpath("standards").as_posix()
-        self._create_dir(dir_path=self.standards, parents=False)
-        self._create_templates()
-        self._create_rendered()
         self._write_project()
-
-    def _create_templates(self):
-        templates = Path(self.project_dir).joinpath("templates")
-        for template_dir in ["appendices", "components", "frontmatter", "tailoring"]:
-            self._create_dir(templates.joinpath(template_dir).as_posix(), parents=True)
-
-    def _create_rendered(self):
-        rendered = Path(self.project_dir).joinpath("rendered")
-        for rendered_dir in [
-            "appendices",
-            "components",
-            "frontmatter",
-            "tailoring",
-            "docs",
-        ]:
-            self._create_dir(rendered.joinpath(rendered_dir).as_posix(), parents=True)
+        flash(f"Project {self.name} created successfully.", "success")
 
     @staticmethod
     def _create_dir(dir_path: str, parents: bool):

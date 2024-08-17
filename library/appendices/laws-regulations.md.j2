@@ -1,0 +1,30 @@
+# Applicable laws and regulations
+
+The following laws, regulations, or policies establish requirements for confidentiality, integrity, and
+availability for the {{ project.name }}. This document references the publications where appropriate.
+
+## Federal statutes
+{% if regulations.fed_statutes is defined -%}
+{% for item in regulations.fed_statutes %}
+- {{ item.title }}
+   - <{{ item.url }}>
+{%- endfor %}
+{%- endif %}
+
+## Federal standards and guidelines
+{% if regulations.standards is defined -%}
+{% for item in regulations.standards %}
+- {{ item.title }}
+   - <{{ item.url }}>
+{%- endfor %}
+{%- endif %}
+
+## Additional federal statutes
+
+Review these for current versions and applicability
+
+{% if regulations.additional is defined -%}
+{% for item in regulations.additional -%}
+- {{ item }}
+{% endfor %}
+{%- endif %}
