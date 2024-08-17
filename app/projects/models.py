@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 from typing import List
 
@@ -9,6 +10,22 @@ from pydantic import BaseModel
 class Metadata(BaseModel):
     description: str
     maintainers: List[str]
+
+
+class SspDate(BaseModel):
+    iso_date: str = "iso-date3"
+    text: datetime | None
+
+
+class SspCertifications(BaseModel):
+    name: str
+    abbr: str
+
+
+class SystemSecurityPlan(BaseModel):
+    title: str
+    date: SspDate
+    certifications: SspCertifications
 
 
 class OpenControl(BaseModel):
