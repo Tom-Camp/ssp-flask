@@ -9,7 +9,7 @@
             <input type="text"
                id="{{ form.name.id }}"
                name="{{ form.name.name }}"
-               value="{{ form.name.data }}"
+               value="{{ form.name.data if form.name.data else '' }}"
                aria-invalid="{{ 'true' if form.name.errors else 'false' }}"
                aria-describedby="{{ 'invalid-name' if form.name.errors else 'valid-name' }}"
             >
@@ -17,8 +17,6 @@
                 {% for error in form.name.errors %}
                     <small id="invalid-name">{{ error }}</small>
                 {% endfor %}
-            {% else %}
-                <small id="valid-name">{{ form.name.data }} is available</small>
             {% endif %}
             {{ form.description.label }} {{ form.description() }}
             {{ form.maintainers.label }}

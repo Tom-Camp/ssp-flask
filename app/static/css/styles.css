@@ -1,8 +1,9 @@
 .flashes article {
   color: #ffffff;
+  padding: 0.1em 0.3em;
 }
 .flashes article.error {
-  background-color: #d93526;
+  background-color: #ee402e;
 }
 .flashes article.warn {
   background-color: #ffa23a;
