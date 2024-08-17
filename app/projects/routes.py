@@ -28,7 +28,7 @@ def projects_create():
                 project_dir=None,
             )
             project.create()
-        return redirect("/project/list")
+            return redirect("/project/list")
 
     return render_template("project/projects_form.html", form=form)
 
