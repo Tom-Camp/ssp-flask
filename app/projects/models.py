@@ -22,39 +22,47 @@ class OpenControl(BaseModel):
 
 class Project(BaseModel):
     name: str
+    machine_name: str = ""
     description: str
     maintainers: List[str] | None
-    oc_file: Path | None
-    config_file: Path | None
-    certifications: Path | None
-    standards: Path | None
-    keys: Path | None
-    project_dir: Path | None
+    oc_file: str | None
+    config_file: str | None
+    certifications: str | None
+    standards: str | None
+    keys: str | None
+    project_dir: str | None
 
     def create(self):
-        self.project_dir = Path("project_data").joinpath(self.name)
+        self._get_machine_name()
+        self.project_dir = Path("project_data").joinpath(self.machine_name).as_posix()
         self._create_dir(dir_path=self.project_dir, parents=True)
         self._create_structure()
         self._create_open_control()
 
     def _create_structure(self):
-        self.oc_file = self.project_dir.joinpath("opencontrol").with_suffix(".yaml")
-        self.keys = self.project_dir.joinpath("keys")
+        project_path = Path(self.project_dir)
+        self.oc_file = (
+            project_path.joinpath("opencontrol").with_suffix(".yaml").as_posix()
+        )
+        self.keys = project_path.joinpath("keys").as_posix()
         self._create_dir(dir_path=self.keys, parents=False)
-        self.certifications = self.project_dir.joinpath("certifications")
+        self.certifications = (
+            project_path.joinpath("keys").joinpath("certifications").as_posix()
+        )
         self._create_dir(dir_path=self.certifications, parents=False)
-        self.standards = self.project_dir.joinpath("standards")
+        self.standards = project_path.joinpath("keys").joinpath("standards").as_posix()
         self._create_dir(dir_path=self.standards, parents=False)
         self._create_templates()
         self._create_rendered()
+        self._write_project()
 
     def _create_templates(self):
-        templates = self.project_dir.joinpath("templates")
+        templates = Path(self.project_dir).joinpath("templates")
         for template_dir in ["appendices", "components", "frontmatter", "tailoring"]:
-            self._create_dir(templates.joinpath(template_dir), parents=True)
+            self._create_dir(templates.joinpath(template_dir).as_posix(), parents=True)
 
     def _create_rendered(self):
-        rendered = self.project_dir.joinpath("rendered")
+        rendered = Path(self.project_dir).joinpath("rendered")
         for rendered_dir in [
             "appendices",
             "components",
@@ -62,12 +70,12 @@ class Project(BaseModel):
             "tailoring",
             "docs",
         ]:
-            self._create_dir(rendered.joinpath(rendered_dir), parents=True)
+            self._create_dir(rendered.joinpath(rendered_dir).as_posix(), parents=True)
 
     @staticmethod
-    def _create_dir(dir_path: Path, parents: bool):
+    def _create_dir(dir_path: str, parents: bool):
         try:
-            dir_path.mkdir(parents=parents)
+            Path(dir_path).mkdir(parents=parents)
         except FileExistsError:
             flash(f"Directory {dir_path} already exists", "error")
         except FileNotFoundError:
@@ -87,5 +95,18 @@ class Project(BaseModel):
             certifications=[],
             standards=[],
         )
-        with self.oc_file.open("w+") as oc:
-            oc.write(rtyaml.dump(opencontrol.dict()))
+        with Path(self.oc_file).open("w+") as oc:
+            oc.write(rtyaml.dump(opencontrol.model_dump()))
+
+    def _get_machine_name(self):
+        to_replace = "~`!@#$%^&*()+=[]{}|:;\"'?/>.<,"
+        name = self.name
+        for x in to_replace:
+            name = name.replace(x, "")
+        self.machine_name = name.replace(" ", "_").lower()
+
+    def _write_project(self):
+        with Path(self.project_dir).joinpath("project").with_suffix(".yaml").open(
+            "w+"
+        ) as pr:
+            pr.write(rtyaml.dump(self.model_dump()))
