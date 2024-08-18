@@ -3,7 +3,6 @@ import os
 from flask import Flask, render_template
 
 from app.projects.routes import project_bp
-from app.utils.helpers import get_projects
 
 
 def intro_text():
@@ -49,9 +48,7 @@ def create_app(test_config=None):
 
     @app.route("/")
     def index():
-        projects = get_projects()
         page_data = {
-            "projects": projects if len(projects) <= 5 else projects[:5],
             "intro": intro_text(),
         }
         return render_template("page/index.html", **page_data)

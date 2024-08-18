@@ -4,6 +4,7 @@ from flask import Blueprint, abort, redirect, render_template, request
 
 from app.projects.forms import ProjectForm
 from app.projects.models import Project
+from app.projects.views import get_projects
 from app.utils.helpers import load_yaml, write_yaml
 from app.utils.library import Library
 
@@ -16,7 +17,8 @@ def get_destination_path(file: str) -> str:
 
 @project_bp.route("/list", methods=["GET"])
 def projects_list():
-    return render_template("project/projects.html")
+    projects = get_projects()
+    return render_template("project/projects.html", projects=projects)
 
 
 @project_bp.route("/create", methods=["GET", "POST"])
