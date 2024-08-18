@@ -34,7 +34,7 @@ class Library:
         )
 
         try:
-            shutil.copy(source, destination)
+            shutil.copy(src=source, dst=destination)
         except FileNotFoundError:
             flash(f"{source.as_posix()} was not found.")
         except PermissionError:

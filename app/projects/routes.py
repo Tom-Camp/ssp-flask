@@ -54,22 +54,17 @@ def project_view(project_name: str):
 
 @project_bp.route("/<project_name>/add/standards", methods=["GET", "POST"])
 def project_add_standards(project_name: str):
-    opencontrol = (
-        Path("project_data")
-        .joinpath(project_name)
-        .joinpath("opencontrol")
-        .with_suffix(".yaml")
-    )
+    project_path = Path("project_data").joinpath(project_name)
+    opencontrol = project_path.joinpath("opencontrol").with_suffix(".yaml")
+
     opencontrol_file = load_yaml(opencontrol.as_posix())
     oc_standards: list = [
         Path(standard).name for standard in opencontrol_file.get("standards", [])
     ]
-    library = Library(
-        project_path=Path("project_data").joinpath(project_name).as_posix()
+    library = Library(project_path=project_path.as_posix())
+    files = Library(project_path=project_path.as_posix()).list_files(
+        dirname="standards"
     )
-    files = Library(
-        project_path=Path("project_data").joinpath(project_name).as_posix()
-    ).list_files(dirname="standards")
     data: dict = {
         "filename": "opencontrol.yaml standards",
         "project_name": project_name,
@@ -79,9 +74,10 @@ def project_add_standards(project_name: str):
 
     if request.method == "POST":
         for file in request.form.getlist("files"):
-            destination = get_destination_path(file)
+            filename = get_destination_path(file)
+            destination = filename
             library.copy(
-                filename=file,
+                filename=filename,
                 dest=destination,
             )
             opencontrol_file["standards"].append(destination)
