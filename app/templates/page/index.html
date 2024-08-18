@@ -8,15 +8,5 @@
         <div id="content">
             <p>{{ intro|safe }}</p>
         </div>
-        <aside>
-            <h2>Projects</h2>
-            {% for project in projects %}
-                <article>
-                    <header>{{ project.name }}</header>
-                    <p>{{ project.description }}</p>
-                    <a href="{{ url_for("project.project_view", project_name=project.machine_name) }}">View project</a>
-                </article>
-            {% endfor %}
-        </aside>
     </div>
 {% endblock %}
