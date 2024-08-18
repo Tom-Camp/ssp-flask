@@ -5,14 +5,15 @@
 {% block content %}
     <article>
         <h2>Current values in {{ filename }}:</h2>
-        {% if standards %}
+        {% if oc_files %}
             <ul>
-            {% for standard in standards %}
-                <li>{{ standard }}
+            {% for ocf in oc_files %}
+                <li>{{ ocf }}
                     <a href="{{
                             url_for(
-                                "project.project_delete_standards",
+                                "project.project_delete_oc_files",
                                 project_name=project_name,
+                                filetype=filename,
                                 filename=standard
                             )
                 }}">remove</a>
@@ -29,7 +30,7 @@
             <fieldset>
                 <legend>Add selected files:</legend>
                 {% for file in file_list %}
-                    {% if file[0] not in standards %}
+                    {% if file[0] not in oc_files %}
                     <label>
                         <input type="checkbox" name="files" value="{{ file[1] }}">
                         <b>{{ file[0] }}</b> ({{ file[1] }})

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}404: File not found{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>404: File not found</h1>
+        <div id="error404">
+            <h2>Sorry, we can't seem to find that file right now!</h2>
+            <img src="{{ url_for('static', filename='images/404.jpg') }}">
+        </div>
+    </div>
+{% endblock %}
