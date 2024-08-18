@@ -3,7 +3,7 @@ body {
 }
 
 footer {
-  position: sticky;
+  background-color: #f1f1f1;
   bottom: 0;
 }
 
@@ -38,6 +38,13 @@ input.add-another {
 
 header {
   background-color: #f1f1f1;
+}
+
+.container aside {
+  grid-area: menu;
+}
+.container .content {
+  grid-area: body;
 }
 
 /*# sourceMappingURL=styles.css.map */
