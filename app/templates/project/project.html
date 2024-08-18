@@ -43,6 +43,14 @@
         {% else %}
             <p>No certifications</p>
         {% endif %}
+        <a href="{{
+                url_for(
+                    "project.project_add_oc_files",
+                    project_name=data.project.machine_name,
+                    filetype="certifications"
+                ) }}">
+            Edit certifications
+        </a>
 
         <h3>Standards</h3>
         {% if data.opencontrol.standards %}
@@ -54,8 +62,13 @@
         {% else %}
             <p>No standards</p>
         {% endif %}
-        <a href="{{ url_for( "project.project_add_standards", project_name=data.project.machine_name) }}">
-            Add standard
+        <a href="{{
+                url_for(
+                    "project.project_add_oc_files",
+                    project_name=data.project.machine_name,
+                    filetype="standards"
+                ) }}">
+            Edit standards
         </a>
     </article>
 

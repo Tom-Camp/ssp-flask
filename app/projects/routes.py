@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from flask import Blueprint, redirect, render_template, request
+from flask import Blueprint, abort, redirect, render_template, request
 
 from app.projects.forms import ProjectForm
 from app.projects.models import Project
@@ -52,24 +52,26 @@ def project_view(project_name: str):
     return render_template("project/project.html", data=page)
 
 
-@project_bp.route("/<project_name>/add/standards", methods=["GET", "POST"])
-def project_add_standards(project_name: str):
+@project_bp.route("/<project_name>/add/<filetype>", methods=["GET", "POST"])
+def project_add_oc_files(project_name: str, filetype: str):
+    oc_key = filetype.lower()
+    if oc_key not in ["standards", "certifications"]:
+        abort(404)
+
     project_path = Path("project_data").joinpath(project_name)
     opencontrol = project_path.joinpath("opencontrol").with_suffix(".yaml")
 
     opencontrol_file = load_yaml(opencontrol.as_posix())
-    oc_standards: list = [
-        Path(standard).name for standard in opencontrol_file.get("standards", [])
+    oc_files: list = [
+        Path(oc_file).name for oc_file in opencontrol_file.get(oc_key, [])
     ]
     library = Library(project_path=project_path.as_posix())
-    files = Library(project_path=project_path.as_posix()).list_files(
-        dirname="standards"
-    )
+    files = Library(project_path=project_path.as_posix()).list_files(dirname=oc_key)
     data: dict = {
-        "filename": "opencontrol.yaml standards",
+        "filename": f"opencontrol.yaml {oc_key}",
         "project_name": project_name,
         "file_list": files,
-        "standards": oc_standards,
+        "oc_files": oc_files,
     }
 
     if request.method == "POST":
@@ -80,7 +82,7 @@ def project_add_standards(project_name: str):
                 filename=filename,
                 dest=destination,
             )
-            opencontrol_file["standards"].append(destination)
+            opencontrol_file[oc_key].append(destination)
             write_yaml(
                 filename=opencontrol.as_posix(),
                 data=opencontrol_file,
@@ -88,8 +90,12 @@ def project_add_standards(project_name: str):
     return render_template("project/project_add_files_form.html", **data)
 
 
-@project_bp.route("/<project_name>/delete/standards/<filename>", methods=["GET"])
-def project_delete_standards(project_name: str, filename: str):
+@project_bp.route("/<project_name>/delete/<filetype>/<filename>", methods=["GET"])
+def project_delete_oc_files(project_name: str, filetype: str, filename: str):
+    oc_key = filetype.lower()
+    if oc_key not in ["standards", "certifications"]:
+        abort(404)
+
     opencontrol = (
         Path("project_data")
         .joinpath(project_name)
@@ -97,14 +103,14 @@ def project_delete_standards(project_name: str, filename: str):
         .with_suffix(".yaml")
     )
     opencontrol_file = load_yaml(opencontrol.as_posix())
-    oc_standards: dict = {
-        Path(standard).name: Path(standard).as_posix()
-        for standard in opencontrol_file.get("standards", [])
+    oc_files: dict = {
+        Path(oc_file).name: Path(oc_file).as_posix()
+        for oc_file in opencontrol_file.get(oc_key, [])
     }
     library = Library(
         project_path=Path("project_data").joinpath(project_name).as_posix()
     )
-    library.remove(filename=oc_standards[filename])
-    opencontrol_file["standards"].remove(oc_standards[filename])
+    library.remove(filename=oc_files[filename])
+    opencontrol_file["standards"].remove(oc_files[filename])
     write_yaml(filename=opencontrol.as_posix(), data=opencontrol_file)
-    return redirect(f"/project/{project_name}/add/standards")
+    return redirect(f"/project/{project_name}/add/{oc_key}")
