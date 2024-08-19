@@ -50,8 +50,8 @@ def project_view(project_name: str):
     )
     if project_file:
         project = Project(**project_file)
-        page = project.load()
-    return render_template("project/project.html", data=page)
+        page = {"appendices": project.get_appendices(), "data": project.load()}
+    return render_template("project/project.html", **page)
 
 
 @project_bp.route("/<project_name>/add/<filetype>", methods=["GET", "POST"])
@@ -116,3 +116,15 @@ def project_delete_oc_files(project_name: str, filetype: str, filename: str):
     opencontrol_file["standards"].remove(oc_files[filename])
     write_yaml(filename=opencontrol.as_posix(), data=opencontrol_file)
     return redirect(f"/project/{project_name}/add/{oc_key}")
+
+
+@project_bp.route("/<project_name>/add/appendices", methods=["GET", "POST"])
+def project_add_all_appendices(project_name: str):
+    library = Library(
+        project_path=Path("project_data").joinpath(project_name).as_posix()
+    )
+    library.copy_dir(
+        directory="appendices",
+        dest="templates/appendices",
+    )
+    return redirect(f"/project/{project_name}")

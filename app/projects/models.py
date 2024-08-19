@@ -136,3 +136,13 @@ class Project(BaseModel):
                 "is required.",
                 "error",
             )
+
+    def get_appendices(self) -> list:
+        appendices = [
+            (app.name.replace(".md.j2", ""), "/".join(app.parts[2:]))
+            for app in Path(self.project_dir)
+            .joinpath("templates")
+            .joinpath("appendices")
+            .glob("*")
+        ]
+        return appendices

@@ -73,6 +73,19 @@
     </article>
 
     <article>
+        <header><h2>Appendices</h2></header>
+        {% if appendices %}
+            <ul>
+            {% for appendix in appendices %}
+                <li>{{ appendix[0] }} ({{ appendix[1] }})</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No appendices.</p>
+        {% endif %}
+    </article>
+
+    <article>
         <header><h2>Configuration</h2></header>
         <h3>Files</h3>
         <p><b>Main config:</b> {{ data.config.configuration }}</p>
