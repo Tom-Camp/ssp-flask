@@ -14,7 +14,7 @@ class Library:
         files: list = []
         try:
             files = [
-                (file.name, file.as_posix().replace("libary/", ""))
+                (file.name, "/".join(file.parts[1:]))
                 for file in Path("library").joinpath(dirname).glob("*")
             ]
         except FileNotFoundError:
@@ -35,6 +35,26 @@ class Library:
 
         try:
             shutil.copy(src=source, dst=destination)
+        except FileNotFoundError:
+            flash(f"{source.as_posix()} was not found.")
+        except PermissionError:
+            print(
+                f"Permission denied. Cannot copy {source.as_posix()} to {destination.as_posix()}."
+            )
+        except Exception as e:
+            print(f"An error occurred: {e}")
+        finally:
+            pass
+
+    def copy_dir(self, directory: str, dest: str | None):
+        source = Path("library").joinpath(directory)
+        destination = (
+            Path(self.project_path).joinpath(dest) if dest else Path(self.project_path)
+        )
+
+        try:
+            shutil.copytree(src=source, dst=destination, dirs_exist_ok=True)
+            flash(f"{source} copied to {destination}", "success")
         except FileNotFoundError:
             flash(f"{source.as_posix()} was not found.")
         except PermissionError:

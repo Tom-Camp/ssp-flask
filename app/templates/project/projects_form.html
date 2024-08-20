@@ -3,6 +3,14 @@
 
 {% block title %}Creat Project{% endblock %}
 
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li><a href="/">Home</a></li>
+    <li><a href="{{ url_for("project.projects_list") }}">Projects</a></li>
+    <li>Creat Project</li>
+</ul>
+{% endblock %}
+
 {% block content %}
     <card>
         <form method="POST">

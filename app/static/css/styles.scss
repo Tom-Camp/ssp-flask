@@ -1,17 +1,23 @@
 @use "colors" as *;
 
 body {
-  background-color: $azure-50;
+  background-color: $grey-50;
 }
 
 footer {
-  background-color: $grey-50;
+  background-color: $grey-100;
   bottom: 0;
 }
 
 article {
-  background-color: $grey-50;
+  background-color: $white;
   margin: .5em;
+  header {
+    background-color: $grey-100;
+  }
+  hr {
+    border-color: $grey-100;
+  }
 }
 
 .flashes {
@@ -43,7 +49,17 @@ input {
 }
 
 header {
-  background-color: $grey-50;
+  background-color: $grey-100;
+  nav {
+    img {
+      &.logo {
+        height: 1.5em;
+      }
+    }
+    .title {
+      font-size: 1.25em;
+    }
+  }
 }
 
 .container {
@@ -64,5 +80,35 @@ header {
     margin-left: auto;
     margin-right: auto;
     width: 50%;
+  }
+}
+
+ /* Style the list */
+ul.breadcrumb {
+  padding: 10px 16px;
+  list-style: none;
+  background-color: #eee;
+}
+
+/* Display list items side by side */
+ul {
+  &.breadcrumb {
+    li {
+      display: inline;
+      font-size: 18px;
+
+      + li:before {
+        padding: 8px;
+        color: black;
+        content: "/\00a0";
+      }
+
+      a {
+        text-decoration: none;
+        &:hover {
+          color: $red-500;
+        }
+      }
+    }
   }
 }
