@@ -2,16 +2,27 @@
 
 {% block title %}{{ data.project.name }}{% endblock %}
 
+{% block breadcrumbs %}
+ <ul class="breadcrumb">
+    <li><a href="/">Home</a></li>
+    <li><a href="{{ url_for("project.projects_list") }}">Projects</a></li>
+    <li>{{ data.project.name }}</li>
+</ul>
+{% endblock %}
+
 {% block content %}
     <h1>{{ data.project.name }}</h1>
-    <p>{{ data.project.description }}</p>
+    <article>
+        <p>{{ data.project.description }}</p>
+    </article>
+
     <article >
         <header><h2>Project</h2></header>
         <p>
             <b>Name:</b> {{ data.project.name }}<br>
-            <b>Data location:</b> /project_data/{{ data.project.machine_name }}
+            <b>File repository:</b> /project_data/{{ data.project.machine_name }}
         </p>
-        <h3>Maintainers</h3>
+        <h6>Maintainers</h6>
         <ul>
             {% for maintainer in data.project.maintainers %}
                 <li>{{ maintainer }}</li>
@@ -22,82 +33,105 @@
     <article>
         <header><h2>OpenControl</h2></header>
         <p><b>Schema version:</b> {{ data.opencontrol.schema_version }}</p>
-        <h3>Components</h3>
-        {% if data.opencontrol.components %}
-            <ul>
-            {% for component in data.opencontrol.components %}
-                <li>{{ component }}</li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>No components</p>
-        {% endif %}
-
-        <h3>Certifications</h3>
-        {% if data.opencontrol.certifications %}
-            <ul>
-            {% for certification in data.opencontrol.certifications %}
-                <li>{{ certification }}</li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>No certifications</p>
-        {% endif %}
-        <a href="{{
+        <details>
+            <summary>Components</summary>
+            {% if data.opencontrol.components %}
+                <ul>
+                {% for component in data.opencontrol.components %}
+                    <li>{{ component }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No components</p>
+            {% endif %}
+        </details>
+        <hr />
+        <details>
+            <summary>Certifications</summary>
+            {% if data.opencontrol.certifications %}
+                <ul>
+                {% for certification in data.opencontrol.certifications %}
+                    <li>{{ certification }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No certifications</p>
+            {% endif %}
+            <a href="{{
                 url_for(
                     "project.project_add_oc_files",
                     project_name=data.project.machine_name,
                     filetype="certifications"
                 ) }}">
-            Edit certifications
-        </a>
-
-        <h3>Standards</h3>
-        {% if data.opencontrol.standards %}
-            <ul>
-            {% for standard in data.opencontrol.standards %}
-                <li>{{ standard }}</li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>No standards</p>
-        {% endif %}
-        <a href="{{
+                Edit certifications
+            </a>
+        </details>
+        <hr />
+        <details>
+            <summary>Standards</summary>
+            {% if data.opencontrol.standards %}
+                <ul>
+                {% for standard in data.opencontrol.standards %}
+                    <li>{{ standard }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No standards</p>
+            {% endif %}
+            <a href="{{
                 url_for(
                     "project.project_add_oc_files",
                     project_name=data.project.machine_name,
                     filetype="standards"
                 ) }}">
-            Edit standards
+                Edit standards
+            </a>
+        </details>
+    </article>
+
+    <article>
+        <header><h2>Templates</h2></header>
+        <details>
+            <summary>Appendices</summary>
+            {% if appendices %}
+                <ul>
+                {% for appendix in appendices %}
+                    <li>{{ appendix[0] }} ({{ appendix[1] }})</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No appendices.</p>
+            {% endif %}
+        </details>
+        <a href="{{
+            url_for(
+                "project.project_add_templates",
+                project_name=data.project.machine_name
+            ) }}">
+            Edit templates
         </a>
     </article>
 
     <article>
-        <header><h2>Appendices</h2></header>
-        {% if appendices %}
-            <ul>
-            {% for appendix in appendices %}
-                <li>{{ appendix[0] }} ({{ appendix[1] }})</li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>No appendices.</p>
-        {% endif %}
-    </article>
-
-    <article>
         <header><h2>Configuration</h2></header>
-        <h3>Files</h3>
-        <p><b>Main config:</b> {{ data.config.configuration }}</p>
-        <h4>Key files</h4>
-        {% if data.config.config_files %}
+        <details open>
+            <summary>Configuration</summary>
             <ul>
-            {% for keyfile in data.config.config_files %}
-                <li>{{ keyfile }}</li>
-            {% endfor %}
+                <li>{{ data.config.configuration }}</li>
             </ul>
-        {% else %}
-            <p>No other configuration files.</p>
-        {% endif %}
+        </details>
+        <hr/>
+        <details>
+            <summary>Keys</summary>
+            {% if data.config.config_files %}
+                <ul>
+                {% for keyfile in data.config.config_files %}
+                    <li>{{ keyfile }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No other configuration files.</p>
+            {% endif %}
+        </details>
     </article>
 {% endblock %}

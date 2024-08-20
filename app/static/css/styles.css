@@ -1,15 +1,22 @@
+@charset "UTF-8";
 body {
-  background-color: #e9f2fc;
+  background-color: #f1f1f1;
 }
 
 footer {
-  background-color: #f1f1f1;
+  background-color: #e2e2e2;
   bottom: 0;
 }
 
 article {
-  background-color: #f1f1f1;
+  background-color: #fff;
   margin: 0.5em;
+}
+article header {
+  background-color: #e2e2e2;
+}
+article hr {
+  border-color: #e2e2e2;
 }
 
 .flashes article {
@@ -37,7 +44,13 @@ input.add-another {
 }
 
 header {
-  background-color: #f1f1f1;
+  background-color: #e2e2e2;
+}
+header nav img.logo {
+  height: 1.5em;
+}
+header nav .title {
+  font-size: 1.25em;
 }
 
 .container aside {
@@ -55,6 +68,30 @@ header {
   margin-left: auto;
   margin-right: auto;
   width: 50%;
+}
+
+/* Style the list */
+ul.breadcrumb {
+  padding: 10px 16px;
+  list-style: none;
+  background-color: #eee;
+}
+
+/* Display list items side by side */
+ul.breadcrumb li {
+  display: inline;
+  font-size: 18px;
+}
+ul.breadcrumb li + li:before {
+  padding: 8px;
+  color: black;
+  content: "/ ";
+}
+ul.breadcrumb li a {
+  text-decoration: none;
+}
+ul.breadcrumb li a:hover {
+  color: #d93526;
 }
 
 /*# sourceMappingURL=styles.css.map */

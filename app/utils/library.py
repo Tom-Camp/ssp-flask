@@ -14,7 +14,7 @@ class Library:
         files: list = []
         try:
             files = [
-                (file.name, file.as_posix().replace("libary/", ""))
+                (file.name, "/".join(file.parts[1:]))
                 for file in Path("library").joinpath(dirname).glob("*")
             ]
         except FileNotFoundError:

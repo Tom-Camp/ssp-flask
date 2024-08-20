@@ -1,22 +1,10 @@
 {% extends 'project/projects.html' %}
 
-{% block title %}Add files{% endblock %}
-
-{% block breadcrumbs %}
-<ul class="breadcrumb">
-    <li><a href="/">Home</a></li>
-    <li><a href="{{ url_for("project.projects_list") }}">Projects</a></li>
-    <li><a href="{{ url_for(
-            "project.project_view",
-            project_name=project_name
-        ) }}">{{ name }}</a></li>
-    <li>Add files</li>
-</ul>
-{% endblock %}
+{% block title %}Add templates{% endblock %}
 
 {% block content %}
     <article>
-        <h2>Templates in {{ project_name }}:</h2>
+        <h2>Files in {{ project_name }}:</h2>
         {% if oc_files %}
             <ul>
             {% for ocf in oc_files %}

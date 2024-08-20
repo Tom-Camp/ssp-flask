@@ -64,6 +64,10 @@ def project_add_oc_files(project_name: str, filetype: str):
     opencontrol = project_path.joinpath("opencontrol").with_suffix(".yaml")
 
     opencontrol_file = load_yaml(opencontrol.as_posix())
+    project_file = load_yaml(
+        project_path.joinpath("project").with_suffix(".yaml").as_posix()
+    )
+
     oc_files: list = [
         Path(oc_file).name for oc_file in opencontrol_file.get(oc_key, [])
     ]
@@ -72,6 +76,7 @@ def project_add_oc_files(project_name: str, filetype: str):
     data: dict = {
         "filename": f"opencontrol.yaml {oc_key}",
         "project_name": project_name,
+        "name": project_file.get("name"),
         "file_list": files,
         "oc_files": oc_files,
     }
@@ -118,10 +123,13 @@ def project_delete_oc_files(project_name: str, filetype: str, filename: str):
     return redirect(f"/project/{project_name}/add/{oc_key}")
 
 
-@project_bp.route("/<project_name>/add/appendices", methods=["GET", "POST"])
-def project_add_all_appendices(project_name: str):
+@project_bp.route("/<project_name>/add/templates", methods=["GET", "POST"])
+def project_add_templates(project_name: str):
     library = Library(
-        project_path=Path("project_data").joinpath(project_name).as_posix()
+        project_path=Path("project_data")
+        .joinpath(project_name)
+        .joinpath("templates")
+        .as_posix()
     )
     library.copy_dir(
         directory="appendices",

@@ -13,6 +13,9 @@
         <header>{% include "nav.html" %}</header>
         <main>
             <section class="container">
+                {% block breadcrumbs %} {% endblock %}
+            </section>
+            <section class="container">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                   {% if messages %}
                     <section class=flashes>
