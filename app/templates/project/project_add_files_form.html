@@ -1,50 +1,33 @@
-{% extends 'project/projects.html' %}
+{% extends 'project/project_list.html' %}
 
 {% block title %}Add files{% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
+<ul>
     <li><a href="/">Home</a></li>
-    <li><a href="{{ url_for("project.projects_list") }}">Projects</a></li>
+    <li><a href="{{ url_for("project.project_list_page") }}">Projects</a></li>
     <li><a href="{{ url_for(
-            "project.project_view",
+            "project.project_view_page",
             project_name=project_name
         ) }}">{{ name }}</a></li>
-    <li>Add files</li>
+    <li class="is-active"><a href="#" aria-current="page">Add files</a></li>
 </ul>
 {% endblock %}
 
 {% block content %}
-    <article>
-        <h2>Templates in {{ project_name }}:</h2>
-        {% if oc_files %}
-            <ul>
-            {% for ocf in oc_files %}
-                <li>{{ ocf }}
-                    <a href="{{
-                        url_for(
-                            "project.project_delete_oc_files",
-                            project_name=project_name,
-                            filetype=filename,
-                            filename=standard
-                        )
-                    }}">remove</a>
-                </li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            None
-        {% endif %}
-    </article>
     <article>
         <h2>Library files:</h2>
         <form method="POST">
             <fieldset>
                 <legend>Add selected files:</legend>
                 {% for file in file_list %}
-                    {% if file[0] not in oc_files %}
+                    {% if file not in project_files %}
                     <label>
-                        <input type="checkbox" name="files" value="{{ file[1] }}">
+                        <input
+                            type="checkbox"
+                            name="files"
+                            value="{{ file[1] }}"
+                        >
                         <b>{{ file[0] }}</b> ({{ file[1] }})
                     </label>
                     {% endif %}

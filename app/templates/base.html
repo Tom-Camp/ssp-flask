@@ -4,33 +4,35 @@
     {% block head %}
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/pico.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bulma.min.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
         <title>SSP Toolkit | {% block title %}{% endblock %}</title>
     {% endblock %}
     </head>
     <body>
-        <header>{% include "nav.html" %}</header>
+        <header class="bd-header">{% include "nav.html" %}</header>
         <main>
-            <section class="container">
+            <nav class="breadcrumb is-centered px-4 my-2" aria-label="breadcrumbs">
                 {% block breadcrumbs %} {% endblock %}
-            </section>
-            <section class="container">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                  {% if messages %}
-                    <section class=flashes>
-                    {% for category, message in messages %}
-                      <article class="{{ category }}">{{ message }}</article>
-                    {% endfor %}
+            </nav>
+            <div class="columns px-4">
+                {% block menu %} {% endblock %}
+                <div class="column {% block columns %} {% endblock %}section">
+                    {% if messages %}
+                    <section class="section">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        <section class=flashes>
+                        {% for category, message in messages %}
+                            <article class="{{ category }}">{{ message }}</article>
+                        {% endfor %}
+                        </section>
+                        {% endwith %}
                     </section>
-                  {% endif %}
-                {% endwith %}
-            </section>
-            <section class="container">
-                {% block content %} {% endblock %}
-            </section>
+                    {% endif %}
+                    {% block content %} {% endblock %}
+                </div>
         </main>
-        <footer>{% include "footer.html" %}</footer>
+        <footer class="footer">{% include "footer.html" %}</footer>
         {% block scripts %} {% endblock %}
     </body>
 </html>

@@ -1,36 +1,15 @@
-@charset "UTF-8";
-body {
-  background-color: #f1f1f1;
-}
-
-footer {
-  background-color: #e2e2e2;
-  bottom: 0;
-}
-
-article {
-  background-color: #fff;
-  margin: 0.5em;
-}
-article header {
-  background-color: #e2e2e2;
-}
-article hr {
-  border-color: #e2e2e2;
-}
-
 .flashes article {
   color: #ffffff;
   padding: 0.2em 0.5em;
 }
 .flashes article.error {
-  background-color: #ee402e;
+  background-color: hsl(347deg, 90%, 96%);
 }
 .flashes article.warn {
-  background-color: #ffa23a;
+  background-color: hsl(48deg, 100%, 96%);
 }
 .flashes article.success {
-  background-color: #409614;
+  background-color: hsl(142deg, 52%, 96%);
 }
 
 input.add-another {
@@ -39,59 +18,15 @@ input.add-another {
   height: auto;
   margin: 0.5em;
   padding: 0.1em 0.3em;
-  background-color: #ccc6b4;
+  background-color: hsl(0deg, 0%, 96%);
   float: right;
 }
 
-header {
-  background-color: #e2e2e2;
-}
-header nav img.logo {
-  height: 1.5em;
-}
-header nav .title {
-  font-size: 1.25em;
-}
-
-.container aside {
-  grid-area: menu;
-}
-.container .content {
-  grid-area: body;
-}
-
-#error404 h2 {
-  text-align: center;
-}
 #error404 img {
   display: block;
   margin-left: auto;
   margin-right: auto;
   width: 50%;
-}
-
-/* Style the list */
-ul.breadcrumb {
-  padding: 10px 16px;
-  list-style: none;
-  background-color: #eee;
-}
-
-/* Display list items side by side */
-ul.breadcrumb li {
-  display: inline;
-  font-size: 18px;
-}
-ul.breadcrumb li + li:before {
-  padding: 8px;
-  color: black;
-  content: "/ ";
-}
-ul.breadcrumb li a {
-  text-decoration: none;
-}
-ul.breadcrumb li a:hover {
-  color: #d93526;
 }
 
 /*# sourceMappingURL=styles.css.map */

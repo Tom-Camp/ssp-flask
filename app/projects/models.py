@@ -1,4 +1,3 @@
-from dataclasses import asdict
 from pathlib import Path
 from typing import List
 
@@ -6,7 +5,6 @@ import rtyaml
 from flask import flash
 from pydantic import BaseModel
 
-from app.toolkit.base.config import Config
 from app.utils.helpers import get_machine_name, load_yaml
 from app.utils.library import Library
 
@@ -44,24 +42,15 @@ class Project(BaseModel):
     machine_name: str = ""
     description: str
     maintainers: List[str] | None
-    oc_file: str | None
+    opencontrol: str | None
     project_dir: str = ""
 
-    def load(self) -> dict:
+    def view(self) -> dict:
         project: dict = {}
         project_path = Path(self.project_dir)
         project["project"] = self.model_dump()
         project["opencontrol"] = load_yaml(
             project_path.joinpath("opencontrol").with_suffix(".yaml").as_posix()
-        )
-        self._check_oc(project.get("opencontrol", {}))
-        project["config"] = asdict(
-            Config(
-                config=project_path.joinpath("configuration")
-                .with_suffix(".yaml")
-                .as_posix(),
-                keys=project_path.joinpath("keys").as_posix(),
-            )
         )
 
         return project
@@ -76,15 +65,15 @@ class Project(BaseModel):
 
     def _create_structure(self):
         project_path = Path(self.project_dir)
-        Library(project_path=project_path.as_posix()).copy(
-            filename="configuration.yaml", dest=None
+        Library(project_machine_name=project_path.as_posix()).copy(
+            filepath="configuration.yaml"
         )
         for directory in project_directories:
             self._create_dir(
                 Path(project_path).joinpath(directory).as_posix(), parents=True
             )
 
-        self.oc_file = (
+        self.opencontrol = (
             project_path.joinpath("opencontrol").with_suffix(".yaml").as_posix()
         )
         self._write_project()
@@ -113,7 +102,7 @@ class Project(BaseModel):
             certifications=[],
             standards=[],
         )
-        with Path(self.oc_file).open("w+") as oc:
+        with Path(self.opencontrol).open("w+") as oc:
             oc.write(rtyaml.dump(opencontrol.model_dump()))
 
     def _write_project(self):
@@ -123,7 +112,7 @@ class Project(BaseModel):
             pr.write(rtyaml.dump(self.model_dump()))
 
     @staticmethod
-    def _check_oc(opencontrol: dict):
+    def _check_opencontrol(opencontrol: dict):
         if not opencontrol.get("standards", None):
             flash(
                 "The opencontrol file does not contain standards. At least one is "
@@ -137,12 +126,12 @@ class Project(BaseModel):
                 "error",
             )
 
-    def get_appendices(self) -> list:
-        appendices = [
-            (app.name.replace(".md.j2", ""), "/".join(app.parts[2:]))
-            for app in Path(self.project_dir)
+    def get_project_files(self) -> list:
+        file_list: list = [
+            (files.name.replace(".md.j2", ""), "/".join(files.parts[2:]))
+            for files in Path(self.project_dir)
             .joinpath("templates")
             .joinpath("appendices")
             .glob("*")
         ]
-        return appendices
+        return file_list

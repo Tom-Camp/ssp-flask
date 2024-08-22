@@ -3,9 +3,9 @@
 {% block title %}Projects{% endblock %}
 
 {% block breadcrumbs %}
-<ul class="breadcrumb">
+<ul>
     <li><a href="/">Home</a></li>
-    <li>Projects</li>
+    <li class="is-active"><a href="#" aria-current="page">Projects</a></li>
 </ul>
 {% endblock %}
 
@@ -17,7 +17,7 @@
                 <header>{{ project.name }}</header>
                 <p>{{ project.description }}</p>
                 <a href="{{ url_for(
-                    "project.project_view",
+                    "project.project_view_page",
                     project_name=project.machine_name
                 ) }}">View project</a>
             </article>
