@@ -7,11 +7,11 @@
 <ul>
     <li><a href="/">Home</a></li>
     <li><a href="{{ url_for("project.project_list_page") }}">Projects</a></li>
-    <li class="is-active"><a href="#" aria-current="page">Creat Project</a></li>
+    <li class="is-active"><a href="#" aria-current="page">Create Project</a></li>
 </ul>
 {% endblock %}
 
-{% block columns %} {% endblock %}
+{% block page_title %}Create Project{% endblock %}
 
 {% block content %}
     <div class="box mx-6">
@@ -36,12 +36,13 @@
                 </div>
             </div>
             <div class="field">
-                <label class="label" for="{{ form.description.id }}">{{ form.description.label }}</label>
+                <label class="label" for="{{ form.description.id }}">Description</label>
                 <div class="control">
                     <textarea
                         id="{{ form.description.id }}"
                         name="{{ form.description.name }}"
-                        class="textarea" placeholder="Textarea"
+                        class="textarea"
+                        placeholder="Description"
                     ></textarea>
                     {% if form.description.errors %}
                         {% for error in form.description.errors %}
@@ -50,18 +51,18 @@
                     {% endif %}
                 </div>
             </div>
-            {{ form.maintainers.label }}
+            <h5 class="title is-5 mt-5">Maintainers</h5>
             <section id="formContainer">
                 {% for maintainers in form.maintainers %}
                     {{ macros.render_maintainers_form(maintainers, loop.index0) }}
                 {% endfor %}
             </section>
-            <div class="field is-grouped mt-4">
+            <div class="field is-grouped mt-4 is-align-content-center">
                 <div class="control">
-                    <input class="button is-link" type="submit">
+                    <button class="button is-link is-light add-another" onclick="addSubForm()">Add maintainer</button>
                 </div>
                 <div class="control">
-                    <button class="button is-link is-light add-another" onclick="addSubForm()">Add another</button>
+                    <input class="button is-link" type="submit" value="Create">
                 </div>
             </div>
         </form>

@@ -102,7 +102,9 @@ def project_create_page():
                 name=form.name.data,
                 description=form.description.data,
                 maintainers=[name.get("maintainer") for name in form.maintainers.data],
-                project_dir="",
+                project_dir=None,
+                opencontrol=None,
+                machine_name=None,
             )
             project.create()
             return redirect("/project/list")

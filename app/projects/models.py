@@ -39,15 +39,15 @@ class OpenControl(BaseModel):
 
 class Project(BaseModel):
     name: str
-    machine_name: str = ""
     description: str
+    machine_name: str | None
     maintainers: List[str] | None
     opencontrol: str | None
-    project_dir: str = ""
+    project_dir: str | None
 
     def view(self) -> dict:
         project: dict = {}
-        project_path = Path(self.project_dir)
+        project_path = Path(self.project_dir)  # type: ignore
         project["project"] = self.model_dump()
         project["opencontrol"] = load_yaml(
             project_path.joinpath("opencontrol").with_suffix(".yaml").as_posix()
@@ -65,13 +65,12 @@ class Project(BaseModel):
 
     def _create_structure(self):
         project_path = Path(self.project_dir)
-        Library(project_machine_name=project_path.as_posix()).copy(
-            filepath="configuration.yaml"
-        )
+        lib = Library(project_machine_name=project_path.as_posix())
+        lib.copy(filepath="configuration.yaml")
+        lib.copy(filepath="keys")
+
         for directory in project_directories:
-            self._create_dir(
-                Path(project_path).joinpath(directory).as_posix(), parents=True
-            )
+            self._create_dir(project_path.joinpath(directory).as_posix(), parents=True)
 
         self.opencontrol = (
             project_path.joinpath("opencontrol").with_suffix(".yaml").as_posix()
@@ -129,7 +128,7 @@ class Project(BaseModel):
     def get_project_files(self) -> list:
         file_list: list = [
             (files.name.replace(".md.j2", ""), "/".join(files.parts[2:]))
-            for files in Path(self.project_dir)
+            for files in Path(self.project_dir)  # type: ignore
             .joinpath("templates")
             .joinpath("appendices")
             .glob("*")

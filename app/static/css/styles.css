@@ -29,4 +29,11 @@ input.add-another {
   width: 50%;
 }
 
+.tab-content {
+  display: none;
+}
+.tab-content.is-active {
+  display: block;
+}
+
 /*# sourceMappingURL=styles.css.map */

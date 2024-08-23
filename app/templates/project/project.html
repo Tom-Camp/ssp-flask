@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends "project/project_base.html" %}
 
 {% block title %}{{ project.name }}{% endblock %}
 
@@ -10,20 +10,44 @@
 </ul>
 {% endblock %}
 
-{% block menu %}{% include "project/menu.html" %}{% endblock %}
-{% block columns %} is-10 {% endblock %}
+{% block page_title %}{{ project.name }}{% endblock %}
 
-{% block content %}
-<h1 class="title is-3">{{ project.name }}</h1>
-<article>
-    <p>{{ project.description }}</p>
-</article>
+{% block project_content %}
+<div class="tabs is-centered">
+    <ul>
+        <li class="is-active" data-tab="tab1"><a>Main</a></li>
+        <li data-tab="tab2"><a>Templates</a></li>
+        <li data-tab="tab3"><a>Keys</a></li>
+    </ul>
+</div>
 
-<article >
-    <header><h2>Project</h2></header>
-    <p>
-        <b>Name:</b> {{ project.name }}<br>
-        <b>File repository:</b> /project_data/{{ project.machine_name }}
-    </p>
-</article>
+<div id="tab1" class="tab-content is-active">
+    <div class="box">
+        <h2 class="title">Project structure</h2>
+        <article>
+            <p>{{ project.description }}</p>
+        </article>
+
+        <article>
+            <p>
+                <b>Name:</b> {{ project.name }}<br>
+                <b>File repository:</b> /project_data/{{ project.machine_name }}
+            </p>
+        </article>
+    </div>
+</div>
+
+<div id="tab2" class="tab-content">
+    <div class="box">
+        <h2 class="title">Tab 2 Content</h2>
+        <p>This is the content for Tab 2.</p>
+    </div>
+</div>
+
+<div id="tab3" class="tab-content">
+    <div class="box">
+        <h2 class="title">Tab 3 Content</h2>
+        <p>This is the content for Tab 3.</p>
+    </div>
+</div>
 {% endblock %}

@@ -15,10 +15,9 @@
             <nav class="breadcrumb is-centered px-4 my-2" aria-label="breadcrumbs">
                 {% block breadcrumbs %} {% endblock %}
             </nav>
-            <div class="columns px-4">
-                {% block menu %} {% endblock %}
-                <div class="column {% block columns %} {% endblock %}section">
-                    {% if messages %}
+            <section class="px-4">
+                <h1 class="title is-3 mb-3 px-5">{% block page_title %} {% endblock %}</h1>
+                {% if messages %}
                     <section class="section">
                         {% with messages = get_flashed_messages(with_categories=true) %}
                         <section class=flashes>
@@ -28,11 +27,13 @@
                         </section>
                         {% endwith %}
                     </section>
-                    {% endif %}
-                    {% block content %} {% endblock %}
-                </div>
+                {% endif %}
+            </section>
+            <section class="px-4">
+                {% block content %} {% endblock %}
+            </section>
         </main>
-        <footer class="footer">{% include "footer.html" %}</footer>
+        <footer class="footer mt-4">{% include "footer.html" %}</footer>
         {% block scripts %} {% endblock %}
     </body>
 </html>
