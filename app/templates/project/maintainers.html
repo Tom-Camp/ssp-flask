@@ -5,6 +5,23 @@
     data-index="{{ index }}
 ">
     {{ subform.csrf_token }}
-    {{ subform.maintainer }}
-</div>
+    <div class="field">
+        <label class="label" for="{{ subform.maintainer.id }}">Name</label>
+        <div class="control">
+            <input
+                type="text"
+                class="input"
+                id="{{ subform.maintainer.id }}"
+                name="{{ subform.maintainer.name }}"
+                value="{{ subform.maintainer.data if subform.maintainer.data else '' }}"
+                aria-invalid="{{ 'true' if subform.maintainer.errors else 'false' }}"
+                aria-describedby="{{ 'invalid-name' if subform.maintainer.errors else 'valid-name' }}"
+            >
+            {% if subform.maintainer.errors %}
+                {% for error in subform.maintainer.errors %}
+                    <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
 {%- endmacro %}

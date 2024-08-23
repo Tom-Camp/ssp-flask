@@ -1,137 +1,53 @@
-{% extends 'base.html' %}
+{% extends "project/project_base.html" %}
 
-{% block title %}{{ data.project.name }}{% endblock %}
+{% block title %}{{ project.name }}{% endblock %}
 
 {% block breadcrumbs %}
- <ul class="breadcrumb">
+<ul>
     <li><a href="/">Home</a></li>
-    <li><a href="{{ url_for("project.projects_list") }}">Projects</a></li>
-    <li>{{ data.project.name }}</li>
+    <li><a href="{{ url_for("project.project_list_page") }}">Projects</a></li>
+    <li class="is-active"><a href="#" aria-current="page">{{ project.name }}</a></li>
 </ul>
 {% endblock %}
 
-{% block content %}
-    <h1>{{ data.project.name }}</h1>
-    <article>
-        <p>{{ data.project.description }}</p>
-    </article>
+{% block page_title %}{{ project.name }}{% endblock %}
 
-    <article >
-        <header><h2>Project</h2></header>
-        <p>
-            <b>Name:</b> {{ data.project.name }}<br>
-            <b>File repository:</b> /project_data/{{ data.project.machine_name }}
-        </p>
-        <h6>Maintainers</h6>
-        <ul>
-            {% for maintainer in data.project.maintainers %}
-                <li>{{ maintainer }}</li>
-            {% endfor %}
-        </ul>
-    </article>
+{% block project_content %}
+<div class="tabs is-centered">
+    <ul>
+        <li class="is-active" data-tab="tab1"><a>Main</a></li>
+        <li data-tab="tab2"><a>Templates</a></li>
+        <li data-tab="tab3"><a>Keys</a></li>
+    </ul>
+</div>
 
-    <article>
-        <header><h2>OpenControl</h2></header>
-        <p><b>Schema version:</b> {{ data.opencontrol.schema_version }}</p>
-        <details>
-            <summary>Components</summary>
-            {% if data.opencontrol.components %}
-                <ul>
-                {% for component in data.opencontrol.components %}
-                    <li>{{ component }}</li>
-                {% endfor %}
-                </ul>
-            {% else %}
-                <p>No components</p>
-            {% endif %}
-        </details>
-        <hr />
-        <details>
-            <summary>Certifications</summary>
-            {% if data.opencontrol.certifications %}
-                <ul>
-                {% for certification in data.opencontrol.certifications %}
-                    <li>{{ certification }}</li>
-                {% endfor %}
-                </ul>
-            {% else %}
-                <p>No certifications</p>
-            {% endif %}
-            <a href="{{
-                url_for(
-                    "project.project_add_oc_files",
-                    project_name=data.project.machine_name,
-                    filetype="certifications"
-                ) }}">
-                Edit certifications
-            </a>
-        </details>
-        <hr />
-        <details>
-            <summary>Standards</summary>
-            {% if data.opencontrol.standards %}
-                <ul>
-                {% for standard in data.opencontrol.standards %}
-                    <li>{{ standard }}</li>
-                {% endfor %}
-                </ul>
-            {% else %}
-                <p>No standards</p>
-            {% endif %}
-            <a href="{{
-                url_for(
-                    "project.project_add_oc_files",
-                    project_name=data.project.machine_name,
-                    filetype="standards"
-                ) }}">
-                Edit standards
-            </a>
-        </details>
-    </article>
+<div id="tab1" class="tab-content is-active">
+    <div class="box">
+        <h2 class="title">Project structure</h2>
+        <article>
+            <p>{{ project.description }}</p>
+        </article>
 
-    <article>
-        <header><h2>Templates</h2></header>
-        <details>
-            <summary>Appendices</summary>
-            {% if appendices %}
-                <ul>
-                {% for appendix in appendices %}
-                    <li>{{ appendix[0] }} ({{ appendix[1] }})</li>
-                {% endfor %}
-                </ul>
-            {% else %}
-                <p>No appendices.</p>
-            {% endif %}
-        </details>
-        <a href="{{
-            url_for(
-                "project.project_add_templates",
-                project_name=data.project.machine_name
-            ) }}">
-            Edit templates
-        </a>
-    </article>
+        <article>
+            <p>
+                <b>Name:</b> {{ project.name }}<br>
+                <b>File repository:</b> /project_data/{{ project.machine_name }}
+            </p>
+        </article>
+    </div>
+</div>
 
-    <article>
-        <header><h2>Configuration</h2></header>
-        <details open>
-            <summary>Configuration</summary>
-            <ul>
-                <li>{{ data.config.configuration }}</li>
-            </ul>
-        </details>
-        <hr/>
-        <details>
-            <summary>Keys</summary>
-            {% if data.config.config_files %}
-                <ul>
-                {% for keyfile in data.config.config_files %}
-                    <li>{{ keyfile }}</li>
-                {% endfor %}
-                </ul>
-            {% else %}
-                <p>No other configuration files.</p>
-            {% endif %}
-        </details>
-    </article>
+<div id="tab2" class="tab-content">
+    <div class="box">
+        <h2 class="title">Tab 2 Content</h2>
+        <p>This is the content for Tab 2.</p>
+    </div>
+</div>
+
+<div id="tab3" class="tab-content">
+    <div class="box">
+        <h2 class="title">Tab 3 Content</h2>
+        <p>This is the content for Tab 3.</p>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Projects{% endblock %}
+
+{% block breadcrumbs %}
+<ul>
+    <li><a href="/">Home</a></li>
+    <li class="is-active"><a href="#" aria-current="page">Projects</a></li>
+</ul>
+{% endblock %}
+
+{% block page_title %}Projects{% endblock %}
+
+{% block content %}
+    <div class="fixed-grid has-3-cols">
+        <div class="grid">
+            {% for project in projects %}
+                <div class="card cell">
+                    <header class="card-header">
+                        <p class="card-header-title">{{ project.name }}</p>
+                        <button class="card-header-icon" aria-label="more options">
+                            <span class="icon">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                    </header>
+                    <div class="card-content">
+                        <div class="content">{{ project.description }}</div>
+                    </div>
+                    <footer class="card-footer">
+                        <a class="card-footer-item" href="{{ url_for(
+                            "project.project_view_page",
+                            project_name=project.machine_name
+                        ) }}">View project</a>
+                    </footer>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

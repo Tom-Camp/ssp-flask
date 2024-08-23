@@ -1,10 +1,27 @@
-<nav class="container">
-    <ul>
-        <li><img src="{{ url_for('static', filename='images/CA-Full-Logo-Red.svg')  }}" class="logo"></li>
-        <li><span class="title">SSP Toolkit</span></li>
-    </ul>
-    <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="{{ url_for("project.projects_list") }}">Projects</a></li>
-    </ul>
+<nav class="navbar px-4 has-background-white-ter" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <img alt="CivicActions logo"
+                 src="{{ url_for('static', filename='images/CA-Full-Logo-Red.svg')  }}"
+                 class="logo"
+            >
+        </a>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+    <div class="navbar-end">
+        <div class="navbar-item">
+            <a class="navbar-item" href="/">Home</a>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link" href="{{ url_for("project.project_list_page") }}">Projects</a>
+            <div class="navbar-dropdown">
+                <a class="navbar-item" href="{{ url_for("project.project_create_page") }}">Create Project</a>
+            </div>
+        </div>
+    </div>
 </nav>
