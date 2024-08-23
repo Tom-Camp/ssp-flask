@@ -17,17 +17,17 @@
             </nav>
             <section class="px-4">
                 <h1 class="title is-3 mb-3 px-5">{% block page_title %} {% endblock %}</h1>
-                {% if messages %}
-                    <section class="section">
-                        {% with messages = get_flashed_messages(with_categories=true) %}
-                        <section class=flashes>
-                        {% for category, message in messages %}
-                            <article class="{{ category }}">{{ message }}</article>
-                        {% endfor %}
-                        </section>
-                        {% endwith %}
-                    </section>
-                {% endif %}
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="level columns">
+                    {% for category, message in messages %}
+                        <article class="message {{ category }} level-item column is-three-quarters">
+                            <div class="message-body">{{ message|safe }}</div>
+                        </article>
+                    {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
             </section>
             <section class="px-4">
                 {% block content %} {% endblock %}

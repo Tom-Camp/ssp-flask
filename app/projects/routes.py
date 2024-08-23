@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from flask import Blueprint, abort, redirect, render_template, request
+from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
 
 from app.projects.forms import ProjectForm
 from app.projects.models import Project
@@ -31,7 +31,7 @@ def project_add_files(project_name: str, file_list: list) -> list:
     :return: a list of Project file paths as strings
     """
     files: list = []
-    library = Library(project_machine_name=project_name)
+    library = Library(project_base_path=project_name)
     for file in file_list:
         files.append(library.copy(filepath=file))
     return files
@@ -46,7 +46,7 @@ def project_remove_files(project_name: str, file_list: list) -> list:
     :return: a list of Project file paths as strings
     """
     files: list = []
-    library = Library(project_machine_name=project_name)
+    library = Library(project_base_path=project_name)
     for file in file_list:
         library.remove(
             filepath=file,
@@ -85,6 +85,15 @@ def project_list_page():
     :return: HTML template
     """
     projects = get_projects()
+    if not projects:
+        project_create_url = url_for("project.project_create_page")
+        flash(
+            message=(
+                f"There are no projects in the /project_data directory.<br>"
+                f'<a href="{project_create_url}">Click here to a new Project</a>.'
+            ),
+            category="is-info",
+        )
     return render_template("project/project_list.html", projects=projects)
 
 
@@ -107,7 +116,9 @@ def project_create_page():
                 machine_name=None,
             )
             project.create()
-            return redirect("/project/list")
+            return redirect(
+                url_for("project.project_view_page", project_name=project.machine_name)
+            )
 
     return render_template("project/project_form.html", form=form)
 
@@ -120,6 +131,9 @@ def project_view_page(project_name: str):
     :param project_name: str - machine_name for the Project.
     :return: HTML template
     """
+    if not Path("project_data").joinpath(project_name).exists():
+        abort(404)
+
     project = load_project(project_name=project_name)
     page: dict = project.view()
     return render_template("project/project.html", **page)
@@ -135,7 +149,7 @@ def project_files_add_page(project_name: str, directory: str):
     :return: HTML template
     """
     source = directory.lower()
-    library = Library(project_machine_name=project_name)
+    library = Library(project_base_path=project_name)
     directories = library.list_directories()
 
     if source not in directories:
