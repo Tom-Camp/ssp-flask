@@ -65,7 +65,7 @@ class Project(BaseModel):
 
     def _create_structure(self):
         project_path = Path(self.project_dir)
-        lib = Library(project_machine_name=project_path.as_posix())
+        lib = Library(project_base_path=project_path.as_posix())
         lib.copy(filepath="configuration.yaml")
         lib.copy(filepath="keys")
 
@@ -76,16 +76,22 @@ class Project(BaseModel):
             project_path.joinpath("opencontrol").with_suffix(".yaml").as_posix()
         )
         self._write_project()
-        flash(f"Project {self.name} created successfully.", "success")
+        flash(
+            message=f"Project {self.name} created successfully.",
+            category="is-success",
+        )
 
     @staticmethod
     def _create_dir(dir_path: str, parents: bool):
         try:
             Path(dir_path).mkdir(parents=parents)
         except FileExistsError:
-            flash(f"Directory {dir_path} already exists", "error")
+            flash(message=f"Directory {dir_path} already exists", category="is-danger")
         except FileNotFoundError:
-            flash(f"Parent directory for {dir_path} doesn't exist", "error")
+            flash(
+                message=f"Parent directory for {dir_path} doesn't exist",
+                category="is-danger",
+            )
         finally:
             pass
 
@@ -105,24 +111,22 @@ class Project(BaseModel):
             oc.write(rtyaml.dump(opencontrol.model_dump()))
 
     def _write_project(self):
-        with Path(self.project_dir).joinpath("project").with_suffix(".yaml").open(
-            "w+"
-        ) as pr:
-            pr.write(rtyaml.dump(self.model_dump()))
+        pr = Path(self.project_dir).joinpath("project").with_suffix(".yaml").open("w+")
+        pr.write(rtyaml.dump(self.model_dump()))
 
     @staticmethod
     def _check_opencontrol(opencontrol: dict):
         if not opencontrol.get("standards", None):
             flash(
-                "The opencontrol file does not contain standards. At least one is "
+                message="The opencontrol file does not contain standards. At least one is "
                 "required.",
-                "error",
+                category="is-danger",
             )
         if not opencontrol.get("certifications", None):
             flash(
-                "The opencontrol file does not contain certifications. At least one "
+                message="The opencontrol file does not contain certifications. At least one "
                 "is required.",
-                "error",
+                category="is-danger",
             )
 
     def get_project_files(self) -> list:

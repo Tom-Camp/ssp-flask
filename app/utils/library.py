@@ -8,7 +8,7 @@ from flask import flash
 
 @dataclass
 class Library:
-    project_machine_name: str
+    project_base_path: str
 
     @staticmethod
     def list_files(directory: str) -> list:
@@ -20,11 +20,14 @@ class Library:
                 if file.is_file()
             ]
         except FileNotFoundError:
-            flash(f"{directory} was not found.")
+            flash(message=f"{directory} was not found.", category="is-danger")
         except PermissionError:
-            print(f"Permission denied. Cannot read {directory}.")
+            flash(
+                message=f"Permission denied. Cannot read {directory}.",
+                category="is-danger",
+            )
         except Exception as e:
-            print(f"An error occurred: {e}")
+            flash(message=f"An error occurred: {e}", category="is-danger")
         finally:
             pass
         return files
@@ -39,11 +42,14 @@ class Library:
                 if file.is_dir()
             ]
         except FileNotFoundError:
-            flash(f"{directory} was not found.")
+            flash(message=f"{directory} was not found.", category="is-danger")
         except PermissionError:
-            print(f"Permission denied. Cannot read {directory}.")
+            flash(
+                message=f"Permission denied. Cannot read {directory}.",
+                category="is-danger",
+            )
         except Exception as e:
-            print(f"An error occurred: {e}")
+            flash(message=f"An error occurred: {e}", category="is-danger")
         finally:
             return dirs
 
@@ -63,34 +69,38 @@ class Library:
 
     def copy(self, filepath: str) -> str:
         source = Path("library").joinpath(filepath).as_posix()
-        destination = self._get_destination(filepath=filepath)
+        destination = self._get_destination(library_path=source)
 
         try:
-            shutil.copytree(src=source, dst=destination, dirs_exist_ok=True)
-            flash(f"{source} copied to {destination}", "success")
+            shutil.copytree(src=Path(source), dst=Path(destination), dirs_exist_ok=True)
+            flash(message=f"{source} copied to {destination}", category="is-success")
         except FileNotFoundError:
-            flash(f"{source} was not found.")
+            flash(message=f"{source} was not found.", category="is-danger")
         except PermissionError:
-            print(f"Permission denied. Cannot copy {source} to {destination}.")
+            flash(
+                message=f"Permission denied. Cannot copy {source} to {destination}.",
+                category="is-danger",
+            )
         except Exception as e:
-            print(f"An error occurred: {e}")
+            flash(message=f"An error occurred: {e}", category="is-danger")
         finally:
             return destination
 
     def remove(self, filepath: str):
-        destination = self._get_destination(filepath=filepath)
+        destination = self._get_destination(library_path=filepath)
         try:
             Path(destination).unlink(missing_ok=False)
-            flash(f"File {destination} removed from project.", "success")
+            flash(
+                message=f"File {destination} removed from project.",
+                category="is-success",
+            )
         except FileNotFoundError:
-            flash(f"The file {destination} was not found.", "error")
+            flash(
+                message=f"The file {destination} was not found.", category="is-dander"
+            )
         finally:
             pass
 
-    def _get_destination(self, filepath: str) -> str:
-        return (
-            Path("project_data")
-            .joinpath(self.project_machine_name)
-            .joinpath(filepath)
-            .as_posix()
-        )
+    def _get_destination(self, library_path: str) -> str:
+        destination = "/".join(Path(library_path).parts[1:])
+        return Path(self.project_base_path).joinpath(destination).as_posix()
