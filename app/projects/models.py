@@ -5,6 +5,7 @@ import rtyaml
 from flask import flash
 from pydantic import BaseModel
 
+from app.toolkit.base.config import Config
 from app.utils.helpers import get_machine_name, load_yaml
 from app.utils.library import Library
 
@@ -52,6 +53,12 @@ class Project(BaseModel):
         project["opencontrol"] = load_yaml(
             project_path.joinpath("opencontrol").with_suffix(".yaml").as_posix()
         )
+        project["keys"] = Config(
+            config=project_path.joinpath("configuration")
+            .with_suffix(".yaml")
+            .as_posix(),
+            keys=project_path.joinpath("keys").as_posix(),
+        )
 
         return project
 
@@ -66,8 +73,8 @@ class Project(BaseModel):
     def _create_structure(self):
         project_path = Path(self.project_dir)
         lib = Library(project_base_path=project_path.as_posix())
-        lib.copy(filepath="configuration.yaml")
-        lib.copy(filepath="keys")
+        lib.copy_file(filepath="configuration.yaml")
+        lib.copy_directory(filepath="keys")
 
         for directory in project_directories:
             self._create_dir(project_path.joinpath(directory).as_posix(), parents=True)
@@ -84,9 +91,9 @@ class Project(BaseModel):
     @staticmethod
     def _create_dir(dir_path: str, parents: bool):
         try:
-            Path(dir_path).mkdir(parents=parents)
+            Path(dir_path).mkdir(parents=parents, exist_ok=True)
         except FileExistsError:
-            flash(message=f"Directory {dir_path} already exists", category="is-danger")
+            flash(message=f"Directory {dir_path} already exists", category="is-warn")
         except FileNotFoundError:
             flash(
                 message=f"Parent directory for {dir_path} doesn't exist",
