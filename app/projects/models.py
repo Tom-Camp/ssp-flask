@@ -15,6 +15,8 @@ project_directories = [
     "standards",
     "rendered/appendices",
     "rendered/components",
+    "rendered/docs",
+    "rendered/docx",
     "rendered/frontmatter",
     "rendered/tailoring",
     "templates/appendices",
@@ -58,7 +60,7 @@ class Project(BaseModel):
             .with_suffix(".yaml")
             .as_posix(),
             keys=project_path.joinpath("keys").as_posix(),
-        )
+        ).config
 
         return project
 

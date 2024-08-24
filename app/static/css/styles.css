@@ -41,4 +41,16 @@ input.add-another {
   margin: 0 auto;
 }
 
+.code {
+  background-color: hsl(0deg, 0%, 96%);
+  padding: 0.3em;
+}
+
+.keys .key {
+  color: hsl(217deg, 71%, 53%);
+}
+.keys .val {
+  color: hsl(141deg, 71%, 48%);
+}
+
 /*# sourceMappingURL=styles.css.map */

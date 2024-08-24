@@ -13,15 +13,7 @@
 {% block page_title %}{{ project.name }}{% endblock %}
 
 {% block project_content %}
-<div class="tabs is-centered">
-    <ul>
-        <li class="is-active" data-tab="tab1"><a>Main</a></li>
-        <li data-tab="tab2"><a>Templates</a></li>
-        <li data-tab="tab3"><a>Keys</a></li>
-    </ul>
-</div>
-
-<div id="tab1" class="tab-content is-active">
+<div class="">
     <div class="box">
         <article>
             <p>{{ project.description }}</p>
@@ -33,20 +25,24 @@
                 <b>File repository:</b> /project_data/{{ project.machine_name }}
             </p>
         </article>
+
+        <p>
+            Templates are rendered into either markdown or YAML files. The files are written
+            to the <span class="code">/rendered/</span> directory. The rendered directory is
+            structured in the format below.
+        </p>
+<pre>
+project_data
+└── {{ project.name }}
+    └── rendered
+        ├── appendices
+        ├── components
+        ├── docs
+        ├── docx
+        ├── frontmatter
+        └── tailoring
+</pre>
     </div>
 </div>
 
-<div id="tab2" class="tab-content">
-    <div class="box">
-        <h2 class="title">Tab 2 Content</h2>
-        <p>This is the content for Tab 2.</p>
-    </div>
-</div>
-
-<div id="tab3" class="tab-content">
-    <div class="box">
-        <h2 class="title">Tab 3 Content</h2>
-        <p>This is the content for Tab 3.</p>
-    </div>
-</div>
 {% endblock %}

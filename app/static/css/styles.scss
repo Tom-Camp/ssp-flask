@@ -46,3 +46,17 @@ input {
     width: 70%;
     margin: 0 auto;
 }
+
+.code {
+  background-color: hsl(0, 0%, 96%);
+  padding: .3em;
+}
+
+.keys {
+  .key {
+    color: hsl(217, 71%, 53%);
+  }
+  .val {
+    color: hsl(141, 71%, 48%);
+  }
+}
