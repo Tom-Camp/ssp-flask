@@ -1,0 +1,73 @@
+---
+index: >2
+  <p>The SSP Toolkit is used to create System Security Plans using components
+  and templates. Components, appendices, and frontmatter can be added to a
+  project and edited. Key YAML files containing variables that can be used
+  to populate the variables in the templates can be edited and created.</p>
+
+  <p>You can create a Project here or clone a git repository of Project files
+  in the project_data directory. Any directory in the project_directory that
+  includes a project.yaml file will be accessible in the Toolkit.</p>
+resources:
+  - url: href="https://csrc.nist.gov/pubs/sp/800/160/v1/r1/final
+    title: Engineering Trustworthy Secure Systems
+    subtitle: NIST SP 800-160 Vol. 1 Rev. 1
+    description: >
+      This publication describes a basis for establishing principles, concepts, activities,
+      and tasks for engineering trustworthy secure systems.
+  - url: https://csrc.nist.gov/pubs/sp/800/18/r1/final
+    title: Guide for Developing Security Plans for Federal Information Systems
+    subtitle: NIST SP 800-18 Rev. 1
+    description: >
+      The objective of system security planning is to improve protection of information system
+      resources.
+  - url: https://csrc.nist.gov/pubs/sp/800/60/v1/r1/final
+    title: Guide for Mapping Types of Information and Information Systems to Security Categories
+    subtitle: NIST SP 800-60 Vol. 1 Rev. 1
+    description: >
+      The appendices contained in Volume I include security categorization recommendations and
+      rationale for mission-based and management and support information types.
+  - url: https://csrc.nist.gov/pubs/sp/800/60/v2/r1/final
+    title: "Guide for Mapping Types of Information and Information Systems to Security Categories: Appendices"
+    subtitle: NIST SP 800-60 Vol. 2 Rev. 1
+    description: >
+      The appendices contained in Volume I include security categorization recommendations and
+      rationale for mission-based and management and support information types.
+  - url: https://csrc.nist.gov/pubs/fips/199/final
+    title: Standards for Security Categorization of Federal Information and Information Systems
+    subtitle: FIPS 199
+    description: >
+      The purpose of this document is to provide a standard for categorizing federal information
+      and information systems according to an agency's level of concern for confidentiality,
+      integrity, and availability and the potential impact on agency assets and operations should
+      their information and information systems be compromised through unauthorized access, use,
+      disclosure, disruption, modification, or destruction.
+  - url: https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final
+    title: Security and Privacy Controls for Information Systems and Organizations
+    subtitle: NIST SP 800-53 Rev. 5
+    description: >
+      This publication provides a catalog of security and privacy controls for information systems
+      and organizations to protect organizational operations and assets, individuals, other
+      organizations, and the Nation from a diverse set of threats and risks, including hostile
+      attacks, human errors, natural disasters, structural failures, foreign intelligence entities,
+      and privacy risks.
+  - url: https://csrc.nist.gov/pubs/sp/800/53/b/upd1/final
+    title: Control Baselines for Information Systems and Organizations
+    subtitle: NIST SP 800-53B
+    description: >
+      This publication provides security and privacy control baselines for the Federal Government.
+  - url: https://csrc.nist.gov/pubs/fips/200/final
+    title: Minimum Security Requirements for Federal Information and Information Systems
+    subtitle: FIPS 200
+    description: >
+      This standard—the second of two security standards mandated by FISMA—specifies minimum
+      security requirements for information and information systems supporting the executive
+      agencies of the federal government and a risk-based process for selecting the security
+      controls necessary to satisfy the minimum security requirements.
+  - url: https://csrc.nist.gov/pubs/sp/800/53/a/r5/final
+    title: Assessing Security and Privacy Controls in Information Systems and Organizations
+    subtitle: NIST SP 800-53A Rev. 5
+    description: >
+      This publication provides a methodology and set of procedures for conducting assessments
+      of security and privacy controls employed within systems and organizations within an
+      effective risk management framework.

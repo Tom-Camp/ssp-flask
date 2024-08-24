@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block page_title %}SSP Toolkit{% endblock %}
+
+{% block content %}
+    <div class="content px-6 mx-6">
+        {% for resource in content %}
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title is-size-5">
+                        {{ resource.title|safe }}
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <p class="is-size-6">
+                            <a href="{{ resource.url }}" target="_blank" rel="noopener noreferrer">
+                                {{ resource.subtitle }}
+                            </a>
+                        </p>
+                        <p>{{ resource.description }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -33,7 +33,7 @@ def project_add_files(project_name: str, file_list: list) -> list:
     files: list = []
     library = Library(project_base_path=project_name)
     for file in file_list:
-        files.append(library.copy(filepath=file))
+        files.append(library.copy_directory(filepath=file))
     return files
 
 

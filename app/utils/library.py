@@ -67,7 +67,26 @@ class Library:
                 current_dict[file] = None
         return directory_dict
 
-    def copy(self, filepath: str) -> str:
+    def copy_file(self, filepath: str) -> str:
+        source = Path("library").joinpath(filepath).as_posix()
+        destination = self._get_destination(library_path=source)
+
+        try:
+            shutil.copy(src=Path(source), dst=Path(destination))
+            flash(message=f"{source} copied to {destination}", category="is-success")
+        except FileNotFoundError:
+            flash(message=f"{source} was not found.", category="is-danger")
+        except PermissionError:
+            flash(
+                message=f"Permission denied. Cannot copy {source} to {destination}.",
+                category="is-danger",
+            )
+        except Exception as e:
+            flash(message=f"An error occurred: {e}", category="is-danger")
+        finally:
+            return destination
+
+    def copy_directory(self, filepath: str) -> str:
         source = Path("library").joinpath(filepath).as_posix()
         destination = self._get_destination(library_path=source)
 
