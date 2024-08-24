@@ -9,14 +9,14 @@ from flask import flash
 @dataclass
 class Library:
     project_base_path: str
+    library: Path = Path("app").joinpath("library")
 
-    @staticmethod
-    def list_files(directory: str) -> list:
+    def list_files(self, directory: str) -> list:
         files: list = []
         try:
             files = [
                 (file.name, "/".join(file.parts[1:]))
-                for file in Path("library").joinpath(directory).iterdir()
+                for file in self.library.joinpath(directory).iterdir()
                 if file.is_file()
             ]
         except FileNotFoundError:
@@ -32,13 +32,12 @@ class Library:
             pass
         return files
 
-    @staticmethod
-    def list_directories(directory: str = ""):
+    def list_directories(self, directory: str = ""):
         dirs: list = []
         try:
             dirs = [
                 file.name
-                for file in Path("library").joinpath(directory).iterdir()
+                for file in self.library.joinpath(directory).iterdir()
                 if file.is_dir()
             ]
         except FileNotFoundError:
@@ -53,12 +52,9 @@ class Library:
         finally:
             return dirs
 
-    @staticmethod
-    def get_directory_tree(directory: str = "") -> dict:
+    def get_directory_tree(self, directory: str = "") -> dict:
         directory_dict: dict = {}
-        for root, dirs, files in os.walk(
-            Path("library").joinpath(directory).as_posix()
-        ):
+        for root, dirs, files in os.walk(self.library.joinpath(directory).as_posix()):
             current_dict = directory_dict
             for part in os.path.relpath(root, directory).split(os.sep):
                 if part != ".":
@@ -68,7 +64,7 @@ class Library:
         return directory_dict
 
     def copy_file(self, filepath: str) -> str:
-        source = Path("library").joinpath(filepath).as_posix()
+        source = self.library.joinpath(filepath).as_posix()
         destination = self._get_destination(library_path=source)
 
         try:
@@ -87,7 +83,7 @@ class Library:
             return destination
 
     def copy_directory(self, filepath: str) -> str:
-        source = Path("library").joinpath(filepath).as_posix()
+        source = self.library.joinpath(filepath).as_posix()
         destination = self._get_destination(library_path=source)
 
         try:
@@ -121,5 +117,5 @@ class Library:
             pass
 
     def _get_destination(self, library_path: str) -> str:
-        destination = "/".join(Path(library_path).parts[1:])
+        destination = "/".join(Path(library_path).parts[2:])
         return Path(self.project_base_path).joinpath(destination).as_posix()
