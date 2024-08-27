@@ -1,149 +1,100 @@
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import rtyaml
 from flask import flash
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-from app.toolkit.base.config import Config
-from app.utils.helpers import get_machine_name, load_yaml
 from app.utils.library import Library
-
-project_directories = [
-    "certifications",
-    "keys",
-    "standards",
-    "rendered/appendices",
-    "rendered/components",
-    "rendered/docs",
-    "rendered/docx",
-    "rendered/frontmatter",
-    "rendered/tailoring",
-    "templates/appendices",
-    "templates/components",
-    "templates/frontmatter",
-    "templates/tailoring",
-]
+from config import ROOT_DIR
 
 
 class Metadata(BaseModel):
     description: str
-    maintainers: List[str]
+    maintainers: Optional[List[str]] = Field(default=[])
 
 
 class OpenControl(BaseModel):
     schema_version: str = "1.0.0"
     name: str
-    metadata: Metadata | None
-    components: List[str] = []
-    certifications: List[str] = []
-    standards: List[str] = []
+    metadata: Optional[Metadata]
+    components: List[str] = Field(default=[])
+    certifications: List[str] = Field(default=[])
+    standards: List[str] = Field(default=[])
+
+    def __init__(self, name: str, description: str, maintainers: list):
+        metadata = Metadata(
+            description=description,
+            maintainers=maintainers,
+        )
+        super().__init__(
+            name=name,
+            metadata=metadata,
+        )
+
+    def write(self, project_path: str):
+        opencontrol_path = (
+            ROOT_DIR.joinpath(project_path).joinpath("opencontrol").with_suffix(".yaml")
+        )
+        with opencontrol_path.open("w+") as oc:
+            oc.write(rtyaml.dump(self.model_dump()))
 
 
 class Project(BaseModel):
     name: str
     description: str
-    machine_name: str | None
-    maintainers: List[str] | None
-    opencontrol: str | None
-    project_dir: str | None
+    machine_name: Optional[str]
+    project_dir: Optional[str]
+    project_path: Path = Field(Path())
+    library: Optional[Library]
 
-    def view(self) -> dict:
-        project: dict = {}
-        project_path = Path(self.project_dir)  # type: ignore
-        project["project"] = self.model_dump()
-        project["opencontrol"] = load_yaml(
-            project_path.joinpath("opencontrol").with_suffix(".yaml").as_posix()
+    def __init__(self, name: str, description: str, **kwargs):
+        machine_name = self._get_machine_name(name=name)
+        project_path = (
+            ROOT_DIR.joinpath("project_data")
+            .joinpath(machine_name)
+            .relative_to(ROOT_DIR)
         )
-        project["keys"] = Config(
-            config=project_path.joinpath("configuration")
-            .with_suffix(".yaml")
-            .as_posix(),
-            keys=project_path.joinpath("keys").as_posix(),
-        ).config
-
-        return project
+        project_dir = project_path.as_posix()
+        library = Library()
+        super().__init__(
+            name=name,
+            description=description,
+            machine_name=machine_name,
+            project_dir=project_dir,
+            project_path=project_path,
+            library=library,
+        )
 
     def create(self):
-        self.machine_name = get_machine_name(name=self.name)
-        self.project_dir = Path("project_data").joinpath(self.machine_name).as_posix()
-        self._create_dir(dir_path=self.project_dir, parents=True)
-
-        self._create_structure()
-        self._create_open_control()
-
-    def _create_structure(self):
-        project_path = Path(self.project_dir)
-        lib = Library(project_base_path=project_path.as_posix())
-        lib.copy_file(filepath="configuration.yaml")
-        lib.copy_directory(filepath="keys")
-
-        for directory in project_directories:
-            self._create_dir(project_path.joinpath(directory).as_posix(), parents=True)
-
-        self.opencontrol = (
-            project_path.joinpath("opencontrol").with_suffix(".yaml").as_posix()
-        )
-        self._write_project()
-        flash(
-            message=f"Project {self.name} created successfully.",
-            category="is-success",
-        )
-
-    @staticmethod
-    def _create_dir(dir_path: str, parents: bool):
         try:
-            Path(dir_path).mkdir(parents=parents, exist_ok=True)
+            self.project_path.mkdir(exist_ok=False)
+            project_file = (
+                self.project_path.joinpath("project").with_suffix(".yaml").open("w+")
+            )
+            project_file.write(
+                rtyaml.dump(self.model_dump(exclude={"project_path", "library"}))
+            )
+            self.library.copy_file(
+                source_path="configuration.yaml", destination=self.project_dir
+            )
         except FileExistsError:
-            flash(message=f"Directory {dir_path} already exists", category="is-warn")
-        except FileNotFoundError:
-            flash(
-                message=f"Parent directory for {dir_path} doesn't exist",
-                category="is-danger",
-            )
+            flash(f"Project {self.name} already exists.", "is-danger")
         finally:
-            pass
-
-    def _create_open_control(self):
-        meta = Metadata(
-            description=self.description,
-            maintainers=self.maintainers,
-        )
-        opencontrol = OpenControl(
-            name=self.name,
-            metadata=meta,
-            components=[],
-            certifications=[],
-            standards=[],
-        )
-        with Path(self.opencontrol).open("w+") as oc:
-            oc.write(rtyaml.dump(opencontrol.model_dump()))
-
-    def _write_project(self):
-        pr = Path(self.project_dir).joinpath("project").with_suffix(".yaml").open("w+")
-        pr.write(rtyaml.dump(self.model_dump()))
-
-    @staticmethod
-    def _check_opencontrol(opencontrol: dict):
-        if not opencontrol.get("standards", None):
-            flash(
-                message="The opencontrol file does not contain standards. At least one is "
-                "required.",
-                category="is-danger",
-            )
-        if not opencontrol.get("certifications", None):
-            flash(
-                message="The opencontrol file does not contain certifications. At least one "
-                "is required.",
-                category="is-danger",
-            )
+            flash(f"Project created at {self.project_dir}", "is-success")
 
     def get_project_files(self) -> list:
-        file_list: list = [
-            (files.name.replace(".md.j2", ""), "/".join(files.parts[2:]))
-            for files in Path(self.project_dir)  # type: ignore
-            .joinpath("templates")
-            .joinpath("appendices")
-            .glob("*")
-        ]
-        return file_list
+        return [file.as_posix() for file in self.project_path.rglob("*")]
+
+    def get_project_files_by_directory(self, directory: str) -> list:
+        return [file.name for file in self.project_path.joinpath(directory).glob("*")]
+
+    def get_copy_destination(self, filepath: str) -> str:
+        return self.project_path.joinpath(filepath).as_posix()
+
+    @staticmethod
+    def _get_machine_name(name: str) -> str:
+        to_replace = "~`!@#$%^&*()+=[]{}|:;\"'?/>.<,"
+        for x in to_replace:
+            name = name.replace(x, "")
+        return name.replace(" ", "_").lower()

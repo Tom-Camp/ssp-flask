@@ -1,0 +1,57 @@
+{% extends "project/project_base.html" %}
+
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block breadcrumbs %}
+<ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="{{ url_for("project.project_list_view") }}">Projects</a></li>
+    <li>
+        <a href="{{ url_for("project.project_view", project_name=project.name) }}">
+            {{ project.name }}
+        </a>
+    </li>
+    <li class="is-active"><a href="#" aria-current="page">Templates</a></li>
+</ul>
+{% endblock %}
+
+{% block page_title %}{{ project.name }}{% endblock %}
+
+{% block project_content %}
+<div class="content">
+    <h2 class="is-size-4">Project {{ directory|title }}</h2>
+    <p>
+
+    </p>
+    {% if templates %}
+        <ul>
+        {% for template in templates %}
+            <li>{{ template }}</li>
+        {% endfor %}
+        </ul>
+        <a href="{{ url_for(
+            "project.project_templates_add_view",
+            project_name=project.machine_name,
+            directory=directory
+        ) }}" class="button is-primary is-dark has-text-white">
+            Add {{ directory }} templates.
+        </a>
+    {% else %}
+        <article class="message is-dark">
+            <div class="message-body">
+                <h3 class="is-size-5">No templates found</h3>
+                <p>
+                    There are no {{ directory }} in your project.
+                </p>
+                <a href="{{ url_for(
+                    "project.project_templates_add_view",
+                    project_name=project.machine_name,
+                    directory=directory
+                ) }}" class="button is-primary is-dark has-text-white">
+                    Add {{ directory }} templates.
+                </a>
+            </div>
+        </article>
+    {% endif %}
+</div>
+{% endblock %}

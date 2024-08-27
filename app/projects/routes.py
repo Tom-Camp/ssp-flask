@@ -7,6 +7,7 @@ from app.projects.models import Project
 from app.projects.views import get_projects
 from app.utils.helpers import load_yaml, write_yaml
 from app.utils.library import Library
+from config import ROOT_DIR
 
 project_bp = Blueprint("project", __name__, url_prefix="/project")
 
@@ -22,37 +23,16 @@ def get_destination_path(file: str) -> str:
     return "/".join(Path(file).parts[1:])
 
 
-def project_add_files(project_name: str, file_list: list) -> list:
-    """
-    Give a list of library files, add them to a Project.
-
-    :param project_name: str the Project machine_name
-    :param file_list: a list of library file paths as strings
-    :return: a list of Project file paths as strings
-    """
-    files: list = []
-    library = Library(project_base_path=project_name)
-    for file in file_list:
-        files.append(library.copy_directory(filepath=file))
-    return files
-
-
-def project_remove_files(project_name: str, file_list: list) -> list:
-    """
-    Give a list of library files, remove them to a Project.
-
-    :param project_name: str the Project machine_name
-    :param file_list: a list of library file paths as strings
-    :return: a list of Project file paths as strings
-    """
-    files: list = []
-    library = Library(project_base_path=project_name)
-    for file in file_list:
-        library.remove(
-            filepath=file,
-        )
-        files.append(file)
-    return files
+def get_project_request_defaults(project_name: str) -> tuple[Path, Project, Library]:
+    project_machine_name = project_name.lower()
+    project_path = (
+        ROOT_DIR.joinpath("project_data")
+        .joinpath(project_machine_name.lower())
+        .relative_to(ROOT_DIR)
+    )
+    project = load_project(project_name=project_machine_name)
+    library = Library()
+    return project_path, project, library
 
 
 def load_project(project_name: str) -> Project:
@@ -69,16 +49,11 @@ def load_project(project_name: str) -> Project:
         .with_suffix(".yaml")
         .as_posix()
     )
-    # Need to fix this.
-    if project_file:
-        project = Project(**project_file)
-    else:
-        project = Project()
-    return project
+    return Project(**project_file)
 
 
 @project_bp.route("/list", methods=["GET"])
-def project_list_page():
+def project_list_view():
     """
     A page to list all the Projects.
 
@@ -98,7 +73,7 @@ def project_list_page():
 
 
 @project_bp.route("/create", methods=["GET", "POST"])
-def project_create_page():
+def project_create_view():
     """
     A page to create an SSP Toolkit Project
 
@@ -110,37 +85,56 @@ def project_create_page():
             project = Project(
                 name=form.name.data,
                 description=form.description.data,
-                maintainers=[name.get("maintainer") for name in form.maintainers.data],
-                project_dir=None,
-                opencontrol=None,
-                machine_name=None,
             )
             project.create()
             return redirect(
-                url_for("project.project_view_page", project_name=project.machine_name)
+                url_for("project.project_view", project_name=project.machine_name)
             )
 
     return render_template("project/project_form.html", form=form)
 
 
 @project_bp.route("/<project_name>", methods=["GET"])
-def project_view_page(project_name: str):
+def project_view(project_name: str):
     """
     A view of an individual Project.
 
     :param project_name: str - machine_name for the Project.
     :return: HTML template
     """
-    if not Path("project_data").joinpath(project_name).exists():
+    project_path, project, library = get_project_request_defaults(project_name)
+    if not project_path.exists():
         abort(404)
 
     project = load_project(project_name=project_name)
-    page: dict = project.view()
-    return render_template("project/project.html", **page)
+    return render_template("project/project.html", project=project.model_dump())
 
 
-@project_bp.route("/<project_name>/add/<directory>", methods=["GET", "POST"])
-def project_files_add_page(project_name: str, directory: str):
+@project_bp.route("/<project_name>/templates/<directory>", methods=["GET"])
+def project_templates_view(project_name: str, directory: str):
+    """
+    A page to add templates to a Project.
+
+    :param project_name: str - machine_name for the Project.
+    :param directory: str - the template directory name.
+    """
+    project_path, project, library = get_project_request_defaults(project_name)
+    allowed_directories = ["appendices", "frontmatter", "tailoring"]
+    if not project_path.exists() or directory not in allowed_directories:
+        abort(404)
+
+    project_templates = project.get_project_files_by_directory(f"templates/{directory}")
+
+    data: dict = {
+        "directory": directory,
+        "project": project,
+        "templates": project_templates,
+    }
+    return render_template("project/project_templates.html", **data)
+
+
+@project_bp.route("/<project_name>/templates/add/<directory>", methods=["GET", "POST"])
+def project_templates_add_view(project_name: str, directory: str):
     """
     A page to add OpenControl certifications and standards.
 
@@ -148,37 +142,51 @@ def project_files_add_page(project_name: str, directory: str):
     :param directory: str - either standards or certifications
     :return: HTML template
     """
-    source = directory.lower()
-    library = Library(project_base_path=project_name)
-    directories = library.list_directories()
-
-    if source not in directories:
+    project_path, project, library = get_project_request_defaults(project_name)
+    allowed_directories = ["appendices", "frontmatter", "tailoring"]
+    if not project_path.exists() or directory not in allowed_directories:
         abort(404)
 
-    files = library.list_files(directory=source)
-    project = load_project(project_name)
+    if request.method == "POST":
+        for file in request.form.getlist("files[]"):
+            copy_path = f"templates/{file}"
+            destination = project.project_path.joinpath("templates").joinpath(file)
+            if library.library.joinpath(copy_path).is_dir():
+                library.copy_directory(
+                    copy_path, destination_path=destination.as_posix()
+                )
+            else:
+                library.copy_file(
+                    source_path=copy_path, destination_path=destination.as_posix()
+                )
+        return redirect(
+            url_for(
+                "project.project_templates_view",
+                project_name=project_name,
+                directory=directory,
+            )
+        )
+
+    project_templates = project.get_project_files_by_directory(f"templates/{directory}")
+    library_templates = library.list_files(
+        directory=Path("templates").joinpath(directory).as_posix()
+    )
+    new_templates: list = []
+    for file in library_templates:
+        if file not in project_templates:
+            new_templates.append(file)
 
     data: dict = {
-        "project_name": project_name,
-        "name": project.name,
-        "file_list": files,
-        "project_files": project.get_project_files_by_directory(directory=directory),
+        "directory": directory,
+        "project": project,
+        "templates": new_templates,
     }
 
-    # if request.method == "POST":
-    #     file_list: list = [file for file in request.form.getlist("files")]
-    #     new_files = project_add_files(project_name=project_name, file_list=file_list)
-    #     opencontrol_file[oc_key] = new_files
-    #     write_yaml(
-    #         filename=opencontrol.as_posix(),
-    #         data=opencontrol_file,
-    #     )
-
-    return render_template("project/project_add_files_form.html", **data)
+    return render_template("project/project_templates_add.html", **data)
 
 
 @project_bp.route("/<project_name>/delete/<filetype>/<filename>", methods=["GET"])
-def project_files_delete_page(project_name: str, filetype: str, filename: str):
+def project_files_delete_view(project_name: str, filetype: str, filename: str):
     """
     A page to remove OpenControl certifications and standards.
 

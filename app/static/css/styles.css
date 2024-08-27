@@ -53,4 +53,11 @@ input.add-another {
   color: hsl(141deg, 71%, 48%);
 }
 
+ul.no-bullets {
+  list-style-type: none;
+}
+ul.no-bullets li ul {
+  list-style-type: none;
+}
+
 /*# sourceMappingURL=styles.css.map */

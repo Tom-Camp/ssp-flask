@@ -4,18 +4,6 @@ import rtyaml
 from flask import flash
 
 
-def get_machine_name(name: str) -> str:
-    """
-    Create a name to be used for a Project's directory within the project_data directory
-    :param name: string The project name
-    :return: string The project name only containing alphanumerics, dashes and underscores.
-    """
-    to_replace = "~`!@#$%^&*()+=[]{}|:;\"'?/>.<,"
-    for x in to_replace:
-        name = name.replace(x, "")
-    return name.replace(" ", "_").lower()
-
-
 def load_yaml(filename: str) -> dict:
     file: dict = {}
     try:

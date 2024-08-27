@@ -1,6 +1,44 @@
-<nav class="panel">
-  <p class="panel-heading">Project Files</p>
-  <a class="panel-block">Rendered Files</a>
-  <a class="panel-block">Templates</a>
-  <a class="panel-block">Keys</a>
-</nav>
+<p class="menu-label">Project Files</p>
+<ul class="menu-list">
+    <li>
+        <a>Templates</a>
+        <ul class="menu-list">
+            <li>
+                <a href="{{ url_for(
+                    "project.project_templates_view",
+                    project_name=project.machine_name,
+                    directory="appendices"
+                ) }}">
+                    Appendices
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for(
+                    "project.project_templates_view",
+                    project_name=project.machine_name,
+                    directory="components"
+                ) }}">
+                    Components
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for(
+                    "project.project_templates_view",
+                    project_name=project.machine_name,
+                    directory="frontmatter"
+                ) }}">
+                    Frontmatter
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for(
+                    "project.project_templates_view",
+                    project_name=project.machine_name,
+                    directory="tailoring"
+                ) }}">
+                    Tailoring
+                </a>
+            </li>
+        </ul>
+    </li>
+</ul>

@@ -60,3 +60,14 @@ input {
     color: hsl(141, 71%, 48%);
   }
 }
+
+ul {
+  &.no-bullets {
+    list-style-type: none;
+    li {
+      ul {
+        list-style-type: none;
+      }
+    }
+  }
+}
