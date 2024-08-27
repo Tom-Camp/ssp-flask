@@ -76,7 +76,10 @@ class Project(BaseModel):
                 rtyaml.dump(self.model_dump(exclude={"project_path", "library"}))
             )
             self.library.copy_file(
-                source_path="configuration.yaml", destination_path=self.project_dir
+                source_path="configuration.yaml",
+                destination_path=self.project_path.joinpath(
+                    "configuration.yaml"
+                ).as_posix(),
             )
         except FileExistsError:
             flash(f"Project {self.name} already exists.", "is-danger")
