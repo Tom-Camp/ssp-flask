@@ -1,6 +1,44 @@
-<p class="menu-label mb-2 is-size-4">Project</p>
+<p class="menu-label">Project Files</p>
 <ul class="menu-list">
-    <li><a href="#">Dashboard</a></li>
-    <li><a href="#">Settings</a></li>
-    <li><a href="#">Profile</a></li>
+    <li>
+        <a>Templates</a>
+        <ul class="menu-list">
+            <li>
+                <a href="{{ url_for(
+                    "project.project_templates_view",
+                    project_name=project.machine_name,
+                    directory="appendices"
+                ) }}">
+                    Appendices
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for(
+                    "project.project_templates_view",
+                    project_name=project.machine_name,
+                    directory="components"
+                ) }}">
+                    Components
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for(
+                    "project.project_templates_view",
+                    project_name=project.machine_name,
+                    directory="frontmatter"
+                ) }}">
+                    Frontmatter
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for(
+                    "project.project_templates_view",
+                    project_name=project.machine_name,
+                    directory="tailoring"
+                ) }}">
+                    Tailoring
+                </a>
+            </li>
+        </ul>
+    </li>
 </ul>

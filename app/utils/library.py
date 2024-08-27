@@ -1,22 +1,22 @@
-import os
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
 from flask import flash
 
+from config import ROOT_DIR
+
 
 @dataclass
 class Library:
-    project_base_path: str
+    library: Path = ROOT_DIR.joinpath("app").joinpath("library").relative_to(ROOT_DIR)
 
-    @staticmethod
-    def list_files(directory: str) -> list:
+    def list_files(self, directory: str) -> list:
         files: list = []
         try:
             files = [
-                (file.name, "/".join(file.parts[1:]))
-                for file in Path("library").joinpath(directory).iterdir()
+                file.name
+                for file in self.library.joinpath(directory).iterdir()
                 if file.is_file()
             ]
         except FileNotFoundError:
@@ -32,13 +32,12 @@ class Library:
             pass
         return files
 
-    @staticmethod
-    def list_directories(directory: str = ""):
+    def list_directories(self, directory: str):
         dirs: list = []
         try:
             dirs = [
                 file.name
-                for file in Path("library").joinpath(directory).iterdir()
+                for file in self.library.joinpath(directory).iterdir()
                 if file.is_dir()
             ]
         except FileNotFoundError:
@@ -53,26 +52,35 @@ class Library:
         finally:
             return dirs
 
-    @staticmethod
-    def get_directory_tree(directory: str = "") -> dict:
-        directory_dict: dict = {}
-        for root, dirs, files in os.walk(
-            Path("library").joinpath(directory).as_posix()
-        ):
-            current_dict = directory_dict
-            for part in os.path.relpath(root, directory).split(os.sep):
-                if part != ".":
-                    current_dict = current_dict.setdefault(part, {})
-            for file in files:
-                current_dict[file] = None
-        return directory_dict
+    def copy_file(self, source_path: str, destination_path: str) -> str:
+        source = self.library.joinpath(source_path)
+        destination = Path(destination_path)
+        try:
+            if Path(source).is_file():
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(src=source, dst=destination)
+                flash(
+                    message=f"{source.name} copied to {'/'.join(destination.parts[-3:-1])}",
+                    category="is-success",
+                )
+        except FileNotFoundError:
+            flash(message=f"{source} was not found.", category="is-danger")
+        except PermissionError:
+            flash(
+                message=f"Permission denied. Cannot copy {source} to {destination}.",
+                category="is-danger",
+            )
+        except Exception as e:
+            flash(message=f"An error occurred: {e}", category="is-danger")
+        finally:
+            return destination.as_posix()
 
-    def copy_file(self, filepath: str) -> str:
-        source = Path("library").joinpath(filepath).as_posix()
-        destination = self._get_destination(library_path=source)
+    def copy_directory(self, source_path: str, destination_path: str) -> str:
+        source = self.library.joinpath(source_path)
+        destination = Path(destination_path)
 
         try:
-            shutil.copy(src=Path(source), dst=Path(destination))
+            shutil.copytree(src=source, dst=destination, dirs_exist_ok=True)
             flash(message=f"{source} copied to {destination}", category="is-success")
         except FileNotFoundError:
             flash(message=f"{source} was not found.", category="is-danger")
@@ -84,42 +92,4 @@ class Library:
         except Exception as e:
             flash(message=f"An error occurred: {e}", category="is-danger")
         finally:
-            return destination
-
-    def copy_directory(self, filepath: str) -> str:
-        source = Path("library").joinpath(filepath).as_posix()
-        destination = self._get_destination(library_path=source)
-
-        try:
-            shutil.copytree(src=Path(source), dst=Path(destination), dirs_exist_ok=True)
-            flash(message=f"{source} copied to {destination}", category="is-success")
-        except FileNotFoundError:
-            flash(message=f"{source} was not found.", category="is-danger")
-        except PermissionError:
-            flash(
-                message=f"Permission denied. Cannot copy {source} to {destination}.",
-                category="is-danger",
-            )
-        except Exception as e:
-            flash(message=f"An error occurred: {e}", category="is-danger")
-        finally:
-            return destination
-
-    def remove(self, filepath: str):
-        destination = self._get_destination(library_path=filepath)
-        try:
-            Path(destination).unlink(missing_ok=False)
-            flash(
-                message=f"File {destination} removed from project.",
-                category="is-success",
-            )
-        except FileNotFoundError:
-            flash(
-                message=f"The file {destination} was not found.", category="is-dander"
-            )
-        finally:
-            pass
-
-    def _get_destination(self, library_path: str) -> str:
-        destination = "/".join(Path(library_path).parts[1:])
-        return Path(self.project_base_path).joinpath(destination).as_posix()
+            return destination.as_posix()

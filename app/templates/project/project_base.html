@@ -2,26 +2,14 @@
 
 {% block content %}
     <div class="columns">
-        <aside class="column is-2 is-narrow-mobile is-fullheight section is-hidden-mobile">
+        <aside class="column is-2 mt-4 ml-2 p-1 menu">
             {% include "project/menu.html" %}
         </aside>
 
-        <div class="column is-10 section">
+        <div class="column is-10">
             {% block project_content %}{% endblock %}
         </div>
     </div>
 {% endblock %}
 
-{% block scripts %}
-<script type="text/javascript">
-document.querySelectorAll(".tabs ul li").forEach(tab => {
-    tab.addEventListener("click", function() {
-        console.log("clicked")
-        document.querySelectorAll(".tabs ul li").forEach(el => el.classList.remove("is-active"));
-        this.classList.add("is-active");
-        document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("is-active"));
-        document.getElementById(this.getAttribute("data-tab")).classList.add("is-active");
-    });
-});
-</script>
-{% endblock %}
+{% block scripts %} {% endblock %}
