@@ -4,12 +4,14 @@ from pathlib import Path
 
 from flask import flash
 
-from config import ROOT_DIR
+from config import config
+
+ROOT_DIR = config.get("ROOT_DIR", Path())
 
 
 @dataclass
 class Library:
-    library: Path = ROOT_DIR.joinpath("app").joinpath("library").relative_to(ROOT_DIR)
+    library: Path = ROOT_DIR.joinpath("app").joinpath("library").relative_to(ROOT_DIR)  # type: ignore
 
     def list_files(self, directory: str) -> list:
         files: list = []
@@ -56,13 +58,12 @@ class Library:
         source = self.library.joinpath(source_path)
         destination = Path(destination_path)
         try:
-            if Path(source).is_file():
-                destination.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copyfile(src=source, dst=destination)
-                flash(
-                    message=f"{source.name} copied to {'/'.join(destination.parts[-3:-1])}",
-                    category="is-success",
-                )
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(src=source, dst=destination)
+            flash(
+                message=f"{source.name} copied to {'/'.join(destination.parts[-3:-1])}",
+                category="is-success",
+            )
         except FileNotFoundError:
             flash(message=f"{source} was not found.", category="is-danger")
         except PermissionError:

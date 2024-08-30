@@ -7,6 +7,7 @@
 {% block content %}
 <div id="error404">
     <p class="is-size-4 has-text-centered">Sorry, something seems to have gone wrong!</p>
+    <p class="is-size-4 has-text-centered">{{ error }}</p>
     <img src="{{ url_for('static', filename='images/error.jpg') }}">
 </div>
 {% endblock %}
