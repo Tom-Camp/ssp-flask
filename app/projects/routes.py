@@ -4,52 +4,10 @@ from flask import Blueprint, abort, flash, redirect, render_template, request, u
 
 from app.projects.forms import ProjectForm
 from app.projects.models import Project
-from app.projects.views import get_projects
+from app.projects.views import get_project_request_defaults, get_projects, load_project
 from app.utils.helpers import load_yaml, write_yaml
-from app.utils.library import Library
-from config import ROOT_DIR
 
 project_bp = Blueprint("project", __name__, url_prefix="/project")
-
-
-def get_destination_path(file: str) -> str:
-    """
-    Given a library path and a Project machine_name, return a file path to use
-    to copy the library file into the Project.
-
-    :param file: str - the library file path
-    :return: str - the file path in the Project directory
-    """
-    return "/".join(Path(file).parts[1:])
-
-
-def get_project_request_defaults(project_name: str) -> tuple[Path, Project, Library]:
-    project_machine_name = project_name.lower()
-    project_path = (
-        ROOT_DIR.joinpath("project_data")
-        .joinpath(project_machine_name.lower())
-        .relative_to(ROOT_DIR)
-    )
-    project = load_project(project_name=project_machine_name)
-    library = Library()
-    return project_path, project, library
-
-
-def load_project(project_name: str) -> Project:
-    """
-    Return a Project object.
-
-    :param project_name: str the Project machine_name
-    :return: Project
-    """
-    project_file = load_yaml(
-        Path("project_data")
-        .joinpath(project_name)
-        .joinpath("project")
-        .with_suffix(".yaml")
-        .as_posix()
-    )
-    return Project(**project_file)
 
 
 @project_bp.route("/list", methods=["GET"])
@@ -102,7 +60,7 @@ def project_view(project_name: str):
     :param project_name: str - machine_name for the Project.
     :return: HTML template
     """
-    project_path, project, library = get_project_request_defaults(project_name)
+    project_path, project = get_project_request_defaults(project_name)
     if not project_path.exists():
         abort(404)
 
@@ -118,7 +76,7 @@ def project_templates_view(project_name: str, directory: str):
     :param project_name: str - machine_name for the Project.
     :param directory: str - the template directory name.
     """
-    project_path, project, library = get_project_request_defaults(project_name)
+    project_path, project = get_project_request_defaults(project_name)
     allowed_directories = ["appendices", "frontmatter", "tailoring"]
     if not project_path.exists() or directory not in allowed_directories:
         abort(404)
@@ -142,7 +100,7 @@ def project_templates_add_view(project_name: str, directory: str):
     :param directory: str - either standards or certifications
     :return: HTML template
     """
-    project_path, project, library = get_project_request_defaults(project_name)
+    project_path, project = get_project_request_defaults(project_name)
     allowed_directories = ["appendices", "frontmatter", "tailoring"]
     if not project_path.exists() or directory not in allowed_directories:
         abort(404)
@@ -150,13 +108,13 @@ def project_templates_add_view(project_name: str, directory: str):
     if request.method == "POST":
         for file in request.form.getlist("files[]"):
             copy_path = f"templates/{file}"
-            destination = project.project_path.joinpath("templates").joinpath(file)
-            if library.library.joinpath(copy_path).is_dir():
-                library.copy_directory(
+            destination = project_path.joinpath("templates").joinpath(file)
+            if project.library.library.joinpath(copy_path).is_dir():
+                project.library.copy_directory(
                     copy_path, destination_path=destination.as_posix()
                 )
             else:
-                library.copy_file(
+                project.library.copy_file(
                     source_path=copy_path, destination_path=destination.as_posix()
                 )
         return redirect(
@@ -168,7 +126,7 @@ def project_templates_add_view(project_name: str, directory: str):
         )
 
     project_templates = project.get_project_files_by_directory(f"templates/{directory}")
-    library_templates = library.list_files(
+    library_templates = project.library.list_files(
         directory=Path("templates").joinpath(directory).as_posix()
     )
     new_templates: list = []

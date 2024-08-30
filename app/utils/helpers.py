@@ -10,9 +10,9 @@ def load_yaml(filename: str) -> dict:
         with Path(filename).open("r") as fp:
             file = rtyaml.load(fp)
     except FileNotFoundError:
-        flash(message=f"File {filename} does not exist", category="error")
+        flash(message=f"File {filename} does not exist", category="is-danger")
     except IOError:
-        flash(message=f"Error loading {filename}", category="error")
+        flash(message=f"Error loading {filename}", category="is-danger")
     finally:
         pass
     return file

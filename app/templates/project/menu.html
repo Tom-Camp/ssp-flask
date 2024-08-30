@@ -14,9 +14,8 @@
             </li>
             <li>
                 <a href="{{ url_for(
-                    "project.project_templates_view",
-                    project_name=project.machine_name,
-                    directory="components"
+                    "component.components_list_view",
+                    project_name=project.machine_name
                 ) }}">
                     Components
                 </a>

@@ -1,69 +1,30 @@
 from pathlib import Path
-from typing import List, Optional
 
 import rtyaml
 from flask import flash
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from app.utils.library import Library
-from config import ROOT_DIR
+from config import Config
 
-
-class Metadata(BaseModel):
-    description: str
-    maintainers: Optional[List[str]] = Field(default=[])
-
-
-class OpenControl(BaseModel):
-    schema_version: str = "1.0.0"
-    name: str
-    metadata: Optional[Metadata]
-    components: List[str] = Field(default=[])
-    certifications: List[str] = Field(default=[])
-    standards: List[str] = Field(default=[])
-
-    def __init__(self, name: str, description: str, maintainers: list):
-        metadata = Metadata(
-            description=description,
-            maintainers=maintainers,
-        )
-        super().__init__(
-            name=name,
-            metadata=metadata,
-        )
-
-    def write(self, project_path: str):
-        opencontrol_path = (
-            ROOT_DIR.joinpath(project_path).joinpath("opencontrol").with_suffix(".yaml")
-        )
-        with opencontrol_path.open("w+") as oc:
-            oc.write(rtyaml.dump(self.model_dump()))
+ROOT_DIR = Config.ROOT_DIR
 
 
 class Project(BaseModel):
     name: str
     description: str
-    machine_name: Optional[str]
-    project_dir: Optional[str]
-    project_path: Path = Field(Path())
-    library: Optional[Library]
+    machine_name: str | None = None
+    project_path: Path = None  # type: ignore
+    library: Library = Field(Library())
 
-    def __init__(self, name: str, description: str, **kwargs):
-        machine_name = self._get_machine_name(name=name)
-        project_path = (
+    @model_validator(mode="after")
+    def set_project_path(cls, model):
+        if not model.machine_name:
+            model.machine_name = cls._get_machine_name(name=model.name)
+        model.project_path = (
             ROOT_DIR.joinpath("project_data")
-            .joinpath(machine_name)
+            .joinpath(model.machine_name)
             .relative_to(ROOT_DIR)
-        )
-        project_dir = project_path.as_posix()
-        library = Library()
-        super().__init__(
-            name=name,
-            description=description,
-            machine_name=machine_name,
-            project_dir=project_dir,
-            project_path=project_path,
-            library=library,
         )
 
     def create(self):
@@ -84,7 +45,7 @@ class Project(BaseModel):
         except FileExistsError:
             flash(f"Project {self.name} already exists.", "is-danger")
         finally:
-            flash(f"Project created at {self.project_dir}", "is-success")
+            flash(f"Project created at {self.project_path.as_posix()}", "is-success")
 
     def get_project_files(self) -> list:
         return [file.as_posix() for file in self.project_path.rglob("*")]
