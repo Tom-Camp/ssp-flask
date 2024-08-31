@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from app.components.models import Component
+from app.toolkit.opencontrol import Component
 from app.utils.helpers import load_yaml, write_yaml
 
 

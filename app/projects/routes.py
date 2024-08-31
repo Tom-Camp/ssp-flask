@@ -5,7 +5,7 @@ from flask import Blueprint, abort, flash, redirect, render_template, request, u
 from app.projects.forms import ProjectForm
 from app.projects.models import Project
 from app.projects.views import get_project_request_defaults, get_projects, load_project
-from app.utils.helpers import load_yaml, write_yaml
+from app.toolkit.file_manager import FileManager
 
 project_bp = Blueprint("project", __name__, url_prefix="/project")
 
@@ -27,7 +27,7 @@ def project_list_view():
             ),
             category="is-info",
         )
-    return render_template("project/project_list.html", projects=projects)
+    return render_template("project/project_list_view.html", projects=projects)
 
 
 @project_bp.route("/create", methods=["GET", "POST"])
@@ -49,7 +49,7 @@ def project_create_view():
                 url_for("project.project_view", project_name=project.machine_name)
             )
 
-    return render_template("project/project_form.html", form=form)
+    return render_template("project/project_create_view.html", form=form)
 
 
 @project_bp.route("/<project_name>", methods=["GET"])
@@ -65,7 +65,7 @@ def project_view(project_name: str):
         abort(404)
 
     project = load_project(project_name=project_name)
-    return render_template("project/project.html", project=project.model_dump())
+    return render_template("project/project_view.html", project=project.model_dump())
 
 
 @project_bp.route("/<project_name>/templates/<directory>", methods=["GET"])
@@ -81,7 +81,8 @@ def project_templates_view(project_name: str, directory: str):
     if not project_path.exists() or directory not in allowed_directories:
         abort(404)
 
-    project_templates = project.get_project_files_by_directory(f"templates/{directory}")
+    manager = FileManager(project_machine_name=project_name)
+    project_templates = manager.get_files_by_directory(f"templates/{directory}")
 
     data: dict = {
         "directory": directory,
@@ -125,7 +126,8 @@ def project_templates_add_view(project_name: str, directory: str):
             )
         )
 
-    project_templates = project.get_project_files_by_directory(f"templates/{directory}")
+    manager = FileManager(project_machine_name=project_name)
+    project_templates = manager.get_files_by_directory(f"templates/{directory}")
     library_templates = project.library.list_files(
         directory=Path("templates").joinpath(directory).as_posix()
     )
@@ -140,34 +142,4 @@ def project_templates_add_view(project_name: str, directory: str):
         "templates": new_templates,
     }
 
-    return render_template("project/project_templates_add.html", **data)
-
-
-@project_bp.route("/<project_name>/delete/<filetype>/<filename>", methods=["GET"])
-def project_files_delete_view(project_name: str, filetype: str, filename: str):
-    """
-    A page to remove OpenControl certifications and standards.
-
-    :param project_name: str - machine_name for the Project.
-    :param filetype: str - either standards or certifications
-    :param filename: str - the filename to remove
-    :return: HTML template
-    """
-    oc_key = filetype.lower()
-    if oc_key not in ["standards", "certifications"]:
-        abort(404)
-
-    opencontrol = (
-        Path("project_data")
-        .joinpath(project_name)
-        .joinpath("opencontrol")
-        .with_suffix(".yaml")
-    )
-    opencontrol_file = load_yaml(opencontrol.as_posix())
-    oc_files: dict = {
-        Path(oc_file).name: Path(oc_file).as_posix()
-        for oc_file in opencontrol_file.get(oc_key, [])
-    }
-    opencontrol_file["standards"].remove(oc_files[filename])
-    write_yaml(filename=opencontrol.as_posix(), data=opencontrol_file)
-    return redirect(f"/project/{project_name}/add/{oc_key}")
+    return render_template("project/project_templates_view.html", **data)

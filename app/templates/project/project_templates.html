@@ -7,7 +7,7 @@
     <li><a href="/">Home</a></li>
     <li><a href="{{ url_for("project.project_list_view") }}">Projects</a></li>
     <li>
-        <a href="{{ url_for("project.project_view", project_name=project.name) }}">
+        <a href="{{ url_for("project.project_view", project_name=project.machine_name) }}">
             {{ project.name }}
         </a>
     </li>

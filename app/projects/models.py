@@ -4,6 +4,7 @@ import rtyaml
 from flask import flash
 from pydantic import BaseModel, Field, model_validator
 
+from app.toolkit.opencontrol import OpenControl
 from app.utils.library import Library
 from config import Config
 
@@ -36,25 +37,31 @@ class Project(BaseModel):
             project_file.write(
                 rtyaml.dump(self.model_dump(exclude={"project_path", "library"}))
             )
-            self.library.copy_file(
-                source_path="configuration.yaml",
-                destination_path=self.project_path.joinpath(
-                    "configuration.yaml"
-                ).as_posix(),
-            )
+            self.add_base()
         except FileExistsError:
             flash(f"Project {self.name} already exists.", "is-danger")
         finally:
             flash(f"Project created at {self.project_path.as_posix()}", "is-success")
 
-    def get_project_files(self) -> list:
-        return [file.as_posix() for file in self.project_path.rglob("*")]
-
-    def get_project_files_by_directory(self, directory: str) -> list:
-        return [file.name for file in self.project_path.joinpath(directory).glob("*")]
-
-    def get_copy_destination(self, filepath: str) -> str:
-        return self.project_path.joinpath(filepath).as_posix()
+    def add_base(self):
+        self.library.copy_file(
+            source_path="configuration.yaml",
+            destination_path=self.project_path.joinpath(
+                "configuration.yaml"
+            ).as_posix(),
+        )
+        self.library.copy_directory(
+            source_path="keys",
+            destination_path=self.project_path.joinpath("keys").as_posix(),
+        )
+        OpenControl(
+            name=self.name,
+            description=self.description,
+            maintainers=[],
+        ).write(self.project_path.as_posix())
+        self.project_path.joinpath("trash").mkdir(exist_ok=True)
+        with open(self.project_path.joinpath(".gitignore"), "w+") as fp:
+            fp.write("trash\n")
 
     @staticmethod
     def _get_machine_name(name: str) -> str:
