@@ -5,7 +5,6 @@ from flask import Blueprint, abort, flash, redirect, render_template, request, u
 from app.projects.forms import ProjectForm
 from app.projects.models import Project
 from app.projects.views import get_project_request_defaults, get_projects, load_project
-from app.toolkit.file_manager import FileManager
 
 project_bp = Blueprint("project", __name__, url_prefix="/project")
 
@@ -60,7 +59,7 @@ def project_view(project_name: str):
     :param project_name: str - machine_name for the Project.
     :return: HTML template
     """
-    project_path, project = get_project_request_defaults(project_name)
+    project_path, project, manager = get_project_request_defaults(project_name)
     if not project_path.exists():
         abort(404)
 
@@ -76,12 +75,11 @@ def project_templates_view(project_name: str, directory: str):
     :param project_name: str - machine_name for the Project.
     :param directory: str - the template directory name.
     """
-    project_path, project = get_project_request_defaults(project_name)
+    project_path, project, manager = get_project_request_defaults(project_name)
     allowed_directories = ["appendices", "frontmatter", "tailoring"]
     if not project_path.exists() or directory not in allowed_directories:
         abort(404)
 
-    manager = FileManager(project_machine_name=project_name)
     project_templates = manager.get_files_by_directory(f"templates/{directory}")
 
     data: dict = {
@@ -92,8 +90,8 @@ def project_templates_view(project_name: str, directory: str):
     return render_template("project/project_templates.html", **data)
 
 
-@project_bp.route("/<project_name>/templates/add/<directory>", methods=["GET", "POST"])
-def project_templates_add_view(project_name: str, directory: str):
+@project_bp.route("/<project_name>/files/add/<directory>", methods=["GET"])
+def project_files_add_view(project_name: str, directory: str):
     """
     A page to add OpenControl certifications and standards.
 
@@ -101,33 +99,12 @@ def project_templates_add_view(project_name: str, directory: str):
     :param directory: str - either standards or certifications
     :return: HTML template
     """
-    project_path, project = get_project_request_defaults(project_name)
+    project_path, project, manager = get_project_request_defaults(project_name)
     allowed_directories = ["appendices", "frontmatter", "tailoring"]
     if not project_path.exists() or directory not in allowed_directories:
         abort(404)
 
-    if request.method == "POST":
-        for file in request.form.getlist("files[]"):
-            copy_path = f"templates/{file}"
-            destination = project_path.joinpath("templates").joinpath(file)
-            if project.library.library.joinpath(copy_path).is_dir():
-                project.library.copy_directory(
-                    copy_path, destination_path=destination.as_posix()
-                )
-            else:
-                project.library.copy_file(
-                    source_path=copy_path, destination_path=destination.as_posix()
-                )
-        return redirect(
-            url_for(
-                "project.project_templates_view",
-                project_name=project_name,
-                directory=directory,
-            )
-        )
-
-    manager = FileManager(project_machine_name=project_name)
-    project_templates = manager.get_files_by_directory(f"templates/{directory}")
+    project_templates = manager.get_files_by_directory(directory)
     library_templates = project.library.list_files(
         directory=Path("templates").joinpath(directory).as_posix()
     )
@@ -139,7 +116,44 @@ def project_templates_add_view(project_name: str, directory: str):
     data: dict = {
         "directory": directory,
         "project": project,
+        "project_templates": project_templates,
         "templates": new_templates,
     }
 
-    return render_template("project/project_templates_view.html", **data)
+    return render_template("project/project_files_add_view.html", **data)
+
+
+@project_bp.route("/<project_name>/file/add", methods=["POST"])
+def project_files_add_submit(project_name: str):
+    project_path, project, manager = get_project_request_defaults(project_name)
+
+    parents = request.form.get("parents")
+    for file in request.form.getlist("files"):
+        copy_path = f"templates/{parents}/{file}"
+        destination = project_path.joinpath(copy_path)
+        if project.library.library.joinpath(copy_path).is_dir():
+            project.library.copy_directory(
+                source_path=copy_path, destination_path=destination.as_posix()
+            )
+        else:
+            project.library.copy_file(
+                source_path=copy_path, destination_path=destination.as_posix()
+            )
+
+    return redirect(
+        request.referrer or url_for("project.project_view", project_name=project_name)
+    )
+
+
+@project_bp.route("/<project_name>/file/remove", methods=["POST"])
+def project_files_remove_submit(project_name: str):
+    project_path, project, manager = get_project_request_defaults(project_name)
+
+    parents = request.form.get("parents")
+    for file in request.form.getlist("files"):
+        copy_path = f"templates/{parents}/{file}"
+        manager.remove_file(source_path=copy_path)
+
+    return redirect(
+        request.referrer or url_for("project.project_view", project_name=project_name)
+    )

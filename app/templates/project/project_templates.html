@@ -18,40 +18,19 @@
 {% block page_title %}{{ project.name }}{% endblock %}
 
 {% block project_content %}
-<div class="content">
-    <h2 class="is-size-4">Project {{ directory|title }}</h2>
-    <p>
-
-    </p>
-    {% if templates %}
-        <ul>
-        {% for template in templates %}
-            <li>{{ template }}</li>
-        {% endfor %}
-        </ul>
+<nav class="panel is-pulled-left">
+    <p class="panel-heading">Project {{ directory|title }}</p>
+    {% for template in templates %}
+        <p class="panel-block">{{ template }}</p>
+    {% endfor %}
+    <p class="panel-block">
         <a href="{{ url_for(
-            "project.project_templates_add_view",
+            "project.project_files_add_view",
             project_name=project.machine_name,
             directory=directory
-        ) }}" class="button is-primary is-dark has-text-white">
+        ) }}" class="button is-link is-outlined is-fullwidth">
             Add {{ directory }} templates.
         </a>
-    {% else %}
-        <article class="message is-dark">
-            <div class="message-body">
-                <h3 class="is-size-5">No templates found</h3>
-                <p>
-                    There are no {{ directory }} in your project.
-                </p>
-                <a href="{{ url_for(
-                    "project.project_templates_add_view",
-                    project_name=project.machine_name,
-                    directory=directory
-                ) }}" class="button is-primary is-dark has-text-white">
-                    Add {{ directory }} templates.
-                </a>
-            </div>
-        </article>
-    {% endif %}
-</div>
+    </p>
+</nav>
 {% endblock %}

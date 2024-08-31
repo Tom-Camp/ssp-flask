@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from app.projects.file_manager import FileManager
 from app.projects.models import Project
 from app.utils.helpers import load_yaml, scan_dir
 from config import config
@@ -18,7 +19,9 @@ def get_destination_path(file: str) -> str:
     return "/".join(Path(file).parts[1:])
 
 
-def get_project_request_defaults(project_name: str) -> tuple[Path, Project]:
+def get_project_request_defaults(
+    project_name: str,
+) -> tuple[Path, Project, FileManager]:
     """
     Return a loaded Project, a pathlib Path representation of Project path, and an
     instance of a Library.
@@ -33,7 +36,8 @@ def get_project_request_defaults(project_name: str) -> tuple[Path, Project]:
         .relative_to(ROOT_DIR)  # type: ignore
     )
     project = load_project(project_name=project_machine_name)
-    return project_path, project
+    manager = FileManager(project_machine_name=project_machine_name)
+    return project_path, project, manager
 
 
 def load_project(project_name: str) -> Project:

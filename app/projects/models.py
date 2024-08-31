@@ -59,9 +59,6 @@ class Project(BaseModel):
             description=self.description,
             maintainers=[],
         ).write(self.project_path.as_posix())
-        self.project_path.joinpath("trash").mkdir(exist_ok=True)
-        with open(self.project_path.joinpath(".gitignore"), "w+") as fp:
-            fp.write("trash\n")
 
     @staticmethod
     def _get_machine_name(name: str) -> str:

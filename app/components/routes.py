@@ -18,7 +18,7 @@ def components_list_view(project_name: str):
     :param project_name: str - Project machine_name
     :return: HTML template
     """
-    project_path, project = get_project_request_defaults(project_name)
+    project_path, project, manager = get_project_request_defaults(project_name)
     component_directories = get_components_directories(project_path)
 
     data: dict = {
@@ -38,7 +38,7 @@ def components_add_list_view(project_name: str):
     :param project_name: str - Project machine_name
     :return: HTML template
     """
-    project_path, project = get_project_request_defaults(project_name)
+    project_path, project, manager = get_project_request_defaults(project_name)
     components = project.library.list_directories(directory="templates/components")
     data: dict = {"project": project, "components": components}
     return render_template("components/component_add_list_view.html", **data)
@@ -55,7 +55,7 @@ def components_add_component_view(project_name: str, component: str):
     :param component: str - Component name
     :return: HTML template
     """
-    project_path, project = get_project_request_defaults(project_name)
+    project_path, project, manager = get_project_request_defaults(project_name)
     templates = project.library.list_files(
         directory=f"templates/components/{component}"
     )
@@ -101,7 +101,7 @@ def components_remove_component_view(project_name: str, component: str):
     :param component: str - Component name
     :return: HTML template
     """
-    project_path, project = get_project_request_defaults(project_name)
+    project_path, project, manager = get_project_request_defaults(project_name)
 
     if request.method == "POST":
         for file in request.form.getlist("files[]"):
