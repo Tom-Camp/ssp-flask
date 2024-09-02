@@ -128,9 +128,9 @@ class OpenControl(BaseModel):
         elif action == "remove" and attribute in field:
             field.remove(attribute)
         setattr(self, key, field)
-        self._write(project_path=project_path)
+        self.write(project_path=project_path)
 
-    def _write(self, project_path: str):
+    def write(self, project_path: str):
         opencontrol_path = (
             ROOT_DIR.joinpath("project_data")  # type: ignore
             .joinpath(project_path)

@@ -4,6 +4,7 @@ import rtyaml
 from flask import flash
 from pydantic import BaseModel, Field, model_validator
 
+from app.logging_config import loguru_logger as logger
 from app.toolkit.opencontrol import OpenControl
 from app.utils.library import Library
 from config import Config
@@ -38,10 +39,14 @@ class Project(BaseModel):
                 rtyaml.dump(self.model_dump(exclude={"project_path", "library"}))
             )
             self.add_base()
+            logger.info(f"Project: Project {self.name} created.")
         except FileExistsError:
-            flash(f"Project {self.name} already exists.", "is-danger")
+            flash(message=f"Project {self.name} already exists.", category="is-danger")
         finally:
-            flash(f"Project created at {self.project_path.as_posix()}", "is-success")
+            flash(
+                message=f"Project created at {self.project_path.as_posix()}",
+                category="is-success",
+            )
 
     def add_base(self):
         self.library.copy_file(
