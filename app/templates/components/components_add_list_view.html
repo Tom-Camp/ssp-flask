@@ -1,0 +1,94 @@
+{% extends "project/project_base.html" %}
+
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block breadcrumbs %}
+<ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="{{ url_for("project.project_list_view") }}">Projects</a></li>
+    <li>
+        <a href="{{ url_for(
+            "project.project_view",
+            project_name=machine_name
+        ) }}">
+            {{ project.name }}
+        </a>
+    </li>
+    <li>
+        <a href="{{ url_for(
+            "component.component_template_list_view",
+            project_name=project.machine_name
+        ) }}">
+            Components
+        </a>
+    </li>
+    <li class="is-active"><a href="#" aria-current="page">Add components</a></li>
+</ul>
+{% endblock %}
+
+{% block page_title %}{{ project.name }}{% endblock %}
+
+{% block project_content %}
+
+<div class="columns">
+    <nav class="column panel mr-5">
+        <form
+            method="POST"
+            action="{{ url_for(
+                "component.component_remove_submit",
+                project_name=project.machine_name
+            ) }}
+        ">
+            <p class="panel-heading">Components in {{ project.name }}</p>
+            {% for project_component in project_components %}
+                <p class="panel-block">
+                    <label class="checkbox">
+                        <input
+                            class="pr-1 directory"
+                            type="checkbox"
+                            name="files"
+                            value="{{ project_component }}"
+                        /> {{ project_component }}
+                    </label>
+                </p>
+            {% endfor %}
+            {% if project_components %}
+                <p class="panel-block">
+                    <button type="submit"  class="button is-warning is-fullwidth">
+                        Remove Component.
+                    </button>
+                </p>
+            {% endif %}
+        </form>
+    </nav>
+
+    <nav class="column panel mr-5">
+        <form
+            method="POST"
+            action="{{ url_for(
+                "component.component_add_submit",
+                project_name=project.machine_name
+            ) }}
+        ">
+            <p class="panel-heading">Components in library</p>
+            {% for component in components %}
+                <p class="panel-block">
+                    <label class="checkbox">
+                        <input
+                            class="pr-1 directory"
+                            type="checkbox"
+                            name="files"
+                            value="{{ component }}"
+                        /> {{ component }}
+                    </label>
+                </p>
+            {% endfor %}
+            <p class="panel-block">
+                <button type="submit" class="button is-success is-fullwidth">
+                    Add Components.
+                </button>
+            </p>
+        </form>
+    </nav>
+</div>
+{% endblock %}

@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List, Optional, Set
 
 import rtyaml
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PrivateAttr
 
 from config import config
 
@@ -112,28 +112,30 @@ class OpenControl(BaseModel):
     certifications: List[str] = Field(default=[])
     standards: List[str] = Field(default=[])
 
-    def __init__(self, name: str, description: str, maintainers: list):
-        metadata = Metadata(
-            description=description,
-            maintainers=maintainers,
-        )
-        super().__init__(
-            name=name,
-            metadata=metadata,
-        )
+    _root_dir: str = PrivateAttr()
 
-    def update(self, key: str, action: str, component: str):
-        component_path = f"./{component}"
+    # @model_validator(mode="after")
+    # def set_maintainers(cls, model):
+    #     model.metadata = Metadata(
+    #         description="description",
+    #         maintainers=[],
+    #     )
+
+    def update(self, project_path: str, key: str, action: str, attribute: str):
         field = getattr(self, key)
-        if action == "add" and component_path not in field:
-            field.append(component_path)
-        elif action == "remove" and component_path in field:
-            field.remove(component_path)
+        if action == "add" and attribute not in field:
+            field.append(attribute)
+        elif action == "remove" and attribute in field:
+            field.remove(attribute)
         setattr(self, key, field)
+        self._write(project_path=project_path)
 
-    def write(self, project_path: str):
+    def _write(self, project_path: str):
         opencontrol_path = (
-            ROOT_DIR.joinpath(project_path).joinpath("opencontrol").with_suffix(".yaml")  # type: ignore
+            ROOT_DIR.joinpath("project_data")  # type: ignore
+            .joinpath(project_path)
+            .joinpath("opencontrol")
+            .with_suffix(".yaml")  # type: ignore
         )
         with opencontrol_path.open("w+") as oc:
             oc.write(rtyaml.dump(self.model_dump()))

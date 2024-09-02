@@ -3,6 +3,7 @@ from pathlib import Path
 from flask import flash
 from pydantic import BaseModel, model_validator
 
+from app.logging_config import loguru_logger as logger
 from config import config
 
 ROOT_DIR = config.get("ROOT_DIR", Path())
@@ -32,14 +33,16 @@ class FileManager(BaseModel):
 
     def remove_file(self, source_path: str):
         source = self.project_path.joinpath(source_path)
-        destination = self.project_path.joinpath("trash").joinpath(source)
+        destination = self.project_path.joinpath("trash").joinpath(source_path)
         destination.parent.mkdir(parents=True, exist_ok=True)
         try:
-            source.rename(destination)
+            _ = source.replace(destination)
+            logger.info(f"Manager action: Resource {source.name} moved to trash")
             flash(
                 message=f"{source_path} moved to Project trash", category="is-success"
             )
-        except FileExistsError:
-            flash(f"Error writing file to {destination}")
+        except FileExistsError as e:
+            logger.exception(f"Manager error: {e}")
+            flash(message=f"Error writing file to {destination}", category="is-danger")
         finally:
             pass

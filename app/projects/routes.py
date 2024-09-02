@@ -4,7 +4,7 @@ from flask import Blueprint, abort, flash, redirect, render_template, request, u
 
 from app.projects.forms import ProjectForm
 from app.projects.models import Project
-from app.projects.views import get_project_request_defaults, get_projects, load_project
+from app.projects.views import get_project_data, get_projects, load_project
 
 project_bp = Blueprint("project", __name__, url_prefix="/project")
 
@@ -59,7 +59,7 @@ def project_view(project_name: str):
     :param project_name: str - machine_name for the Project.
     :return: HTML template
     """
-    project_path, project, manager = get_project_request_defaults(project_name)
+    project_path, project, manager, opencontrol = get_project_data(project_name)
     if not project_path.exists():
         abort(404)
 
@@ -75,12 +75,12 @@ def project_templates_view(project_name: str, directory: str):
     :param project_name: str - machine_name for the Project.
     :param directory: str - the template directory name.
     """
-    project_path, project, manager = get_project_request_defaults(project_name)
-    allowed_directories = ["appendices", "frontmatter", "tailoring"]
+    project_path, project, manager, opencontrol = get_project_data(project_name)
+    allowed_directories = ["appendices", "components", "frontmatter", "tailoring"]
     if not project_path.exists() or directory not in allowed_directories:
         abort(404)
 
-    project_templates = manager.get_files_by_directory(f"templates/{directory}")
+    project_templates = manager.get_files_by_directory(directory)
 
     data: dict = {
         "directory": directory,
@@ -99,8 +99,8 @@ def project_files_add_view(project_name: str, directory: str):
     :param directory: str - either standards or certifications
     :return: HTML template
     """
-    project_path, project, manager = get_project_request_defaults(project_name)
-    allowed_directories = ["appendices", "frontmatter", "tailoring"]
+    project_path, project, manager, opencontrol = get_project_data(project_name)
+    allowed_directories = ["appendices", "components", "frontmatter", "tailoring"]
     if not project_path.exists() or directory not in allowed_directories:
         abort(404)
 
@@ -108,10 +108,9 @@ def project_files_add_view(project_name: str, directory: str):
     library_templates = project.library.list_files(
         directory=Path("templates").joinpath(directory).as_posix()
     )
-    new_templates: list = []
-    for file in library_templates:
-        if file not in project_templates:
-            new_templates.append(file)
+    new_templates: list = [
+        file for file in library_templates if file not in project_templates
+    ]
 
     data: dict = {
         "directory": directory,
@@ -125,7 +124,7 @@ def project_files_add_view(project_name: str, directory: str):
 
 @project_bp.route("/<project_name>/file/add", methods=["POST"])
 def project_files_add_submit(project_name: str):
-    project_path, project, manager = get_project_request_defaults(project_name)
+    project_path, project, manager, opencontrol = get_project_data(project_name)
 
     parents = request.form.get("parents")
     for file in request.form.getlist("files"):
@@ -147,7 +146,7 @@ def project_files_add_submit(project_name: str):
 
 @project_bp.route("/<project_name>/file/remove", methods=["POST"])
 def project_files_remove_submit(project_name: str):
-    project_path, project, manager = get_project_request_defaults(project_name)
+    project_path, project, manager, opencontrol = get_project_data(project_name)
 
     parents = request.form.get("parents")
     for file in request.form.getlist("files"):
