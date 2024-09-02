@@ -30,43 +30,72 @@
 {% block page_title %}{{ project.name }}{% endblock %}
 
 {% block project_content %}
-    <div class="content">
-        <h2>Add {{ directory }}</h2>
-        <form method="POST">
-            <ul class="no-bullets">
-                <li>
+<div class="columns">
+    <nav class="column panel mr-5">
+        <form
+            method="POST"
+            action="{{ url_for(
+                "project.project_files_remove_submit",
+                project_name=project.machine_name
+            ) }}
+        ">
+            <input type="hidden" name="parents" value="{{ directory }}">
+            <p class="panel-heading">{{ directory|title }} in {{ project.name }}</p>
+            {% for project_template in project_templates %}
+                <p class="panel-block">
                     <label class="checkbox">
                         <input
                             class="pr-1 directory"
                             type="checkbox"
-                            name="files[]"
-                            value="{{ directory }}"
-                        /> {{ directory }}
+                            name="files"
+                            value="{{ project_template }}"
+                        /> {{ project_template }}
                     </label>
-                    <ul>
-                        {% for template in templates %}
-                            <li>
-                                <label class="checkbox">
-                                    <input
-                                        class="pr-1 filepath"
-                                        type="checkbox"
-                                        name="files[]"
-                                        value="{{ directory }}/{{ template }}"
-                                    /> {{ template }}
-                                </label>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            </ul>
-            <div class="control">
+                </p>
+            {% endfor %}
+            {% if project_templates %}
+                <p class="panel-block">
                 <button
-                    class="button is-primary is-dark has-text-white"
                     type="submit"
-                >Add {{ directory }}</button>
-            </div>
+                    class="button is-warning is-fullwidth"
+                >
+                        Remove {{ directory }} file.
+                    </button>
+                </p>
+            {% endif %}
         </form>
-    </div>
+    </nav>
+
+    <nav class="column panel mr-5">
+        <form
+            method="POST"
+            action="{{ url_for(
+                "project.project_files_add_submit",
+                project_name=project.machine_name
+            ) }}
+        ">
+            <input type="hidden" name="parents" value="{{ directory }}">
+            <p class="panel-heading">{{ directory|title }} in library</p>
+            {% for template in templates %}
+                <p class="panel-block">
+                    <label class="checkbox">
+                        <input
+                            class="pr-1 directory"
+                            type="checkbox"
+                            name="files"
+                            value="{{ template }}"
+                        /> {{ template }}
+                    </label>
+                </p>
+            {% endfor %}
+            <p class="panel-block">
+                <button type="submit" class="button is-success is-fullwidth">
+                    Add {{ directory }} files.
+                </button>
+            </p>
+        </form>
+    </nav>
+</div>
 {% endblock %}
 
 {% block scripts %}

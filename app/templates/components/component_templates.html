@@ -19,17 +19,16 @@
 
 {% block project_content %}
 <nav class="panel is-pulled-left">
-    <p class="panel-heading">Project {{ directory|title }}</p>
-    {% for template in templates %}
-        <p class="panel-block">{{ template }}</p>
+    <p class="panel-heading">Project Components</p>
+    {% for component in components %}
+        <p class="panel-block">{{ component }}</p>
     {% endfor %}
     <p class="panel-block">
         <a href="{{ url_for(
-            "project.project_files_add_view",
-            project_name=project.machine_name,
-            directory=directory
+            "component.components_add_list_view",
+            project_name=project.machine_name
         ) }}" class="button is-link is-outlined is-fullwidth">
-            Add {{ directory }} templates.
+            Add Components.
         </a>
     </p>
 </nav>
