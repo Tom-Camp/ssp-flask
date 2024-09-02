@@ -41,8 +41,7 @@ class FileManager(BaseModel):
             flash(
                 message=f"{source_path} moved to Project trash", category="is-success"
             )
-        except FileExistsError as e:
-            logger.exception(f"Manager error: {e}")
+        except FileExistsError:
             flash(message=f"Error writing file to {destination}", category="is-danger")
         finally:
             pass

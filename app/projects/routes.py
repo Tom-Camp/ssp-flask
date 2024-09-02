@@ -76,7 +76,7 @@ def project_templates_view(project_name: str, directory: str):
     :param directory: str - the template directory name.
     """
     project_path, project, manager, opencontrol = get_project_data(project_name)
-    allowed_directories = ["appendices", "components", "frontmatter", "tailoring"]
+    allowed_directories = ["appendices", "frontmatter", "tailoring"]
     if not project_path.exists() or directory not in allowed_directories:
         abort(404)
 

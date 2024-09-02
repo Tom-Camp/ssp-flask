@@ -3,11 +3,6 @@ from pathlib import Path, PosixPath
 from app.utils import helpers
 
 
-def test_machine_name():
-    machine_name = helpers.get_machine_name(name="t!e@s#t$ n%a^m&e*")
-    assert machine_name == "test_name"
-
-
 def test_load_yaml():
     filepath = "tests/assets/test.yaml"
     load_yaml = helpers.load_yaml(filepath)

@@ -5,7 +5,7 @@ from app.projects.views import get_project_data
 opencontrol_bp = Blueprint("component", __name__, url_prefix="/project")
 
 
-@opencontrol_bp.route("/<project_name>/components", methods=["GET"])
+@opencontrol_bp.route("/<project_name>/templates/components", methods=["GET"])
 def component_template_list_view(project_name: str):
     """
     Returns a list of Components available to add to a Project.

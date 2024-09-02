@@ -4,6 +4,7 @@ from pathlib import Path
 
 from flask import flash
 
+from app.logging_config import loguru_logger as logger
 from config import config
 
 ROOT_DIR = config.get("ROOT_DIR", Path())
@@ -64,6 +65,7 @@ class Library:
                 message=f"{source.name} copied to {'/'.join(destination.parts[-3:-1])}",
                 category="is-success",
             )
+            logger.info(f"{source.name} copied to {'/'.join(destination.parts[-3:-1])}")
         except FileNotFoundError:
             flash(message=f"{source} was not found.", category="is-danger")
         except PermissionError:
@@ -83,6 +85,7 @@ class Library:
         try:
             shutil.copytree(src=source, dst=destination, dirs_exist_ok=True)
             flash(message=f"{source} copied to {destination}", category="is-success")
+            logger.info(f"Library: {source.name} copied to {destination.as_posix()}.")
         except FileNotFoundError:
             flash(message=f"{source} was not found.", category="is-danger")
         except PermissionError:

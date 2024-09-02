@@ -1,6 +1,7 @@
 import pytest
 
 from app import create_app
+from app.projects.models import Project
 
 
 @pytest.fixture
@@ -8,6 +9,7 @@ def app():
     app = create_app(
         {
             "TESTING": True,
+            "SECRET_KEY": "testing_secret_key",
         }
     )
 
@@ -24,3 +26,12 @@ def client(app):
 @pytest.fixture
 def runner(app):
     return app.test_cli_runner()
+
+
+@pytest.fixture
+def project():
+    project_instance = Project(
+        name="Test Project!",
+        description="This is a test project",
+    )
+    return project_instance
