@@ -12,7 +12,7 @@ from app.projects.routes import project_bp
 def create_app(config_name=None):
     app = Flask(__name__, instance_relative_config=True)
     if config_name:
-        app.config.from_object(config_name)
+        app.config.from_mapping(config_name)
     else:
         app.config.from_object("config.DevelopmentConfig")
 
