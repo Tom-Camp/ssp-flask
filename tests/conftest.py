@@ -12,7 +12,6 @@ def app():
             "SECRET_KEY": "testing_secret_key",
         }
     )
-
     yield app
 
 
@@ -28,10 +27,10 @@ def runner(app):
     return app.test_cli_runner()
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def project():
     project_instance = Project(
-        name="Test Project!",
+        name="Testing Project!",
         description="This is a test project",
     )
-    return project_instance
+    yield project_instance

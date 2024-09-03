@@ -107,19 +107,12 @@ class Metadata(BaseModel):
 class OpenControl(BaseModel):
     schema_version: str = OPENCONTROL_SCHEMA_VERSION
     name: str
-    metadata: Optional[Metadata]
+    metadata: Metadata
     components: List[str] = Field(default=[])
     certifications: List[str] = Field(default=[])
     standards: List[str] = Field(default=[])
 
     _root_dir: str = PrivateAttr()
-
-    # @model_validator(mode="after")
-    # def set_maintainers(cls, model):
-    #     model.metadata = Metadata(
-    #         description="description",
-    #         maintainers=[],
-    #     )
 
     def update(self, project_path: str, key: str, action: str, attribute: str):
         field = getattr(self, key)
@@ -132,10 +125,9 @@ class OpenControl(BaseModel):
 
     def write(self, project_path: str):
         opencontrol_path = (
-            ROOT_DIR.joinpath("project_data")  # type: ignore
-            .joinpath(project_path)
+            ROOT_DIR.joinpath(project_path)  # type: ignore
             .joinpath("opencontrol")
             .with_suffix(".yaml")  # type: ignore
         )
-        with opencontrol_path.open("w+") as oc:
+        with opencontrol_path.open("w") as oc:
             oc.write(rtyaml.dump(self.model_dump()))
