@@ -57,7 +57,7 @@ def component_add_submit(project_name: str):
             )
         if component not in opencontrol.components:
             opencontrol.update(
-                project_path=project_name,
+                project_path=project_path.as_posix(),
                 key="components",
                 action="add",
                 attribute=component,
@@ -77,7 +77,7 @@ def component_remove_submit(project_name: str):
         manager.remove_file(source_path=copy_path)
         if component in opencontrol.components:
             opencontrol.update(
-                project_path=project_name,
+                project_path=project_path.as_posix(),
                 key="components",
                 action="remove",
                 attribute=component,

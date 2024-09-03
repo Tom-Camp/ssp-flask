@@ -124,6 +124,12 @@ def project_files_add_view(project_name: str, directory: str):
 
 @project_bp.route("/<project_name>/file/add", methods=["POST"])
 def project_files_add_submit(project_name: str):
+    """
+    Submit handler for adding template files.
+
+    :param project_name: str - machine_name for the Project.
+    :return: redirect to page that submitted the request
+    """
     project_path, project, manager, opencontrol = get_project_data(project_name)
 
     parents = request.form.get("parents")
@@ -146,6 +152,12 @@ def project_files_add_submit(project_name: str):
 
 @project_bp.route("/<project_name>/file/remove", methods=["POST"])
 def project_files_remove_submit(project_name: str):
+    """
+    Submit handler for removing template files.
+
+    :param project_name: str - machine_name for the Project.
+    :return: redirect to page that submitted the request
+    """
     project_path, project, manager, opencontrol = get_project_data(project_name)
 
     parents = request.form.get("parents")

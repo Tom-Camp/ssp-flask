@@ -5,7 +5,7 @@ from flask import flash
 from pydantic import BaseModel, Field, model_validator
 
 from app.logging_config import loguru_logger as logger
-from app.toolkit.opencontrol import OpenControl
+from app.toolkit.opencontrol import Metadata, OpenControl
 from app.utils.library import Library
 from config import Config
 
@@ -59,10 +59,13 @@ class Project(BaseModel):
             source_path="keys",
             destination_path=self.project_path.joinpath("keys").as_posix(),
         )
-        OpenControl(
-            name=self.name,
+        metadata = Metadata(
             description=self.description,
             maintainers=[],
+        )
+        OpenControl(
+            name=self.name,
+            metadata=metadata,
         ).write(self.project_path.as_posix())
 
     @staticmethod
