@@ -16,6 +16,9 @@
 {% block page_title %}{{ project.name }}{% endblock %}
 
 {% block project_content %}
+    {% if todo %}
+        {% include "project/project_messages.html" %}
+    {% endif %}
     <div class="box">
         <article>
             <p>{{ project.description }}</p>

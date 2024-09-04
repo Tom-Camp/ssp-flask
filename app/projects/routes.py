@@ -4,7 +4,7 @@ from flask import Blueprint, abort, flash, redirect, render_template, request, u
 
 from app.projects.forms import ProjectForm
 from app.projects.models import Project
-from app.projects.views import get_project_data, get_projects, load_project
+from app.projects.views import get_project_data, get_projects
 
 project_bp = Blueprint("project", __name__, url_prefix="/project")
 
@@ -63,8 +63,18 @@ def project_view(project_name: str):
     if not project_path.exists():
         abort(404)
 
-    project = load_project(project_name=project_name)
-    return render_template("project/project_view.html", project=project.model_dump())
+    _, project, _, opencontrol = get_project_data(project_name)
+    todo: list = []
+    for section in ["components", "certifications", "standards"]:
+        if not getattr(opencontrol, section):
+            todo.append(f"Add {section}")
+
+    data: dict = {
+        "project": project,
+        "todo": todo,
+    }
+
+    return render_template("project/project_view.html", **data)
 
 
 @project_bp.route("/<project_name>/templates/<directory>", methods=["GET"])
