@@ -23,14 +23,14 @@ class Library:
                 if file.is_file()
             ]
         except FileNotFoundError:
-            flash(message=f"{directory} was not found.", category="is-danger")
+            flash(message=f"{directory} was not found.", category="error")
         except PermissionError:
             flash(
                 message=f"Permission denied. Cannot read {directory}.",
-                category="is-danger",
+                category="error",
             )
         except Exception as e:
-            flash(message=f"An error occurred: {e}", category="is-danger")
+            flash(message=f"An error occurred: {e}", category="error")
         finally:
             pass
         return files
@@ -44,14 +44,14 @@ class Library:
                 if file.is_dir()
             ]
         except FileNotFoundError:
-            flash(message=f"{directory} was not found.", category="is-danger")
+            flash(message=f"{directory} was not found.", category="error")
         except PermissionError:
             flash(
                 message=f"Permission denied. Cannot read {directory}.",
-                category="is-danger",
+                category="error",
             )
         except Exception as e:
-            flash(message=f"An error occurred: {e}", category="is-danger")
+            flash(message=f"An error occurred: {e}", category="error")
         finally:
             return dirs
 
@@ -63,18 +63,18 @@ class Library:
             shutil.copyfile(src=source, dst=destination)
             flash(
                 message=f"{source.name} copied to {'/'.join(destination.parts[-3:-1])}",
-                category="is-success",
+                category="success",
             )
             logger.info(f"{source.name} copied to {'/'.join(destination.parts[-3:-1])}")
         except FileNotFoundError:
-            flash(message=f"{source} was not found.", category="is-danger")
+            flash(message=f"{source} was not found.", category="error")
         except PermissionError:
             flash(
                 message=f"Permission denied. Cannot copy {source} to {destination}.",
-                category="is-danger",
+                category="error",
             )
         except Exception as e:
-            flash(message=f"An error occurred: {e}", category="is-danger")
+            flash(message=f"An error occurred: {e}", category="error")
         finally:
             return destination.as_posix()
 
@@ -84,16 +84,16 @@ class Library:
 
         try:
             shutil.copytree(src=source, dst=destination, dirs_exist_ok=True)
-            flash(message=f"{source} copied to {destination}", category="is-success")
+            flash(message=f"{source} copied to {destination}", category="success")
             logger.info(f"Library: {source.name} copied to {destination.as_posix()}.")
         except FileNotFoundError:
-            flash(message=f"{source} was not found.", category="is-danger")
+            flash(message=f"{source} was not found.", category="error")
         except PermissionError:
             flash(
                 message=f"Permission denied. Cannot copy {source} to {destination}.",
-                category="is-danger",
+                category="error",
             )
         except Exception as e:
-            flash(message=f"An error occurred: {e}", category="is-danger")
+            flash(message=f"An error occurred: {e}", category="error")
         finally:
             return destination.as_posix()

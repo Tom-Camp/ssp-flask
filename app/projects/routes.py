@@ -24,7 +24,7 @@ def project_list_view():
                 f"There are no projects in the /project_data directory.<br>"
                 f'<a href="{project_create_url}">Click here to a new Project</a>.'
             ),
-            category="is-info",
+            category="info",
         )
     return render_template("project/project_list_view.html", projects=projects)
 

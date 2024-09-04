@@ -41,11 +41,11 @@ class Project(BaseModel):
             self.add_base()
             logger.info(f"Project: Project {self.name} created.")
         except FileExistsError:
-            flash(message=f"Project {self.name} already exists.", category="is-danger")
+            flash(message=f"Project {self.name} already exists.", category="error")
         finally:
             flash(
                 message=f"Project created at {self.project_path.as_posix()}",
-                category="is-success",
+                category="success",
             )
 
     def add_base(self):
