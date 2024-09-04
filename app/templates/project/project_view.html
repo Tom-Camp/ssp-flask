@@ -3,17 +3,19 @@
 {% block title %}{{ project.name }}{% endblock %}
 
 {% block breadcrumbs %}
-<ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="{{ url_for("project.project_list_view") }}">Projects</a></li>
-    <li class="is-active"><a href="#" aria-current="page">{{ project.name }}</a></li>
-</ul>
+<ol class="usa-breadcrumb__list">
+    <li class="usa-breadcrumb__list-item">
+        <a href="/"><span>Home</span></a>
+    </li>
+    <li class="usa-breadcrumb__list-item usa-current" aria-current="page">
+        <span>{{ project.name }}</span>
+    </li>
+</ol>
 {% endblock %}
 
 {% block page_title %}{{ project.name }}{% endblock %}
 
 {% block project_content %}
-<div class="content">
     <div class="box">
         <article>
             <p>{{ project.description }}</p>
@@ -43,5 +45,4 @@ project_data
         └── tailoring
 </pre>
     </div>
-</div>
 {% endblock %}

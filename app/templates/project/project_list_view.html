@@ -3,38 +3,39 @@
 {% block title %}Projects{% endblock %}
 
 {% block breadcrumbs %}
-<ul>
-    <li><a href="/">Home</a></li>
-    <li class="is-active"><a href="#" aria-current="page">Projects</a></li>
-</ul>
+<ol class="usa-breadcrumb__list">
+    <li class="usa-breadcrumb__list-item">
+        <a href="/"><span>Home</span></a>
+    </li>
+    <li  class="usa-breadcrumb__list-item usa-current" aria-current="page">
+        <span>Projects</span>
+    </li>
+</ol>
 {% endblock %}
 
 {% block page_title %}Projects{% endblock %}
 
 {% block content %}
-    <div class="fixed-grid has-3-cols">
-        <div class="grid">
+    <div class="grid-row grid-gap">
+        <ul class="usa-card-group">
             {% for project in projects %}
-                <div class="card cell">
-                    <header class="card-header">
-                        <p class="card-header-title">{{ project.name }}</p>
-                        <button class="card-header-icon" aria-label="more options">
-                            <span class="icon">
-                                <i class="fas fa-angle-down" aria-hidden="true"></i>
-                            </span>
-                        </button>
-                    </header>
-                    <div class="card-content">
-                        <div class="content">{{ project.description }}</div>
+                <li class="usa-card grid-col-4 tablet:grid-col-6 mobile-lg:grid-col-12">
+                    <div class="usa-card__container">
+                        <div class="usa-card__header">
+                            <h4 class="usa-card__heading">{{ project.name }}</h4>
+                        </div>
+                        <div class="usa-card__body">
+                            <p>{{ project.description }}</p>
+                        </div>
+                        <div class="usa-card__footer">
+                            <a class="usa-button" href="{{ url_for(
+                                "project.project_view",
+                                project_name=project.machine_name
+                            ) }}">View project</a>
+                        </div>
                     </div>
-                    <footer class="card-footer">
-                        <a class="card-footer-item" href="{{ url_for(
-                            "project.project_view",
-                            project_name=project.machine_name
-                        ) }}">View project</a>
-                    </footer>
-                </div>
+                </li>
             {% endfor %}
-        </div>
+        </ul>
     </div>
 {% endblock %}

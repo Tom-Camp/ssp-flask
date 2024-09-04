@@ -1,0 +1,17 @@
+/* Error: Undefined variable.
+ *    ,
+ * 10 | @if $utilities-use-important {
+ *    |     ^^^^^^^^^^^^^^^^^^^^^^^^
+ *    '
+ *   utility-fonts.scss 10:5  root stylesheet */
+
+body::before {
+  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
+      "Droid Sans Mono", monospace, monospace;
+  white-space: pre;
+  display: block;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-bottom: 2px solid black;
+  content: "Error: Undefined variable.\a    \2577 \a 10 \2502  @if $utilities-use-important {\a    \2502      ^^^^^^^^^^^^^^^^^^^^^^^^\a    \2575 \a   utility-fonts.scss 10:5  root stylesheet";
+}

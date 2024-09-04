@@ -3,33 +3,73 @@
 {% block title %}{{ project.name }}{% endblock %}
 
 {% block breadcrumbs %}
-<ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="{{ url_for("project.project_list_view") }}">Projects</a></li>
-    <li>
+<ol class="usa-breadcrumb__list">
+    <li class="usa-breadcrumb__list-item">
+        <a href="/">Home</a>
+    </li>
+    <li class="usa-breadcrumb__list-item">
         <a href="{{ url_for("project.project_view", project_name=project.machine_name) }}">
             {{ project.name }}
         </a>
     </li>
-    <li class="is-active"><a href="#" aria-current="page">Templates</a></li>
-</ul>
+    <li class="usa-breadcrumb__list-item">
+        <span>Component templates</span>
+    </li>
+</ol>
 {% endblock %}
 
 {% block page_title %}{{ project.name }}{% endblock %}
 
 {% block project_content %}
-<nav class="panel is-pulled-left">
-    <p class="panel-heading">Project Components</p>
-    {% for component in components %}
-        <p class="panel-block">{{ component }}</p>
-    {% endfor %}
-    <p class="panel-block">
-        <a href="{{ url_for(
-            "component.components_add_list_view",
-            project_name=project.machine_name
-        ) }}" class="button is-link is-outlined is-fullwidth">
-            Add Components.
-        </a>
-    </p>
-</nav>
+    {% if components %}
+        <table class="usa-table usa-table--striped">
+            <caption>Component templates in project</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Component template</th>
+                    <th scope="col">Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for component in components %}
+                    <tr>
+                        <th scope="row">{{ component }}</th>
+                        <td>Edit</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div
+          class="usa-summary-box"
+          role="region"
+          aria-labelledby="summary-box-key-information"
+        >
+            <div class="usa-summary-box__body">
+                <h4 class="usa-summary-box__heading" id="summary-box-key-information">
+                    No components
+                </h4>
+                <div class="usa-summary-box__text">
+                    <ul class="usa-list">
+                        <li>
+                            No components have been added to your project.
+                            <a class="usa-summary-box__link" href="{{ url_for(
+                                    "component.components_add_list_view",
+                                    project_name=project.machine_name
+                                ) }}"
+                            >
+                                Click here
+                            </a> to add one.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <a href="{{ url_for(
+        "component.components_add_list_view",
+        project_name=project.machine_name
+    ) }}" class="usa-button margin-top-2">
+        Add/remove Component templates.
+    </a>
 {% endblock %}

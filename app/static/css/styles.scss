@@ -1,73 +1,14 @@
-.flashes {
-  article {
-    color: #ffffff;
-    padding: .2em .5em;
-    &.error {
-      background-color: hsl(347, 90%, 96%);
-    }
-    &.warn {
-      background-color: hsl(48, 100%, 96%);
-    }
-    &.success {
-      background-color: hsl(142, 52%, 96%);
-    }
-  }
-}
-
-input {
-  &.add-another {
-    color: #000000;
-    width: auto;
-    height: auto;
-    margin: .5em;
-    padding: .1em .3em;
-    background-color: hsl(0, 0%, 96%);
-    float: right;
-  }
-}
-
-#error404 {
+.usa-logo {
   img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 40%;
-  }
-}
-
-.tab-content {
-  display: none;
-  &.is-active {
-    display: block;
-  }
-}
-
-.centered-message {
-    width: 70%;
-    margin: 0 auto;
-}
-
-.code {
-  background-color: hsl(0, 0%, 96%);
-  padding: .3em;
-}
-
-.keys {
-  .key {
-    color: hsl(217, 71%, 53%);
-  }
-  .val {
-    color: hsl(141, 71%, 48%);
-  }
-}
-
-ul {
-  &.no-bullets {
-    list-style-type: none;
-    li {
-      ul {
-        list-style-type: none;
-      }
+    &.logo {
+      max-width: 75%;
     }
+  }
+}
+
+img {
+  &.footer-logo {
+    max-width: 150px;
+    align-content: center;
   }
 }

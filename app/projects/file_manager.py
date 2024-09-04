@@ -38,10 +38,8 @@ class FileManager(BaseModel):
         try:
             _ = source.replace(destination)
             logger.info(f"Manager action: Resource {source.name} moved to trash")
-            flash(
-                message=f"{source_path} moved to Project trash", category="is-success"
-            )
+            flash(message=f"{source_path} moved to Project trash", category="success")
         except FileExistsError:
-            flash(message=f"Error writing file to {destination}", category="is-danger")
+            flash(message=f"Error writing file to {destination}", category="error")
         finally:
             pass

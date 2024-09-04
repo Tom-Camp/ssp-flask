@@ -4,37 +4,39 @@
     {% block head %}
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/bulma.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='uswds/css/uswds.min.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
         <title>SSP Toolkit | {% block title %}{% endblock %}</title>
     {% endblock %}
     </head>
     <body>
-        <header class="bd-header">{% include "nav.html" %}</header>
-        <main>
-            <nav class="breadcrumb is-centered px-4 my-2" aria-label="breadcrumbs">
-                {% block breadcrumbs %} {% endblock %}
-            </nav>
-            <section class="px-4">
-                <h1 class="title is-3 mb-3 px-5">{% block page_title %} {% endblock %}</h1>
+        {% include "sprites.html" %}
+        <header class="usa-header usa-header--basic">
+            {% include "nav.html" %}
+        </header>
+        <main class="usa-layout-docs">
+            <div class="grid-container">
+                <nav class="usa-breadcrumb" aria-label="Breadcrumbs,,">
+                    {% block breadcrumbs %} {% endblock %}
+                </nav>
+                <h1>{% block page_title %} {% endblock %}</h1>
                 {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
-                        <div class="level mb-1">
-                            <article class="message {{ category }} level-item">
-                                <div class="message-body centered-message">{{ message|safe }}</div>
-                            </article>
+                        <div class="usa-alert usa-alert--{{ category }} margin-bottom-2">
+                            <div class="usa-alert__body">
+                                <p class="usa-alert__text">{{ message|safe }}</p>
+                            </div>
                         </div>
                     {% endfor %}
                 {% endif %}
                 {% endwith %}
-            </section>
-            <section class="px-4 is-fullheight">
                 {% block content %} {% endblock %}
-            </section>
+            </div>
         </main>
-        <footer class="footer mt-4">{% include "footer.html" %}</footer>
+        <footer class="usa-footer usa-footer--slim">{% include "footer.html" %}</footer>
         {% block scripts %} {% endblock %}
+        <script src="{{ url_for('static', filename='uswds/js/uswds.min.js') }}"></script>
     </body>
 </html>

@@ -3,34 +3,78 @@
 {% block title %}{{ project.name }}{% endblock %}
 
 {% block breadcrumbs %}
-<ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="{{ url_for("project.project_list_view") }}">Projects</a></li>
-    <li>
-        <a href="{{ url_for("project.project_view", project_name=project.machine_name) }}">
-            {{ project.name }}
+<ol class="usa-breadcrumb__list">
+    <li class="usa-breadcrumb__list-item">
+        <a href="/"><span>Home</span></a>
+    </li>
+    <li class="usa-breadcrumb__list-item">
+        <a href="{{ url_for(
+            "project.project_view",
+            project_name=machine_name
+        ) }}">
+            <span>{{ project.name }}</span>
         </a>
     </li>
-    <li class="is-active"><a href="#" aria-current="page">Templates</a></li>
-</ul>
+    <li  class="usa-breadcrumb__list-item usa-current" aria-current="page">
+        <span>{{ directory|title }} templates</span>
+    </li>
+</ol>
 {% endblock %}
 
 {% block page_title %}{{ project.name }}{% endblock %}
 
 {% block project_content %}
-<nav class="panel is-pulled-left">
-    <p class="panel-heading">Project {{ directory|title }}</p>
-    {% for template in templates %}
-        <p class="panel-block">{{ template }}</p>
-    {% endfor %}
-    <p class="panel-block">
-        <a href="{{ url_for(
-            "project.project_files_add_view",
-            project_name=project.machine_name,
-            directory=directory
-        ) }}" class="button is-link is-outlined is-fullwidth">
-            Add {{ directory }} templates.
-        </a>
-    </p>
-</nav>
+    {% if templates %}
+        <table class="usa-table usa-table--striped">
+            <caption>{{ directory|title }} templates in project</caption>
+            <thead>
+                <tr>
+                    <th scope="col">{{ directory|title }} template</th>
+                    <th scope="col">Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for template in templates %}
+                    <tr>
+                        <th scope="row">{{ template }}</th>
+                        <td>Edit</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div
+          class="usa-summary-box"
+          role="region"
+          aria-labelledby="summary-box-key-information"
+        >
+            <div class="usa-summary-box__body">
+                <h4 class="usa-summary-box__heading" id="summary-box-key-information">
+                    No {{ directory }} files
+                </h4>
+                <div class="usa-summary-box__text">
+                    <ul class="usa-list">
+                        <li>
+                            No {{ directory }} files have been added to your project.
+                            <a class="usa-summary-box__link" href="{{ url_for(
+                                    "project.project_files_add_view",
+                                    project_name=project.machine_name,
+                                    directory=directory
+                                ) }}"
+                            >
+                                Click here
+                            </a> to add one.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <a href="{{ url_for(
+        "project.project_files_add_view",
+        project_name=project.machine_name,
+        directory=directory
+    ) }}" class="usa-button margin-top-2">
+        Add/remove {{ directory }} templates.
+    </a>
 {% endblock %}
