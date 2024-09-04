@@ -11,6 +11,7 @@
     {% endblock %}
     </head>
     <body>
+        {% include "sprites.html" %}
         <header class="usa-header usa-header--basic">
             {% include "nav.html" %}
         </header>
@@ -34,7 +35,7 @@
                 {% block content %} {% endblock %}
             </div>
         </main>
-        <footer class="usa-footer">{% include "footer.html" %}</footer>
+        <footer class="usa-footer usa-footer--slim">{% include "footer.html" %}</footer>
         {% block scripts %} {% endblock %}
         <script src="{{ url_for('static', filename='uswds/js/uswds.min.js') }}"></script>
     </body>

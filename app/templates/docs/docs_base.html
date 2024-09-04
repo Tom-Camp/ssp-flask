@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="grid-row grid-gap">
+        <div class="display-none desktop:display-block desktop:grid-col-3">
+            {% include "docs/menu.html" %}
+        </div>
+        <main class="desktop:grid-col-9 usa-prose" id="main-content">
+            {% block doc_content %}{% endblock %}
+        </main>
+    </div>
+{% endblock %}
+
+{% block scripts %} {% endblock %}

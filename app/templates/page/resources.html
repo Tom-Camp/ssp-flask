@@ -1,29 +1,36 @@
-{% extends 'base.html' %}
+{% extends 'docs/docs_base.html' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Resources{% endblock %}
 
-{% block page_title %}SSP Toolkit{% endblock %}
+{% block breadcrumbs %}
+<ol class="usa-breadcrumb__list">
+    <li class="usa-breadcrumb__list-item">
+        <a href="/"><span>Home</span></a>
+    </li>
+    <li  class="usa-breadcrumb__list-item usa-current" aria-current="page">
+        <span>Resources</span>
+    </li>
+</ol>
+{% endblock %}
 
-{% block content %}
-    <div class="content px-6 mx-6">
-        {% for resource in content %}
-            <div class="card">
-                <header class="card-header">
-                    <p class="card-header-title is-size-5">
-                        {{ resource.title|safe }}
-                    </p>
-                </header>
-                <div class="card-content">
-                    <div class="content">
-                        <p class="is-size-6">
-                            <a href="{{ resource.url }}" target="_blank" rel="noopener noreferrer">
-                                {{ resource.subtitle }}
+{% block page_title %}Resources{% endblock %}
+
+{% block doc_content %}
+        <ul class="usa-collection">
+            {% for resource in content %}
+                <li class="usa-collection__item">
+                    <div class="usa-collection__body">
+                        <h4 class="usa-collection__heading">
+                            <a class="usa-link" href="{{ resource.url }}">
+                                {{ resource.title|safe }}
+                                <svg class="usa-icon" aria-hidden="true" role="img">
+                                    <use xlink:href="#usa-icon-external-link"></use>
+                                </svg>
                             </a>
-                        </p>
-                        <p>{{ resource.description }}</p>
+                        </h4>
+                        <p class="usa-collection__description">{{ resource.description }}</p>
                     </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+                </li>
+            {% endfor %}
+        </ul>
 {% endblock %}
