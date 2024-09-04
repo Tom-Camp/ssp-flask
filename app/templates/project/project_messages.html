@@ -1,0 +1,16 @@
+
+<section
+  class="usa-site-alert usa-site-alert--emergency"
+  aria-label="Site alert,,,"
+>
+    <div class="usa-alert">
+        <div class="usa-alert__body">
+            <h4 class="usa-alert__heading">The following items need to be completed:</h4>
+            <ul class="usa-list">
+                {% for item in todo %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>
