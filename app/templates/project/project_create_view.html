@@ -3,11 +3,16 @@
 {% block title %}Creat Project{% endblock %}
 
 {% block breadcrumbs %}
-<ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="{{ url_for("project.project_list_view") }}">Projects</a></li>
-    <li class="is-active"><a href="#" aria-current="page">Create Project</a></li>
-</ul>
+<ol class="usa-breadcrumb__list">
+    <li class="usa-breadcrumb__list-item">
+        <a href="/"><span>Home</span></a>
+    </li>
+    <li class="usa-breadcrumb__list-item">
+        <a href="{{ url_for("project.project_list_view") }}"><span>Projects></span></a></li>
+    <li  class="usa-breadcrumb__list-item usa-current" aria-current="page">
+        <span>Create Project</span>
+    </li>
+</ol>
 {% endblock %}
 
 {% block page_title %}Create Project{% endblock %}
@@ -16,43 +21,37 @@
     <div class="box mx-6">
         <form method="POST">
             {{ form.csrf_token }}
-            <div class="field">
-                <label class="label" for="{{ form.name.id }}">Name</label>
-                <div class="control">
-                    <input type="text"
-                        class="input"
-                        id="{{ form.name.id }}"
-                        name="{{ form.name.name }}"
-                        value="{{ form.name.data if form.name.data else '' }}"
-                        aria-invalid="{{ 'true' if form.name.errors else 'false' }}"
-                        aria-describedby="{{ 'invalid-name' if form.name.errors else 'valid-name' }}"
-                    >
-                    {% if form.name.errors %}
-                        {% for error in form.name.errors %}
-                            <p class="help is-danger">{{ error }}</p>
-                        {% endfor %}
-                    {% endif %}
-                </div>
+            <div class="usa-form-group usa-form-group{% if form.name.errors %}--error{% endif %}">
+                <label class="usa-label" for="{{ form.name.id }}">Name</label>
+                {% if form.name.errors %}
+                    {% for error in form.name.errors %}
+                        <span class="usa-error-message" id="name-error-message" role="alert">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+                <input type="text"
+                    class="usa-input"
+                    id="{{ form.name.id }}"
+                    name="{{ form.name.name }}"
+                    value="{{ form.name.data if form.name.data else '' }}"
+                    aria-invalid="{{ 'true' if form.name.errors else 'false' }}"
+                    aria-describedby="{{ 'invalid-name' if form.name.errors else 'valid-name' }}"
+                >
             </div>
-            <div class="field">
-                <label class="label" for="{{ form.description.id }}">Description</label>
-                <div class="control">
-                    <textarea
-                        id="{{ form.description.id }}"
-                        name="{{ form.description.name }}"
-                        class="textarea"
-                        placeholder="Description"
-                    ></textarea>
-                    {% if form.description.errors %}
-                        {% for error in form.description.errors %}
-                            <p class="help is-danger">{{ error }}</p>
-                        {% endfor %}
-                    {% endif %}
-                </div>
+            <div class="usa-form-group usa-form-group{% if form.description.errors %}--error{% endif %}">
+                <label class="usa-label" for="{{ form.description.id }}">Description</label>
+                {% if form.description.errors %}
+                    {% for error in form.description.errors %}
+                        <span class="usa-error-message" id="name-error-message" role="alert">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+                <textarea
+                    id="{{ form.description.id }}"
+                    name="{{ form.description.name }}"
+                    class="usa-textarea"
+                    placeholder="Description"
+                ></textarea>
             </div>
-            <div class="control">
-                <input class="button is-link" type="submit" value="Create">
-            </div>
+            <button class="usa-button margin-top-2" type="submit" value="Create">Create</button>
         </form>
     </div>
 {% endblock %}

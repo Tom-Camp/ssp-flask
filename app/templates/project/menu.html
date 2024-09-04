@@ -1,43 +1,44 @@
-<p class="menu-label">Project Files</p>
-<ul class="menu-list">
-    <li>
-        <a>Templates</a>
-        <ul class="menu-list">
-            <li>
-                <a href="{{ url_for(
-                    "project.project_templates_view",
-                    project_name=project.machine_name,
-                    directory="appendices"
-                ) }}">
-                    Appendices
-                </a>
-            </li>
-            <li>
-                <a href="{{ url_for(
-                    "component.component_template_list_view",
-                    project_name=project.machine_name
-                ) }}">
-                    Components
-                </a>
-            </li>
-            <li>
-                <a href="{{ url_for(
-                    "project.project_templates_view",
-                    project_name=project.machine_name,
-                    directory="frontmatter"
-                ) }}">
-                    Frontmatter
-                </a>
-            </li>
-            <li>
-                <a href="{{ url_for(
-                    "project.project_templates_view",
-                    project_name=project.machine_name,
-                    directory="tailoring"
-                ) }}">
-                    Tailoring
-                </a>
-            </li>
-        </ul>
-    </li>
-</ul>
+<nav aria-label="Secondary navigation">
+    <ul class="usa-sidenav">
+        <li class="usa-sidenav__item">
+            <a href="javascript:void(0);"><span>Templates</span></a>
+            <ul class="usa-sidenav__sublist">
+                <li class="usa-sidenav__item">
+                    <a href="{{ url_for(
+                        "project.project_templates_view",
+                        project_name=project.machine_name,
+                        directory="appendices"
+                    ) }}">
+                        Appendices
+                    </a>
+                </li>
+                <li class="usa-sidenav__item">
+                    <a href="{{ url_for(
+                        "component.component_template_list_view",
+                        project_name=project.machine_name
+                    ) }}">
+                        Components
+                    </a>
+                </li>
+                <li class="usa-sidenav__item">
+                    <a href="{{ url_for(
+                        "project.project_templates_view",
+                        project_name=project.machine_name,
+                        directory="frontmatter"
+                    ) }}">
+                        Frontmatter
+                    </a>
+                </li>
+                <li class="usa-sidenav__item">
+                    <a href="{{ url_for(
+                        "project.project_templates_view",
+                        project_name=project.machine_name,
+                        directory="tailoring"
+                    ) }}">
+                        Tailoring
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>

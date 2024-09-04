@@ -3,99 +3,125 @@
 {% block title %}{{ project.name }}{% endblock %}
 
 {% block breadcrumbs %}
-<ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="{{ url_for("project.project_list_view") }}">Projects</a></li>
-    <li>
+<ol class="usa-breadcrumb__list">
+    <li class="usa-breadcrumb__list-item">
+        <a href="/"><span>Home</span></a>
+    </li>
+    <li class="usa-breadcrumb__list-item">
         <a href="{{ url_for(
             "project.project_view",
             project_name=machine_name
         ) }}">
-            {{ project.name }}
+            <span>{{ project.name }}</span>
         </a>
     </li>
-    <li>
+    <li class="usa-breadcrumb__list-item">
         <a href="{{ url_for(
             "project.project_templates_view",
             project_name=project.machine_name,
             directory=directory
         ) }}">
-            Templates
+            <span>Templates</span>
         </a>
     </li>
-    <li class="is-active"><a href="#" aria-current="page">Add {{ directory|title }}</a></li>
-</ul>
+    <li  class="usa-breadcrumb__list-item usa-current" aria-current="page">
+        <span>Add {{ directory|title }}</span>
+    </li>
+</ol>
 {% endblock %}
 
 {% block page_title %}{{ project.name }}{% endblock %}
 
 {% block project_content %}
-<div class="columns">
-    <nav class="column panel mr-5">
-        <form
-            method="POST"
-            action="{{ url_for(
-                "project.project_files_remove_submit",
-                project_name=project.machine_name
-            ) }}
-        ">
-            <input type="hidden" name="parents" value="{{ directory }}">
-            <p class="panel-heading">{{ directory|title }} in {{ project.name }}</p>
-            {% for project_template in project_templates %}
-                <p class="panel-block">
-                    <label class="checkbox">
-                        <input
-                            class="pr-1 directory"
-                            type="checkbox"
-                            name="files"
-                            value="{{ project_template }}"
-                        /> {{ project_template }}
-                    </label>
-                </p>
-            {% endfor %}
-            {% if project_templates %}
-                <p class="panel-block">
-                <button
-                    type="submit"
-                    class="button is-warning is-fullwidth"
-                >
-                        Remove {{ directory }} file.
-                    </button>
-                </p>
-            {% endif %}
-        </form>
-    </nav>
-
-    <nav class="column panel mr-5">
-        <form
-            method="POST"
-            action="{{ url_for(
-                "project.project_files_add_submit",
-                project_name=project.machine_name
-            ) }}
-        ">
-            <input type="hidden" name="parents" value="{{ directory }}">
-            <p class="panel-heading">{{ directory|title }} in library</p>
-            {% for template in templates %}
-                <p class="panel-block">
-                    <label class="checkbox">
-                        <input
-                            class="pr-1 directory"
-                            type="checkbox"
-                            name="files"
-                            value="{{ template }}"
-                        /> {{ template }}
-                    </label>
-                </p>
-            {% endfor %}
-            <p class="panel-block">
-                <button type="submit" class="button is-success is-fullwidth">
-                    Add {{ directory }} files.
-                </button>
-            </p>
-        </form>
-    </nav>
-</div>
+    <div class="grid-row grid-gap">
+        <ul class="usa-card-group">
+            <li class="usa-card grid-col-4 tablet:grid-col-6 mobile-lg:grid-col-12">
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        "project.project_files_remove_submit",
+                        project_name=project.machine_name
+                    ) }}
+                ">
+                    <div class="usa-card__container">
+                        <div class="usa-card__header">
+                            <h4 class="usa-card__heading">{{ directory|title }} in {{ project.name }}</h4>
+                        </div>
+                        <div class="usa-card__body">
+                            <input type="hidden" name="parents" value="{{ directory }}">
+                            {% for project_template in project_templates %}
+                                <div class="usa-checkbox">
+                                    <input
+                                        class="usa-checkbox__input usa-checkbox__input--tile"
+                                        id="file-{{ project_template }}"
+                                        type="checkbox"
+                                        name="files"
+                                        value="{{ project_template }}"
+                                    />
+                                    <label
+                                        class="usa-checkbox__label"
+                                        for="file-{{ project_template }}"
+                                    >
+                                        {{ project_template }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="usa-card__footer">
+                            {% if project_templates %}
+                                <button
+                                    class="usa-button usa-button--accent-warm width-full"
+                                    type="submit"
+                                >
+                                    Remove {{ directory }} file.
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </form>
+            </li>
+            <li class="usa-card grid-col-4 tablet:grid-col-6 mobile-lg:grid-col-12">
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        "project.project_files_add_submit",
+                        project_name=project.machine_name
+                    ) }}
+                ">
+                    <div class="usa-card__container">
+                        <div class="usa-card__header">
+                            <h4 class="usa-card__heading">{{ directory|title }} in library</h4>
+                        </div>
+                        <div class="usa-card__body">
+                            <input type="hidden" name="parents" value="{{ directory }}">
+                            {% for template in templates %}
+                                <div class="usa-checkbox">
+                                    <input
+                                        class="usa-checkbox__input usa-checkbox__input--tile"
+                                        id="file-{{ template }}"
+                                        type="checkbox"
+                                        name="files"
+                                        value="{{ template }}"
+                                    />
+                                    <label
+                                        class="usa-checkbox__label"
+                                        for="file-{{ template }}"
+                                    >
+                                        {{ template }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="usa-card__footer">
+                            <button class="usa-button width-full" type="submit">
+                                Add {{ directory }} files.
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </li>
+        </ul>
+    </div>
 {% endblock %}
 
 {% block scripts %}

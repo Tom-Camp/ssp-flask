@@ -1,14 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="columns">
-        <aside class="column is-2 mt-4 ml-2 p-1 menu">
+    <div class="grid-row grid-gap">
+        <div class="display-none desktop:display-block desktop:grid-col-3">
             {% include "project/menu.html" %}
-        </aside>
-
-        <div class="column is-10">
-            {% block project_content %}{% endblock %}
         </div>
+        <main class="desktop:grid-col-9 usa-prose" id="main-content">
+            {% block project_content %}{% endblock %}
+        </main>
     </div>
 {% endblock %}
 
