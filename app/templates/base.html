@@ -19,12 +19,14 @@
                 <nav class="usa-breadcrumb" aria-label="Breadcrumbs,,">
                     {% block breadcrumbs %} {% endblock %}
                 </nav>
-                <h1 class="title is-3 mb-3 px-5">{% block page_title %} {% endblock %}</h1>
+                <h1>{% block page_title %} {% endblock %}</h1>
                 {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
-                        <div class="usa-alert usa-alert--{{ category }}">
-                            <p class="usa-alert__text">{{ message|safe }}</p>
+                        <div class="usa-alert usa-alert--{{ category }} margin-bottom-2">
+                            <div class="usa-alert__body">
+                                <p class="usa-alert__text">{{ message|safe }}</p>
+                            </div>
                         </div>
                     {% endfor %}
                 {% endif %}
