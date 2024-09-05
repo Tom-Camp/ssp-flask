@@ -19,23 +19,20 @@
     {% if todo %}
         {% include "project/project_messages.html" %}
     {% endif %}
-    <div class="box">
-        <article>
-            <p>{{ project.description }}</p>
-        </article>
+    <p class="usa-prose">{{ project.description }}</p>
 
-        <article>
-            <p>
-                <b>Name:</b> {{ project.name }}<br>
-                <b>File repository:</b> /project_data/{{ project.machine_name }}
-            </p>
-        </article>
-
+    <article>
         <p>
-            Templates are rendered into either markdown or YAML files. The files are written
-            to the <span class="code">/rendered/</span> directory. The rendered directory is
-            structured in the format below.
+            <b>Name:</b> {{ project.name }}<br>
+            <b>File repository:</b> /project_data/{{ project.machine_name }}
         </p>
+    </article>
+
+    <p class="usa-prose">
+        Templates are rendered into either markdown or YAML files. The files are written
+        to the <span class="code">/rendered/</span> directory. The rendered directory is
+        structured in the format below.
+    </p>
 <pre>
 project_data
 └── {{ project.machine_name }}

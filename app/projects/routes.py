@@ -67,7 +67,15 @@ def project_view(project_name: str):
     todo: list = []
     for section in ["components", "certifications", "standards"]:
         if not getattr(opencontrol, section):
-            todo.append(f"Add {section}")
+            if section == "components":
+                url: str = url_for(
+                    "component.components_add_list_view", project_name=project_name
+                )
+            else:
+                url = "#"
+            todo.append(
+                f"<a class='text-white' href='{url}'>Click here to add {section}</a>"
+            )
 
     data: dict = {
         "project": project,

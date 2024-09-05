@@ -1,6 +1,14 @@
 <nav aria-label="Secondary navigation">
     <ul class="usa-sidenav">
         <li class="usa-sidenav__item">
+            <a href="{{ url_for(
+                "project.project_view",
+                project_name=project.machine_name
+            ) }}">
+                <span>Project home</span>
+            </a>
+        </li>
+        <li class="usa-sidenav__item">
             <a href="javascript:void(0);"><span>Templates</span></a>
             <ul class="usa-sidenav__sublist">
                 <li class="usa-sidenav__item">

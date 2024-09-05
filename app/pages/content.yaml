@@ -9,7 +9,7 @@ index: >2
   in the project_data directory. Any directory in the project_directory that
   includes a project.yaml file will be accessible in the Toolkit.</p>
 resources:
-  - url: href="https://csrc.nist.gov/pubs/sp/800/160/v1/r1/final
+  - url: https://csrc.nist.gov/pubs/sp/800/160/v1/r1/final
     title: Engineering Trustworthy Secure Systems
     subtitle: NIST SP 800-160 Vol. 1 Rev. 1
     description: >
