@@ -5720,7 +5720,7 @@ module.exports = {
   //
   // * It pre-empted mobile browsers' default behavior of detecting
   //   whether a touch turned into a scroll, thereby preventing
-  //   users from using some of our components as scroll surfaces.
+  //   users from using some of our opencontrol as scroll surfaces.
   //
   // * Some devices, such as the Microsoft Surface Pro, support *both*
   //   touch and clicks. This meant the conditional effectively dropped
@@ -5944,7 +5944,7 @@ window.uswdsPresent = true; // GLOBAL variable to indicate that the uswds.js has
  */
 require("./polyfills");
 const uswds = require("./config");
-const components = require("./components");
+const components = require("./opencontrol");
 const svg4everybody = require("./polyfills/svg4everybody");
 uswds.components = components;
 domready(() => {

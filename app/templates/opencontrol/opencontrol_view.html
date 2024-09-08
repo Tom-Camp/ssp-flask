@@ -1,0 +1,20 @@
+{% extends "project/project_base.html" %}
+
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="usa-breadcrumb__list">
+    <li class="usa-breadcrumb__list-item">
+        <a href="/"><span>Home</span></a>
+    </li>
+    <li class="usa-breadcrumb__list-item usa-current" aria-current="page">
+        <span>OpenControl</span>
+    </li>
+</ol>
+{% endblock %}
+
+{% block page_title %}{{ project.name }}{% endblock %}
+
+{% block project_content %}
+{{ opencontrol }}
+{% endblock %}

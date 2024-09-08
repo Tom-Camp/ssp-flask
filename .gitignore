@@ -162,7 +162,7 @@ cython_debug/
 #.idea/
 
 
-project_data/*
+project_data
 
 # USWDS
 node_modules

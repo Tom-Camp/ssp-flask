@@ -39,40 +39,41 @@
                 <form
                     method="POST"
                     action="{{ url_for(
-                        "component.component_remove_submit",
+                        "opencontrol.opencontrol_remove_submit",
                         project_name=project.machine_name
                     ) }}
                 ">
+                    <input type="hidden" name="key" value="{{ key }}">
                     <div class="usa-card__container">
                         <div class="usa-card__header">
-                            <h4 class="usa-card__heading">Components in {{ project.name }}</h4>
+                            <h4 class="usa-card__heading">{{ key|title }} in {{ project.name }}</h4>
                         </div>
                         <div class="usa-card__body">
-                            {% for project_component in project_components %}
+                            {% for file in project_files %}
                                 <div class="usa-checkbox">
                                     <input
                                         class="usa-checkbox__input usa-checkbox__input--tile"
-                                        id="file-{{ project_component }}"
+                                        id="file-{{ file }}"
                                         type="checkbox"
                                         name="files"
-                                        value="{{ project_component }}"
+                                        value="{{ file }}"
                                     />
                                     <label
                                         class="usa-checkbox__label"
-                                        for="file-{{ project_component }}"
+                                        for="file-{{ file }}"
                                     >
-                                        {{ project_component }}
+                                        {{ file }}
                                     </label>
                                 </div>
                             {% endfor %}
                         </div>
                         <div class="usa-card__footer">
-                            {% if project_components %}
+                            {% if project_files %}
                                 <button
                                     class="usa-button usa-button--accent-warm width-full"
                                     type="submit"
                                 >
-                                    Remove component template.
+                                    Remove {{ key|title }} template.
                                 </button>
                             {% endif %}
                         </div>
@@ -83,35 +84,37 @@
                 <form
                     method="POST"
                     action="{{ url_for(
-                        "component.component_add_submit",
+                        "opencontrol.opencontrol_add_submit",
                         project_name=project.machine_name
                     ) }}
-                "> <div class="usa-card__container">
+                ">
+                    <input type="hidden" name="key" value="{{ key }}">
+                    <div class="usa-card__container">
                         <div class="usa-card__header">
-                            <h4 class="usa-card__heading">Components in library</h4>
+                            <h4 class="usa-card__heading">{{ key|title }} in library</h4>
                         </div>
                         <div class="usa-card__body">
-                            {% for component in components %}
+                            {% for available in available_files %}
                                 <div class="usa-checkbox">
                                     <input
                                         class="usa-checkbox__input usa-checkbox__input--tile"
-                                        id="file-{{ component }}"
+                                        id="file-{{ available }}"
                                         type="checkbox"
                                         name="files"
-                                        value="{{ component }}"
+                                        value="{{ available }}"
                                     />
                                     <label
                                         class="usa-checkbox__label"
-                                        for="file-{{ component }}"
+                                        for="file-{{ available }}"
                                     >
-                                        {{ component }}
+                                        {{ available }}
                                     </label>
                                 </div>
                             {% endfor %}
                         </div>
                         <div class="usa-card__footer">
                             <button class="usa-button width-full" type="submit">
-                                Add component template.
+                                Add {{ key|title }} template.
                             </button>
                         </div>
                     </div>

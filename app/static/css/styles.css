@@ -11,4 +11,10 @@ a.usa-footer__logo-heading img.footer-logo {
   font-size: 1rem;
 }
 
+#error404 img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /*# sourceMappingURL=styles.css.map */

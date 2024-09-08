@@ -286,7 +286,7 @@ If you’re interested in maintaining a package that helps us distribute USWDS, 
 USWDS JavaScript is separated into components (just as with the CSS and HTML) and initialized with event handlers when the DOM is ready. These components are accessible as CommonJS modules that can be required in other JavaScript files, then built for the browser. The components are not accessible in the global browser scope, but can be extended to be included by requiring `components` and setting it to a global scope:
 
 ```js
-window.uswds = require("./components");
+window.uswds = require("./opencontrol");
 ```
 
 Each component has a standardized interface that can be used to extend it further. The components store a HTML class (like `.usa-accordion__button[aria-controls]`) used to link HTML elements with the JavaScript component. When a component is initialized, it searches through the current HTML DOM to find all elements that match the class and initializes the component JavaScript for those elements. The primary methods for each component include:
@@ -304,8 +304,8 @@ Some components have additional methods based on that component's functionality.
 Importing a modular component.
 
 ```js
-import USWDS from "../node_modules/uswds/src/js/components";
-const { characterCount, accordion } = USWDS; // deconstruct your components here
+import USWDS from "../node_modules/uswds/src/js/opencontrol";
+const { characterCount, accordion } = USWDS; // deconstruct your opencontrol here
 ```
 
 React hooks example:

@@ -90,7 +90,7 @@ class Component(OpenControlElement):
     def write(self, component: str):
         component_path = (
             ROOT_DIR.joinpath("templates")  # type: ignore
-            .joinpath("components")  # type: ignore
+            .joinpath("opencontrol")  # type: ignore
             .joinpath(component)  # type: ignore
             .joinpath("component")
             .with_suffix(".yaml")  # type: ignore

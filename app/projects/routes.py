@@ -67,9 +67,9 @@ def project_view(project_name: str):
     todo: list = []
     for section in ["components", "certifications", "standards"]:
         if not getattr(opencontrol, section):
-            if section == "components":
+            if section == "opencontrol":
                 url: str = url_for(
-                    "component.components_add_list_view", project_name=project_name
+                    "opencontrol.components_add_list_view", project_name=project_name
                 )
             else:
                 url = "#"
@@ -118,7 +118,7 @@ def project_files_add_view(project_name: str, directory: str):
     :return: HTML template
     """
     project_path, project, manager, opencontrol = get_project_data(project_name)
-    allowed_directories = ["appendices", "components", "frontmatter", "tailoring"]
+    allowed_directories = ["appendices", "opencontrol", "frontmatter", "tailoring"]
     if not project_path.exists() or directory not in allowed_directories:
         abort(404)
 
