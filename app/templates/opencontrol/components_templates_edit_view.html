@@ -10,22 +10,21 @@
     <li class="usa-breadcrumb__list-item">
         <a href="{{ url_for(
             "project.project_view",
-            project_name=machine_name
+            project_name=project.machine_name
         ) }}">
             <span>{{ project.name }}</span>
         </a>
     </li>
     <li class="usa-breadcrumb__list-item">
         <a href="{{ url_for(
-            "project.project_templates_view",
-            project_name=project.machine_name,
-            directory=directory
+            "opencontrol.opencontrol_view",
+            project_name=project.machine_name
         ) }}">
-            <span>Templates</span>
+            <span>OpenControl</span>
         </a>
     </li>
     <li  class="usa-breadcrumb__list-item usa-current" aria-current="page">
-        <span>Add Component</span>
+        <span>Add {{ key }}</span>
     </li>
 </ol>
 {% endblock %}
@@ -38,11 +37,18 @@
             <li class="usa-card grid-col-4 tablet:grid-col-6 mobile-lg:grid-col-12">
                 <form
                     method="POST"
-                    action="{{ url_for(
-                        "opencontrol.opencontrol_remove_submit",
-                        project_name=project.machine_name
-                    ) }}
-                ">
+                    {% if key == "components" %}
+                        action="{{ url_for(
+                            "opencontrol.opencontrol_component_remove_submit",
+                            project_name=project.machine_name
+                        ) }}"
+                    {% else %}
+                        action="{{ url_for(
+                            "opencontrol.opencontrol_file_remove_submit",
+                            project_name=project.machine_name
+                        ) }}"
+                    {% endif %}
+                >
                     <input type="hidden" name="key" value="{{ key }}">
                     <div class="usa-card__container">
                         <div class="usa-card__header">
@@ -83,11 +89,18 @@
             <li class="usa-card grid-col-4 tablet:grid-col-6 mobile-lg:grid-col-12">
                 <form
                     method="POST"
-                    action="{{ url_for(
-                        "opencontrol.opencontrol_add_submit",
-                        project_name=project.machine_name
-                    ) }}
-                ">
+                    {% if key == "components" %}
+                        action="{{ url_for(
+                            "opencontrol.opencontrol_component_add_submit",
+                            project_name=project.machine_name
+                        ) }}"
+                    {% else %}
+                        action="{{ url_for(
+                            "opencontrol.opencontrol_file_add_submit",
+                            project_name=project.machine_name
+                        ) }}"
+                    {% endif %}
+                >
                     <input type="hidden" name="key" value="{{ key }}">
                     <div class="usa-card__container">
                         <div class="usa-card__header">

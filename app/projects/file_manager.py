@@ -45,10 +45,9 @@ class FileManager(BaseModel):
         finally:
             pass
 
-    @staticmethod
-    def remove_directory(source: str, destination: str):
-        file_source = Path(source)
-        trash_path = Path(destination)
+    def remove_directory(self, source: str):
+        file_source = self.project_path.joinpath(source)
+        trash_path = self.project_path.joinpath("trash").joinpath(source)
         if trash_path.exists() and trash_path.is_dir():
             shutil.rmtree(trash_path)
         try:
