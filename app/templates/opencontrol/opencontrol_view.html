@@ -1,0 +1,134 @@
+{% extends "project/project_base.html" %}
+
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="usa-breadcrumb__list">
+    <li class="usa-breadcrumb__list-item">
+        <a href="/"><span>Home</span></a>
+    </li>
+    <li class="usa-breadcrumb__list-item usa-current" aria-current="page">
+        <span>OpenControl</span>
+    </li>
+</ol>
+{% endblock %}
+
+{% block page_title %}{{ project.name }}{% endblock %}
+
+{% block project_content %}
+{{ opencontrol }}<h3 class="site-preview-heading">Default</h3>
+    <div
+      class="usa-summary-box margin-bottom-2"
+      role="region"
+      aria-labelledby="summary-box-key-information"
+    >
+        <div class="usa-summary-box__body">
+            <h4 class="usa-summary-box__heading" id="summary-box-key-information">
+                OpenControl
+            </h4>
+            <div class="usa-summary-box__text">
+                <ul class="usa-list">
+                    <li>
+                        <b>SchemaVersion:</b> {{ opencontrol.schema_version }}
+                    </li>
+                    <li>
+                        <b>Name:</b> {{ opencontrol.name }}
+                    </li>
+                    <li>
+                        <b>Metadata:</b> {{ opencontrol.name }}
+                        <ul>
+                            <li>
+                                <b>Description:</b> {{ opencontrol.metadata.description }}
+                            </li>
+                            <li>
+                                <b>Maintainers:</b>
+                                {% if opencontrol.metadata.description %}
+                                    <ul>
+                                    {% for maintainer in opencontrol.metadata.maintainer %}
+                                        <li>{{ maintainer }}</li>
+                                    {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    No maintainers have been added.
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="grid-row grid-gap">
+        <ul class="usa-card-group">
+            <li class="usa-card grid-col-4 tablet:grid-col-6 mobile-lg:grid-col-12">
+                <div class="usa-card__container">
+                    <div class="usa-card__header">
+                        <h4 class="usa-card__heading">Certifications</h4>
+                    </div>
+                    <div class="usa-card__body">
+                        {% if opencontrol.certifications %}
+                            <ul>
+                            {% for cert in opencontrol.certifications %}
+                                <li>{{ cert }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    <div class="usa-card__footer">
+                        <a class="usa-button" href="{{ url_for(
+                            "opencontrol.opencontrol_add_elements_view",
+                            project_name=project.machine_name,
+                            key="certifications"
+                        ) }}">Add/edit certifications</a>
+                    </div>
+                </div>
+            </li>
+            <li class="usa-card grid-col-4 tablet:grid-col-6 mobile-lg:grid-col-12">
+                <div class="usa-card__container">
+                    <div class="usa-card__header">
+                        <h4 class="usa-card__heading">Standards</h4>
+                    </div>
+                    <div class="usa-card__body">
+                        {% if opencontrol.standards %}
+                            <ul>
+                            {% for standard in opencontrol.standards %}
+                                <li>{{ standard }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    <div class="usa-card__footer">
+                        <a class="usa-button" href="{{ url_for(
+                            "opencontrol.opencontrol_add_elements_view",
+                            project_name=project.machine_name,
+                            key="standards"
+                        ) }}">Add/edit standards</a>
+                    </div>
+                </div>
+            </li>
+            <li class="usa-card grid-col-4 tablet:grid-col-6 mobile-lg:grid-col-12">
+                <div class="usa-card__container">
+                    <div class="usa-card__header">
+                        <h4 class="usa-card__heading">Components</h4>
+                    </div>
+                    <div class="usa-card__body">
+                        {% if opencontrol.component %}
+                            <ul>
+                            {% for component in opencontrol.component %}
+                                <li>{{ component }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    <div class="usa-card__footer">
+                        <a class="usa-button" href="{{ url_for(
+                            "opencontrol.opencontrol_add_elements_view",
+                            project_name=project.machine_name,
+                            key="components"
+                        ) }}">Add/edit component</a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

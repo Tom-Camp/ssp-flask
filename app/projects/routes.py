@@ -4,7 +4,7 @@ from flask import Blueprint, abort, flash, redirect, render_template, request, u
 
 from app.projects.forms import ProjectForm
 from app.projects.models import Project
-from app.projects.views import get_project_data, get_projects, load_project
+from app.projects.views import get_project_data, get_projects
 
 project_bp = Blueprint("project", __name__, url_prefix="/project")
 
@@ -63,8 +63,26 @@ def project_view(project_name: str):
     if not project_path.exists():
         abort(404)
 
-    project = load_project(project_name=project_name)
-    return render_template("project/project_view.html", project=project.model_dump())
+    _, project, _, opencontrol = get_project_data(project_name)
+    todo: list = []
+    for section in ["components", "certifications", "standards"]:
+        if not getattr(opencontrol, section):
+            if section == "opencontrol":
+                url: str = url_for(
+                    "opencontrol.components_add_list_view", project_name=project_name
+                )
+            else:
+                url = "#"
+            todo.append(
+                f"<a class='text-white' href='{url}'>Click here to add {section}</a>"
+            )
+
+    data: dict = {
+        "project": project,
+        "todo": todo,
+    }
+
+    return render_template("project/project_view.html", **data)
 
 
 @project_bp.route("/<project_name>/templates/<directory>", methods=["GET"])
@@ -100,7 +118,7 @@ def project_files_add_view(project_name: str, directory: str):
     :return: HTML template
     """
     project_path, project, manager, opencontrol = get_project_data(project_name)
-    allowed_directories = ["appendices", "components", "frontmatter", "tailoring"]
+    allowed_directories = ["appendices", "opencontrol", "frontmatter", "tailoring"]
     if not project_path.exists() or directory not in allowed_directories:
         abort(404)
 

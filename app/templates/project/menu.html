@@ -1,7 +1,23 @@
 <nav aria-label="Secondary navigation">
     <ul class="usa-sidenav">
         <li class="usa-sidenav__item">
-            <a href="javascript:void(0);"><span>Templates</span></a>
+            <a href="{{ url_for(
+                "project.project_view",
+                project_name=project.machine_name
+            ) }}">
+                Project home
+            </a>
+        </li>
+        <li class="usa-sidenav__item">
+            <a href="{{ url_for(
+                "opencontrol.opencontrol_view",
+                project_name=project.machine_name
+            ) }}">
+                OpenControl
+            </a>
+        </li>
+        <li class="usa-sidenav__item">
+            <a href="javascript:void(0);">Templates</a>
             <ul class="usa-sidenav__sublist">
                 <li class="usa-sidenav__item">
                     <a href="{{ url_for(
@@ -14,8 +30,9 @@
                 </li>
                 <li class="usa-sidenav__item">
                     <a href="{{ url_for(
-                        "component.component_template_list_view",
-                        project_name=project.machine_name
+                        "opencontrol.opencontrol_add_elements_view",
+                        project_name=project.machine_name,
+                        key="components"
                     ) }}">
                         Components
                     </a>

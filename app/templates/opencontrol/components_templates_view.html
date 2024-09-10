@@ -54,8 +54,9 @@
                         <li>
                             No components have been added to your project.
                             <a class="usa-summary-box__link" href="{{ url_for(
-                                    "component.components_add_list_view",
-                                    project_name=project.machine_name
+                                    "opencontrol.components_add_list_view",
+                                    project_name=project.machine_name,
+                                    key="components"
                                 ) }}"
                             >
                                 Click here
@@ -67,8 +68,9 @@
         </div>
     {% endif %}
     <a href="{{ url_for(
-        "component.components_add_list_view",
-        project_name=project.machine_name
+        "opencontrol.components_add_list_view",
+        project_name=project.machine_name,
+        key="components"
     ) }}" class="usa-button margin-top-2">
         Add/remove Component templates.
     </a>

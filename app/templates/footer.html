@@ -1,4 +1,4 @@
-<div class="usa-footer__primary-section">
+<div class="usa-footer__primary-section margin-top-6">
     <div class="usa-footer__primary-container grid-row">
         <div class="mobile-lg:grid-col-10">
             <nav class="usa-footer__nav" aria-label="Footer navigation,">
@@ -32,16 +32,24 @@
         </div>
     </div>
 </div>
-<div class="usa-footer__secondary-section">
+    <div class="usa-footer__secondary-section">
     <div class="grid-container">
         <div class="usa-footer__logo grid-row grid-gap-2">
-            <div class="grid-col-auto">
-                <p class="usa-footer__logo-heading">
+            <div class="grid-col-auto margin-left-auto">
+                <a
+                    class="usa-footer__logo-heading"
+                    href="https://civicactions.com"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                >
                     <img alt="CivicActions logo"
                          src="{{ url_for("static", filename="images/CA-Full-Logo-Red.svg")  }}"
                          class="footer-logo"
                     >
-                </p>
+                    <svg class="usa-icon icon-custom-size-1" aria-hidden="true" role="img">
+                        <use xlink:href="#usa-icon-external-link"></use>
+                    </svg>
+                </>
             </div>
         </div>
     </div>

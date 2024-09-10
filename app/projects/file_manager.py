@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 
 from flask import flash
@@ -41,5 +42,25 @@ class FileManager(BaseModel):
             flash(message=f"{source_path} moved to Project trash", category="success")
         except FileExistsError:
             flash(message=f"Error writing file to {destination}", category="error")
+        finally:
+            pass
+
+    def remove_directory(self, source: str):
+        file_source = self.project_path.joinpath(source)
+        trash_path = self.project_path.joinpath("trash").joinpath(source)
+        if trash_path.exists() and trash_path.is_dir():
+            shutil.rmtree(trash_path)
+        try:
+            shutil.move(src=file_source, dst=trash_path)
+            logger.info(f"Manager action: Resource {file_source.name} moved to trash")
+            flash(
+                message=f"{file_source.name} moved to Project trash", category="success"
+            )
+        except shutil.Error as e:
+            logger.info(f"Manager action: {e}")
+            flash(
+                message=f"{file_source.name} failed to move to Project trash",
+                category="success",
+            )
         finally:
             pass

@@ -11,11 +11,9 @@
     </div>
     <nav aria-label="Primary navigation" class="usa-nav">
         <button type="button" class="usa-nav__close">
-            <img
-                src="{{ url_for("static", filename="uswds/assets/img/usa-icons/close.svg }}" ) }}"
-                role="img"
-                alt="Close"
-            />
+            <svg class="usa-icon" aria-hidden="true" role="img">
+                <use xlink:href="#usa-nav__close"></use>
+            </svg>
         </button>
         <ul class="usa-nav__primary usa-accordion">
             <li class="usa-nav__primary-item">

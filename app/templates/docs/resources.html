@@ -21,7 +21,12 @@
                 <li class="usa-collection__item">
                     <div class="usa-collection__body">
                         <h4 class="usa-collection__heading">
-                            <a class="usa-link" href="{{ resource.url }}">
+                            <a
+                                class="usa-link"
+                                href="{{ resource.url }}"
+                                rel="noopener noreferrer"
+                                target="_blank"
+                            >
                                 {{ resource.title|safe }}
                                 <svg class="usa-icon" aria-hidden="true" role="img">
                                     <use xlink:href="#usa-icon-external-link"></use>

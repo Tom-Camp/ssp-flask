@@ -2,9 +2,19 @@
   max-width: 75%;
 }
 
-img.footer-logo {
+a.usa-footer__logo-heading img.footer-logo {
   max-width: 150px;
-  align-content: center;
+  text-decoration: none;
+}
+
+.icon-custom-size-1 {
+  font-size: 1rem;
+}
+
+#error404 img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /*# sourceMappingURL=styles.css.map */

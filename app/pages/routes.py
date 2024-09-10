@@ -24,4 +24,4 @@ def resources():
     page_data = {
         "content": get_content("resources"),
     }
-    return render_template("page/resources.html", **page_data)
+    return render_template("docs/resources.html", **page_data)
