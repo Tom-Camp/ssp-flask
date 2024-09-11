@@ -2,6 +2,7 @@ import pytest
 
 from app import create_app
 from app.projects.models import Project
+from app.projects.views import get_machine_name
 
 
 @pytest.fixture
@@ -29,8 +30,11 @@ def runner(app):
 
 @pytest.fixture(scope="module")
 def project():
+    name = "Testing Project!"
+    machine_name = get_machine_name(name=name)
     project_instance = Project(
-        name="Testing Project!",
+        name=name,
+        machine_name=machine_name,
         description="This is a test project",
     )
     yield project_instance
