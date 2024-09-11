@@ -75,3 +75,10 @@ def get_projects() -> list:
             project_data = load_yaml(project_file.as_posix())
             projects.append(project_data)
     return projects
+
+
+def get_machine_name(name: str) -> str:
+    to_replace = "~`!@#$%^&*()+=[]{}|:;\"'?/>.<,"
+    for x in to_replace:
+        name = name.replace(x, "")
+    return name.replace(" ", "_").lower()

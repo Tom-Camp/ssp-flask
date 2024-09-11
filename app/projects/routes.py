@@ -1,10 +1,12 @@
+from dataclasses import asdict
 from pathlib import Path
 
 from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
 
 from app.projects.forms import ProjectForm
 from app.projects.models import Project
-from app.projects.views import get_project_data, get_projects
+from app.projects.views import get_machine_name, get_project_data, get_projects
+from app.toolkit.base.config import Config
 
 project_bp = Blueprint("project", __name__, url_prefix="/project")
 
@@ -39,8 +41,11 @@ def project_create_view():
     form = ProjectForm()
     if request.method == "POST":
         if form.validate_on_submit():
+            name = form.name.data
+            machine_name = get_machine_name(name=name)
             project = Project(
-                name=form.name.data,
+                name=name,
+                machine_name=machine_name,
                 description=form.description.data,
             )
             project.create()
@@ -186,3 +191,13 @@ def project_files_remove_submit(project_name: str):
     return redirect(
         request.referrer or url_for("project.project_view", project_name=project_name)
     )
+
+
+@project_bp.route("<project_name>/keys", methods=["GET"])
+def project_keys_view(project_name: str):
+    project_path, project, manager, opencontrol = get_project_data(project_name)
+    config = Config(machine_name=project.machine_name)
+
+    data: dict = {"project": project, "config": asdict(config)}
+
+    return render_template("project/keys_view.html", **data)

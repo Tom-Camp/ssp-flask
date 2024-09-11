@@ -16,7 +16,6 @@
 {% block page_title %}{{ project.name }}{% endblock %}
 
 {% block project_content %}
-{{ opencontrol }}<h3 class="site-preview-heading">Default</h3>
     <div
       class="usa-summary-box margin-bottom-2"
       role="region"
@@ -112,9 +111,9 @@
                         <h4 class="usa-card__heading">Components</h4>
                     </div>
                     <div class="usa-card__body">
-                        {% if opencontrol.component %}
+                        {% if opencontrol.components %}
                             <ul>
-                            {% for component in opencontrol.component %}
+                            {% for component in opencontrol.components %}
                                 <li>{{ component }}</li>
                             {% endfor %}
                             </ul>
