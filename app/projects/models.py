@@ -15,7 +15,7 @@ ROOT_DIR = Config.ROOT_DIR
 class Project(BaseModel):
     name: str
     description: str
-    machine_name: str | None = None
+    machine_name: str
     project_path: Path = None  # type: ignore
     library: Library = Field(Library())
 
@@ -67,10 +67,3 @@ class Project(BaseModel):
             name=self.name,
             metadata=metadata,
         ).write(self.project_path.as_posix())
-
-    @staticmethod
-    def _get_machine_name(name: str) -> str:
-        to_replace = "~`!@#$%^&*()+=[]{}|:;\"'?/>.<,"
-        for x in to_replace:
-            name = name.replace(x, "")
-        return name.replace(" ", "_").lower()

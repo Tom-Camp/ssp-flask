@@ -1,0 +1,82 @@
+{% extends "project/project_base.html" %}
+
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="usa-breadcrumb__list">
+    <li class="usa-breadcrumb__list-item">
+        <a href="/"><span>Home</span></a>
+    </li>
+    <li class="usa-breadcrumb__list-item">
+        <a href="{{ url_for(
+            "project.project_view",
+            project_name=project.machine_name
+        ) }}">
+            <span>{{ project.name }}</span>
+        </a>
+    </li>
+    <li  class="usa-breadcrumb__list-item usa-current" aria-current="page">
+        <span>Keys</span>
+    </li>
+</ol>
+{% endblock %}
+
+{% block page_title %}{{ project.name }}{% endblock %}
+
+{% block project_content %}
+    <div class="content">
+        <h2 class="is-size-4">Variable Keys</h2>
+        <p>
+            YAML files containing keys/value pairs are stored in the
+            <span class="code">/project_data/{{ project.name }}/keys/</span>
+            directory. The keys are used in the templates using the
+            <a href="https://jinja.palletsprojects.com/en/3.0.x/templates/" target="_blank" rel="noopener noreferrer">
+                Jinja2 variable format
+            </a>.
+        </p>
+        <p>
+            Any YAML file in the <span class="code">/keys/</span> directory will be read into the
+            configuration object and the values within will be available to use in the templates.
+            The main key is the file name, so a file named <span class="code">mykeys.yaml</span>
+            with the parameter <span class="code">myname: name</span> will be used in the template
+            using <span class="code">{% raw %}{{ mykeys.myname }}{% endraw %}</span>.
+        </p>
+        <div class="usa-accordion">
+        {% for filename, values in config.config.items() %}
+            <h4 class="usa-accordion__heading">
+                <button
+                  type="button"
+                  class="usa-accordion__button"
+                  aria-expanded="true"
+                  aria-controls="a{{ loop.index0 }}"
+                >{{ filename }}</button>
+            </h4>
+            <div id="a{{ loop.index0 }}" class="usa-accordion__content usa-prose">
+                {% macro render_dict(d) %}
+                    <ul>
+                    {% for key, value in d.items() %}
+                        <li>
+                            <strong>{{ key }}:</strong>
+                            {% if value is mapping %}
+                                <ul>
+                                    {{ render_dict(value) }}
+                                </ul>
+                            {% elif value is sequence and value is not string %}
+                                <ul>
+                                    {% for item in value %}
+                                        <li>{{ item }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                {{ value }}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% endmacro %}
+
+                {{ render_dict(values) }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

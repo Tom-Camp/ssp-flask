@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 
+from app.projects.file_manager import FileManager
 from app.utils.helpers import load_yaml
 
 default_keys: dict = {
@@ -13,15 +14,21 @@ default_keys: dict = {
 
 @dataclass
 class Config:
+    project_name = str
+    project_path = Path
     config: dict
-    configuration: str
+    config_path: Path
     keys: str
     config_files: list
 
-    def __init__(self, config: str, keys: str):
-        self.configuration = config
-        self.keys = keys
-        self.config = load_yaml(filename=self.configuration)
+    def __init__(self, machine_name: str):
+        manager = FileManager(project_machine_name=machine_name)
+        self.project_path = manager.project_path  # type: ignore
+        self.config_path = self.project_path.joinpath("configuration").with_suffix(  # type: ignore
+            ".yaml"
+        )
+        self.keys = self.project_path.joinpath("keys").as_posix()  # type: ignore
+        self.config = load_yaml(filename=self.config_path.as_posix())
         self.load_keys()
 
     def load_keys(self):
