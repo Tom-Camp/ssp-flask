@@ -29,6 +29,12 @@ class FileManager(BaseModel):
     def get_files_by_directory(self, directory: str) -> list:
         return [file.name for file in self.template_path.joinpath(directory).glob("*")]
 
+    def get_directory_tree(self, dir_path: Path):
+        return {
+            item.name: self.get_directory_tree(item) if item.is_dir() else None
+            for item in dir_path.iterdir()
+        }
+
     def get_copy_destination(self, filepath: str) -> str:
         return self.template_path.joinpath(filepath).as_posix()
 
@@ -64,3 +70,22 @@ class FileManager(BaseModel):
             )
         finally:
             pass
+
+    def write_file(self, file_path: str, file_body: str):
+        file = Path(file_path)
+        write_path = (
+            file
+            if file.is_relative_to(self.template_path)
+            else self.template_path.joinpath(file)
+        )
+        try:
+            with open(write_path, "w") as fp:
+                fp.write(file_body)
+            logger.info(f"Manager action: Template {write_path.name} updated")
+            flash(message=f"{write_path.name} updated", category="success")
+        except FileNotFoundError:
+            logger.info(f"Manager action: Failed to update {write_path.name}")
+            flash(message=f"{write_path.name} not found", category="error")
+        except IOError:
+            logger.info(f"Manager action: Error updating {write_path.name}")
+            flash(message=f"Error updating {write_path.name}", category="error")

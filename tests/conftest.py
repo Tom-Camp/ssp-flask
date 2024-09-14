@@ -1,8 +1,8 @@
 import pytest
 
 from app import create_app
+from app.projects.helpers import get_machine_name
 from app.projects.models import Project
-from app.projects.views import get_machine_name
 
 
 @pytest.fixture

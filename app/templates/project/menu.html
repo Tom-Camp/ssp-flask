@@ -30,9 +30,8 @@
                 </li>
                 <li class="usa-sidenav__item">
                     <a href="{{ url_for(
-                        "opencontrol.opencontrol_add_elements_view",
-                        project_name=project.machine_name,
-                        key="components"
+                        "opencontrol.component_template_list_view",
+                        project_name=project.machine_name
                     ) }}">
                         Components
                     </a>

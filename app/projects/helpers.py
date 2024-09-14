@@ -2,6 +2,7 @@ from pathlib import Path
 
 from app.projects.file_manager import FileManager
 from app.projects.models import Project
+from app.toolkit.base.config import Config
 from app.toolkit.opencontrol import OpenControl
 from app.utils.helpers import load_yaml, scan_dir
 from config import config
@@ -22,7 +23,7 @@ def get_destination_path(file: str) -> str:
 
 def get_project_data(
     project_name: str,
-) -> tuple[Path, Project, FileManager, OpenControl]:
+) -> tuple[Path, Project, FileManager, OpenControl, Config]:
     """
     Return a loaded Project, a pathlib Path representation of Project path, and an
     instance of a Library.
@@ -41,7 +42,8 @@ def get_project_data(
     oc_path = project_path.joinpath("opencontrol").with_suffix(".yaml")
     oc_data = load_yaml(oc_path.as_posix())
     opencontrol = OpenControl(**oc_data)
-    return project_path, project, manager, opencontrol
+    project_config = Config(machine_name=project_machine_name)
+    return project_path, project, manager, opencontrol, project_config
 
 
 def load_project(project_name: str) -> Project:
@@ -82,3 +84,11 @@ def get_machine_name(name: str) -> str:
     for x in to_replace:
         name = name.replace(x, "")
     return name.replace(" ", "_").lower()
+
+
+def load_template_file(template_path: str) -> str:
+    template_file = Path(template_path)
+    text: str = ""
+    if template_file.is_file():
+        text = template_file.read_text(encoding="utf-8")
+    return text

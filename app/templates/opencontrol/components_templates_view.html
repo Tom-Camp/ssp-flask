@@ -13,7 +13,7 @@
         </a>
     </li>
     <li class="usa-breadcrumb__list-item">
-        <span>Component templates</span>
+        <span>Components</span>
     </li>
 </ol>
 {% endblock %}
@@ -22,23 +22,34 @@
 
 {% block project_content %}
     {% if components %}
-        <table class="usa-table usa-table--striped">
-            <caption>Component templates in project</caption>
-            <thead>
-                <tr>
-                    <th scope="col">Component template</th>
-                    <th scope="col">Edit</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for component in components %}
-                    <tr>
-                        <th scope="row">{{ component }}</th>
-                        <td>Edit</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="usa-accordion">
+        {% for component, templates in components.items() %}
+            <h4 class="usa-accordion__heading">
+                <button
+                    type="button"
+                    class="usa-accordion__button"
+                    aria-expanded="true"
+                    aria-controls="{{ loop.index0 }}"
+                >{{ component }}</button>
+            </h4>
+            <div id="{{ loop.index0 }}" class="usa-accordion__content usa-prose">
+                <table class="usa-table usa-table--striped">
+                    <tbody>
+                        {% for template in templates %}
+                            <tr>
+                                <th scope="row">{{ template }}</th>
+                                <td>
+                                    <a href="#" onclick="
+                                        postValue('project_data/{{ project.machine_name }}/templates/components/{{ component }}/{{ template }}')
+                                    ">Edit</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+        </div>
     {% else %}
         <div
           class="usa-summary-box"
@@ -68,10 +79,34 @@
         </div>
     {% endif %}
     <a href="{{ url_for(
-        "opencontrol.components_add_list_view",
+        "opencontrol.opencontrol_add_elements_view",
         project_name=project.machine_name,
         key="components"
     ) }}" class="usa-button margin-top-2">
         Add/remove Component templates.
     </a>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    function postValue(value) {
+        var form = document.createElement("form");
+        form.method = "POST";
+        form.action = "{{ url_for(
+            "editing.edit_template",
+            project_name=project.machine_name
+        ) }}";
+
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "template";
+        input.value = value;
+
+        form.appendChild(input);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
 {% endblock %}

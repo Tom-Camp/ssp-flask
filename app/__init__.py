@@ -5,6 +5,7 @@ from werkzeug.exceptions import HTTPException
 
 from app.logging_config import loguru_logger as logger
 from app.pages.routes import page_bp
+from app.projects.editing_routes import editing_bp
 from app.projects.opencontrol_routes import opencontrol_bp
 from app.projects.routes import project_bp
 
@@ -23,6 +24,7 @@ def create_app(config_name=None):
 
     app.register_blueprint(page_bp)
     app.register_blueprint(project_bp)
+    app.register_blueprint(editing_bp)
     app.register_blueprint(opencontrol_bp)
 
     @app.errorhandler(HTTPException)

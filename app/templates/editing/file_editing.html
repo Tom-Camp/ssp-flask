@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="grid-row grid-gap">
+        <div class="grid-col-12">
+            <form class="editing" method="POST" action="{{ url_for(
+                "editing.edit_template_submit",
+                project_name=project.machine_name
+            ) }}">
+                <input type="hidden" name="file_path" value="{{ file_path }}">
+                <input type="hidden" name="directory" value="{{ directory }}">
+                <label class="usa-label width-full" for="file_body">{{ file_path }}</label>
+                <textarea
+                    id="file_body"
+                    class="usa-textarea width-full"
+                    id="template-body"
+                    name="file_body"
+                    oninput="autoResize(this)"
+                >{{ file_value }}</textarea>
+                <button class="usa-button usa-button margin-top-2" type="submit">Update</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function autoResize(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var textarea = document.getElementById('template-body');
+        autoResize(textarea);
+    });
+</script>
+{% endblock %}

@@ -37,7 +37,11 @@
                 {% for template in templates %}
                     <tr>
                         <th scope="row">{{ template }}</th>
-                        <td>Edit</td>
+                        <td>
+                            <a href="#" onclick="
+                                postValue('project_data/{{ project.machine_name }}/templates/{{ directory }}/{{ template }}')
+                            ">Edit</a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -77,4 +81,28 @@
     ) }}" class="usa-button margin-top-2">
         Add/remove {{ directory }} templates.
     </a>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    function postValue(value) {
+        var form = document.createElement("form");
+        form.method = "POST";
+        form.action = "{{ url_for(
+            "editing.edit_template",
+            project_name=project.machine_name
+        ) }}";
+
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "template";
+        input.value = value;
+
+        form.appendChild(input);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
 {% endblock %}
