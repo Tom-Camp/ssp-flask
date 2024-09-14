@@ -34,10 +34,13 @@ def component_template_list_view(project_name: str):
     :return: HTML template
     """
     project_path, project, manager, opencontrol, _ = get_project_data(project_name)
+    components = manager.get_directory_tree(
+        project_path.joinpath("templates/components")
+    )
 
     data: dict = {
         "project": project,
-        "components": opencontrol.components,
+        "components": components,
     }
 
     return render_template("opencontrol/components_templates_view.html", **data)

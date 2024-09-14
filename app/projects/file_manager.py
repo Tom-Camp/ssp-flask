@@ -29,6 +29,12 @@ class FileManager(BaseModel):
     def get_files_by_directory(self, directory: str) -> list:
         return [file.name for file in self.template_path.joinpath(directory).glob("*")]
 
+    def get_directory_tree(self, dir_path: Path):
+        return {
+            item.name: self.get_directory_tree(item) if item.is_dir() else None
+            for item in dir_path.iterdir()
+        }
+
     def get_copy_destination(self, filepath: str) -> str:
         return self.template_path.joinpath(filepath).as_posix()
 

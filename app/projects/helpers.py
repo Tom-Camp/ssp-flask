@@ -42,8 +42,8 @@ def get_project_data(
     oc_path = project_path.joinpath("opencontrol").with_suffix(".yaml")
     oc_data = load_yaml(oc_path.as_posix())
     opencontrol = OpenControl(**oc_data)
-    config = Config(machine_name=project_machine_name)
-    return project_path, project, manager, opencontrol, config
+    project_config = Config(machine_name=project_machine_name)
+    return project_path, project, manager, opencontrol, project_config
 
 
 def load_project(project_name: str) -> Project:
