@@ -2,7 +2,7 @@ from pathlib import Path
 
 from flask import Blueprint, abort, redirect, render_template, request, url_for
 
-from app.projects.views import get_project_data
+from app.projects.helpers import get_project_data
 
 opencontrol_bp = Blueprint("opencontrol", __name__, url_prefix="/project")
 
@@ -15,7 +15,7 @@ def opencontrol_view(project_name: str):
     :param project_name: str - Project machine_name
     :return: HTML template
     """
-    project_path, project, manager, opencontrol = get_project_data(project_name)
+    project_path, project, manager, opencontrol, _ = get_project_data(project_name)
 
     data: dict = {
         "project": project,
@@ -33,7 +33,7 @@ def component_template_list_view(project_name: str):
     :param project_name: str - Project machine_name
     :return: HTML template
     """
-    project_path, project, manager, opencontrol = get_project_data(project_name)
+    project_path, project, manager, opencontrol, _ = get_project_data(project_name)
 
     data: dict = {
         "project": project,
@@ -52,7 +52,7 @@ def opencontrol_add_elements_view(project_name: str, key: str):
     :param key: str - The OpenControl parameter
     :return: HTML template
     """
-    project_path, project, manager, opencontrol = get_project_data(project_name)
+    project_path, project, manager, opencontrol, _ = get_project_data(project_name)
     if hasattr(opencontrol, key):
         section = getattr(opencontrol, key)
     else:
@@ -79,7 +79,7 @@ def opencontrol_add_elements_view(project_name: str, key: str):
 
 @opencontrol_bp.route("<project_name>/component/add", methods=["POST"])
 def opencontrol_component_add_submit(project_name: str):
-    project_path, project, manager, opencontrol = get_project_data(project_name)
+    project_path, project, manager, opencontrol, _ = get_project_data(project_name)
 
     for filename in request.form.getlist("files"):
         copy_path = Path("templates/components").joinpath(filename)
@@ -103,7 +103,7 @@ def opencontrol_component_add_submit(project_name: str):
 
 @opencontrol_bp.route("<project_name>/component/remove", methods=["POST"])
 def opencontrol_component_remove_submit(project_name: str):
-    project_path, project, manager, opencontrol = get_project_data(project_name)
+    project_path, project, manager, opencontrol, _ = get_project_data(project_name)
 
     for filename in request.form.getlist("files"):
         remove_path = Path("templates/components").joinpath(filename)
@@ -123,7 +123,7 @@ def opencontrol_component_remove_submit(project_name: str):
 
 @opencontrol_bp.route("<project_name>/opencontrol/add", methods=["POST"])
 def opencontrol_file_add_submit(project_name: str):
-    project_path, project, manager, opencontrol = get_project_data(project_name)
+    project_path, project, manager, opencontrol, _ = get_project_data(project_name)
 
     key = request.form.get("key")
     if key not in ["certifications", "standards"]:
@@ -151,7 +151,7 @@ def opencontrol_file_add_submit(project_name: str):
 
 @opencontrol_bp.route("<project_name>/opencontrol/remove", methods=["POST"])
 def opencontrol_file_remove_submit(project_name: str):
-    project_path, project, manager, opencontrol = get_project_data(project_name)
+    project_path, project, manager, opencontrol, _ = get_project_data(project_name)
 
     key = request.form.get("key")
     for filename in request.form.getlist("files"):
