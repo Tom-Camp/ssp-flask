@@ -28,14 +28,14 @@ class Config:
             ".yaml"
         )
         self.keys = self.project_path.joinpath("keys").as_posix()  # type: ignore
-        self.config = load_yaml(filename=self.config_path.as_posix())
+        self.config = load_yaml(filename=self.config_path)
         self.load_keys()
 
     def load_keys(self):
         self.config_files = []
         for filename in Path(self.keys).glob("*.yaml"):
             key = default_keys.get(filename.name, filename.stem)
-            data = load_yaml(filename=filename.as_posix())
+            data = load_yaml(filename=filename)
             if data:
                 self.config_files.append((filename.name, key))
                 self.config[key] = data

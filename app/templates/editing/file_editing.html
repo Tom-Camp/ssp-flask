@@ -1,5 +1,23 @@
 {% extends "base.html" %}
 
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="usa-breadcrumb__list">
+    <li class="usa-breadcrumb__list-item">
+        <a href="/">Home</a>
+    </li>
+    <li class="usa-breadcrumb__list-item">
+        <a href="{{ url_for("project.project_view", project_name=project.machine_name) }}">
+            {{ project.name }}
+        </a>
+    </li>
+    <li class="usa-breadcrumb__list-item">
+        <span>{{ file_name }}</span>
+    </li>
+</ol>
+{% endblock %}
+
 {% block content %}
     <div class="grid-row grid-gap">
         <div class="grid-col-12">
@@ -9,11 +27,10 @@
             ) }}">
                 <input type="hidden" name="file_path" value="{{ file_path }}">
                 <input type="hidden" name="directory" value="{{ directory }}">
-                <label class="usa-label width-full" for="file_body">{{ file_path }}</label>
+                <label class="usa-label width-full" for="file_body">Edit: {{ file_path }}</label>
                 <textarea
                     id="file_body"
                     class="usa-textarea width-full"
-                    id="template-body"
                     name="file_body"
                     oninput="autoResize(this)"
                 >{{ file_value }}</textarea>
@@ -31,7 +48,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        var textarea = document.getElementById('template-body');
+        var textarea = document.getElementById('file_body');
         autoResize(textarea);
     });
 </script>

@@ -55,9 +55,13 @@ class Library:
         finally:
             return dirs
 
-    def copy_file(self, source_path: str, destination_path: str) -> str:
+    def copy_file(self, source_path: str | Path, destination_path: str | Path) -> str:
         source = self.library.joinpath(source_path)
-        destination = Path(destination_path)
+        destination = (
+            destination_path
+            if isinstance(destination_path, Path)
+            else Path(destination_path)
+        )
         try:
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(src=source, dst=destination)
@@ -78,7 +82,9 @@ class Library:
         finally:
             return destination.as_posix()
 
-    def copy_directory(self, source_path: str, destination_path: str) -> str:
+    def copy_directory(
+        self, source_path: str | Path, destination_path: str | Path
+    ) -> str:
         source = self.library.joinpath(source_path)
         destination = Path(destination_path)
 

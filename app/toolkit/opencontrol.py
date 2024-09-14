@@ -114,21 +114,21 @@ class OpenControl(BaseModel):
 
     _root_dir: str = PrivateAttr()
 
-    def add(self, project_path: str, key: str, attribute: str):
+    def add(self, project_path: str | Path, key: str, attribute: str):
         field = getattr(self, key)
         if attribute not in field:
             field.append(attribute)
         setattr(self, key, field)
         self.write(project_path=project_path)
 
-    def remove(self, project_path: str, key: str, attribute: str):
+    def remove(self, project_path: str | Path, key: str, attribute: str):
         field = getattr(self, key)
         if attribute in field:
             field.remove(attribute)
         setattr(self, key, field)
         self.write(project_path=project_path)
 
-    def write(self, project_path: str):
+    def write(self, project_path: str | Path):
         opencontrol_path = (
             ROOT_DIR.joinpath(project_path)  # type: ignore
             .joinpath("opencontrol")

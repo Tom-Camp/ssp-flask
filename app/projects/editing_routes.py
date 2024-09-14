@@ -17,12 +17,13 @@ def edit_template(project_name: str):
     """
     project_path, project, _, _, _ = get_project_data(project_name)
 
-    template_path = request.form.get("template")
+    template_path = Path(request.form.get("template"))
     file_value = load_template_file(template_path=template_path)
 
     data: dict = {
         "project": project,
-        "file_path": template_path,
+        "file_path": template_path.as_posix(),
+        "file_name": template_path.name,
         "file_value": file_value,
     }
 

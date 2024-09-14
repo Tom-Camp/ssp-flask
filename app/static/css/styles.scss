@@ -33,6 +33,7 @@ form{
   &.editing {
     label {
       max-width: 100%;
+      font-weight: bold;
     }
     textarea {
       &.usa-textarea {

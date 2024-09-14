@@ -40,7 +40,7 @@ def get_project_data(
     project = load_project(project_name=project_machine_name)
     manager = FileManager(project_machine_name=project_machine_name)
     oc_path = project_path.joinpath("opencontrol").with_suffix(".yaml")
-    oc_data = load_yaml(oc_path.as_posix())
+    oc_data = load_yaml(oc_path)
     opencontrol = OpenControl(**oc_data)
     project_config = Config(machine_name=project_machine_name)
     return project_path, project, manager, opencontrol, project_config
@@ -58,7 +58,6 @@ def load_project(project_name: str) -> Project:
         .joinpath(project_name)
         .joinpath("project")
         .with_suffix(".yaml")
-        .as_posix()
     )
     return Project(**project_file)
 
@@ -74,7 +73,7 @@ def get_projects() -> list:
     for project in project_list:
         project_file = Path(project).joinpath("project").with_suffix(".yaml")
         if project_file.exists():
-            project_data = load_yaml(project_file.as_posix())
+            project_data = load_yaml(project_file)
             projects.append(project_data)
     return projects
 
@@ -86,8 +85,8 @@ def get_machine_name(name: str) -> str:
     return name.replace(" ", "_").lower()
 
 
-def load_template_file(template_path: str) -> str:
-    template_file = Path(template_path)
+def load_template_file(template_path: Path) -> str:
+    template_file = template_path
     text: str = ""
     if template_file.is_file():
         text = template_file.read_text(encoding="utf-8")
