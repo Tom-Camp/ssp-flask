@@ -3,7 +3,7 @@ from pathlib import Path
 from app.projects.file_manager import FileManager
 from app.projects.models import Project
 from app.toolkit.base.config import Config
-from app.toolkit.opencontrol import OpenControl
+from app.toolkit.base.opencontrol import OpenControl
 from app.utils.helpers import load_yaml, scan_dir
 from config import config
 

@@ -67,21 +67,16 @@ class FileManager(BaseModel):
         finally:
             pass
 
-    def write_file(self, file_path: str | Path, file_body: str):
-        file = Path(file_path)
-        write_path = (
-            file
-            if file.is_relative_to(self.template_path)
-            else self.template_path.joinpath(file)
-        )
+    def write_file(self, file_path: Path, file_body: str):
+        output = self.project_path.joinpath(file_path)
+        if not output.parent.is_dir():
+            output.parent.mkdir(parents=True)
+
         try:
-            with open(write_path, "w") as fp:
+            with open(output, "w+") as fp:
                 fp.write(file_body)
-            logger.info(f"Manager action: Template {write_path.name} updated")
-            flash(message=f"{write_path.name} updated", category="success")
-        except FileNotFoundError:
-            logger.info(f"Manager action: Failed to update {write_path.name}")
-            flash(message=f"{write_path.name} not found", category="error")
+            logger.info(f"Manager action: Template {output.name} updated")
+            flash(message=f"{output.name} updated", category="success")
         except IOError:
-            logger.info(f"Manager action: Error updating {write_path.name}")
-            flash(message=f"Error updating {write_path.name}", category="error")
+            logger.error(f"Manager action: Error updating {output.name}")
+            flash(message=f"Error updating {output.name}", category="error")

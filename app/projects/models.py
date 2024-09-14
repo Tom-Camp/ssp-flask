@@ -5,7 +5,7 @@ from flask import flash
 from pydantic import BaseModel, Field, model_validator
 
 from app.logging_config import loguru_logger as logger
-from app.toolkit.opencontrol import Metadata, OpenControl
+from app.toolkit.base.opencontrol import Metadata, OpenControl
 from app.utils.library import Library
 from config import Config
 

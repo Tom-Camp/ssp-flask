@@ -3,6 +3,7 @@ from pathlib import Path
 from flask import Blueprint, redirect, render_template, request, url_for
 
 from app.projects.helpers import get_project_data, load_template_file
+from app.toolkit.createfiles import render
 
 editing_bp = Blueprint("editing", __name__, url_prefix="/project")
 
@@ -19,11 +20,13 @@ def edit_template(project_name: str):
 
     template_path = Path(request.form.get("template"))
     file_value = load_template_file(template_path=template_path)
+    relative_path = template_path.relative_to(project_path.joinpath("templates"))
 
     data: dict = {
         "project": project,
-        "file_path": template_path.as_posix(),
+        "file_path": relative_path,
         "file_name": template_path.name,
+        "directory": relative_path.parts[0],
         "file_value": file_value,
     }
 
@@ -35,10 +38,17 @@ def edit_template_submit(project_name: str):
     project_path, project, manager, _, config = get_project_data(project_name)
     file_text = request.form.get("file_body")
     file_path = request.form.get("file_path")
-    directory = Path(file_path).relative_to(project_path.joinpath("templates")).parts[0]
+    directory = request.form.get("directory")
+    update_path = Path("templates").joinpath(file_path)
     manager.write_file(
-        file_path=file_path,
+        file_path=update_path,
         file_body=file_text,
+    )
+    render(
+        templates=[file_path],
+        project_path=project_path,
+        config=config,
+        manager=manager,
     )
 
     return redirect(
