@@ -51,13 +51,11 @@ class Project(BaseModel):
     def add_base(self):
         self.library.copy_file(
             source_path="configuration.yaml",
-            destination_path=self.project_path.joinpath(
-                "configuration.yaml"
-            ).as_posix(),
+            destination_path=self.project_path.joinpath("configuration.yaml"),
         )
         self.library.copy_directory(
             source_path="keys",
-            destination_path=self.project_path.joinpath("keys").as_posix(),
+            destination_path=self.project_path.joinpath("keys"),
         )
         metadata = Metadata(
             description=self.description,
@@ -66,4 +64,4 @@ class Project(BaseModel):
         OpenControl(
             name=self.name,
             metadata=metadata,
-        ).write(self.project_path.as_posix())
+        ).write(self.project_path)

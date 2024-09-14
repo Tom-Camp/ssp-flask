@@ -103,7 +103,7 @@ def project_templates_view(project_name: str, directory: str):
     if not project_path.exists() or directory not in allowed_directories:
         abort(404)
 
-    project_templates = manager.get_files_by_directory(directory)
+    project_templates = manager.get_files_by_directory(f"templates/{directory}")
 
     data: dict = {
         "directory": directory,
@@ -127,7 +127,7 @@ def project_files_add_view(project_name: str, directory: str):
     if not project_path.exists() or directory not in allowed_directories:
         abort(404)
 
-    project_templates = manager.get_files_by_directory(directory)
+    project_templates = manager.get_files_by_directory(f"templates/{directory}")
     library_templates = project.library.list_files(
         directory=Path("templates").joinpath(directory).as_posix()
     )
@@ -161,11 +161,11 @@ def project_files_add_submit(project_name: str):
         destination = project_path.joinpath(copy_path)
         if project.library.library.joinpath(copy_path).is_dir():
             project.library.copy_directory(
-                source_path=copy_path, destination_path=destination.as_posix()
+                source_path=copy_path, destination_path=destination
             )
         else:
             project.library.copy_file(
-                source_path=copy_path, destination_path=destination.as_posix()
+                source_path=copy_path, destination_path=destination
             )
 
     return redirect(
@@ -185,7 +185,7 @@ def project_files_remove_submit(project_name: str):
 
     parents = request.form.get("parents")
     for file in request.form.getlist("files"):
-        copy_path = f"templates/{parents}/{file}"
+        copy_path = Path("templates").joinpath(parents).joinpath(file)
         manager.remove_file(source_path=copy_path)
 
     return redirect(

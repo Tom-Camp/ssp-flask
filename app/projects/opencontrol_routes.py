@@ -89,12 +89,12 @@ def opencontrol_component_add_submit(project_name: str):
         destination = project_path.joinpath(copy_path)
         if project.library.library.joinpath(copy_path).is_dir():
             project.library.copy_directory(
-                source_path=copy_path.as_posix(),
-                destination_path=destination.as_posix(),
+                source_path=copy_path,
+                destination_path=destination,
             )
 
             opencontrol.add(
-                project_path=project_path.as_posix(),
+                project_path=project_path,
                 key="components",
                 attribute=f"rendered_files/components/{filename}",
             )
@@ -111,10 +111,10 @@ def opencontrol_component_remove_submit(project_name: str):
     for filename in request.form.getlist("files"):
         remove_path = Path("templates/components").joinpath(filename)
         if project_path.joinpath(remove_path).is_dir():
-            manager.remove_directory(source=remove_path.as_posix())
+            manager.remove_directory(source=remove_path)
 
             opencontrol.remove(
-                project_path=project_path.as_posix(),
+                project_path=project_path,
                 key="components",
                 attribute=f"rendered_files/components/{filename}",
             )
@@ -137,12 +137,12 @@ def opencontrol_file_add_submit(project_name: str):
         destination = project_path.joinpath(copy_path)
         if project.library.library.joinpath(copy_path).is_file():
             project.library.copy_file(
-                source_path=copy_path.as_posix(),
-                destination_path=destination.as_posix(),
+                source_path=copy_path,
+                destination_path=destination,
             )
 
             opencontrol.add(
-                project_path=project_path.as_posix(),
+                project_path=project_path,
                 key=key,
                 attribute=f"{key}/{filename}",
             )
@@ -160,9 +160,9 @@ def opencontrol_file_remove_submit(project_name: str):
     for filename in request.form.getlist("files"):
         remove_file = Path(key).joinpath(filename)
         if project_path.joinpath(remove_file).is_file():
-            manager.remove_file(source_path=remove_file.as_posix())
+            manager.remove_file(source_path=remove_file)
             opencontrol.remove(
-                project_path=project_path.as_posix(),
+                project_path=project_path,
                 key=key,
                 attribute=Path(remove_file).as_posix(),
             )

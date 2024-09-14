@@ -4,10 +4,11 @@ import rtyaml
 from flask import flash
 
 
-def load_yaml(filename: str) -> dict:
+def load_yaml(filename: str | Path) -> dict:
     file: dict = {}
+    file_name = filename if isinstance(filename, Path) else Path(filename)
     try:
-        with Path(filename).open("r") as fp:
+        with file_name.open("r") as fp:
             file = rtyaml.load(fp)
     except FileNotFoundError:
         flash(message=f"File {filename} does not exist", category="error")

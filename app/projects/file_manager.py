@@ -23,22 +23,18 @@ class FileManager(BaseModel):
         if model.project_path.is_dir():
             model.template_path = model.project_path.joinpath("templates")
 
-    def get_files(self) -> list:
-        return [file.as_posix() for file in self.template_path.rglob("*")]
-
     def get_files_by_directory(self, directory: str) -> list:
-        return [file.name for file in self.template_path.joinpath(directory).glob("*")]
+        return [file.name for file in self.project_path.joinpath(directory).glob("*")]
 
-    def get_directory_tree(self, dir_path: Path):
-        return {
-            item.name: self.get_directory_tree(item) if item.is_dir() else None
-            for item in dir_path.iterdir()
-        }
+    def get_directory_tree(self, dir_path: Path) -> dict:
+        if dir_path.is_dir():
+            return {
+                item.name: self.get_directory_tree(item) if item.is_dir() else None
+                for item in dir_path.iterdir()
+            }
+        return {}
 
-    def get_copy_destination(self, filepath: str) -> str:
-        return self.template_path.joinpath(filepath).as_posix()
-
-    def remove_file(self, source_path: str):
+    def remove_file(self, source_path: Path):
         source = self.project_path.joinpath(source_path)
         destination = self.project_path.joinpath("trash").joinpath(source_path)
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -51,7 +47,7 @@ class FileManager(BaseModel):
         finally:
             pass
 
-    def remove_directory(self, source: str):
+    def remove_directory(self, source: Path):
         file_source = self.project_path.joinpath(source)
         trash_path = self.project_path.joinpath("trash").joinpath(source)
         if trash_path.exists() and trash_path.is_dir():
@@ -71,7 +67,7 @@ class FileManager(BaseModel):
         finally:
             pass
 
-    def write_file(self, file_path: str, file_body: str):
+    def write_file(self, file_path: str | Path, file_body: str):
         file = Path(file_path)
         write_path = (
             file
