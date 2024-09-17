@@ -17,6 +17,14 @@
             </a>
         </li>
         <li class="usa-sidenav__item">
+            <a href="{{ url_for(
+                "rendered.rendered_files",
+                project_name=project.machine_name
+            ) }}">
+                Rendered files
+            </a>
+        </li>
+        <li class="usa-sidenav__item">
             <a href="javascript:void(0);">Templates</a>
             <ul class="usa-sidenav__sublist">
                 <li class="usa-sidenav__item">

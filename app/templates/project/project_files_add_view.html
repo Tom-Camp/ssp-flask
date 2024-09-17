@@ -5,27 +5,23 @@
 {% block breadcrumbs %}
 <ol class="usa-breadcrumb__list">
     <li class="usa-breadcrumb__list-item">
-        <a href="/"><span>Home</span></a>
+        <a href="/">Home</a>
     </li>
     <li class="usa-breadcrumb__list-item">
         <a href="{{ url_for(
             "project.project_view",
             project_name=machine_name
-        ) }}">
-            <span>{{ project.name }}</span>
-        </a>
+        ) }}">{{ project.name }}</a>
     </li>
     <li class="usa-breadcrumb__list-item">
         <a href="{{ url_for(
             "project.project_templates_view",
             project_name=project.machine_name,
             directory=directory
-        ) }}">
-            <span>Templates</span>
-        </a>
+        ) }}">Templates</a>
     </li>
     <li  class="usa-breadcrumb__list-item usa-current" aria-current="page">
-        <span>Add {{ directory|title }}</span>
+        Add {{ directory|title }}
     </li>
 </ol>
 {% endblock %}
