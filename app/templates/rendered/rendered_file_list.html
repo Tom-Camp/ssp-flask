@@ -1,0 +1,72 @@
+{% extends "project/project_base.html" %}
+
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="usa-breadcrumb__list">
+    <li class="usa-breadcrumb__list-item">
+        <a href="/"><span>Home</span></a>
+    </li>
+    <li class="usa-breadcrumb__list-item">
+        <a href="{{ url_for(
+            "project.project_view",
+            project_name=machine_name
+        ) }}">{{ project.name }}</a>
+    </li>
+    <li class="usa-breadcrumb__list-item usa-current" aria-current="page">
+        <span>Rendered files</span>
+    </li>
+</ol>
+{% endblock %}
+
+{% block page_title %}{{ project.name }}{% endblock %}
+
+{% block project_content %}
+    <div class="grid-row grid-gap">
+        <div class="usa-accordion usa-accordion--bordered">
+        {% for directory, files in rendered.items() %}
+            <h4 class="usa-accordion__heading">
+                <button
+                    type="button"
+                    class="usa-accordion__button"
+                    aria-expanded="true"
+                    aria-controls="a{{ loop.index0 }}"
+                >{{ directory }}</button>
+            </h4>
+            <div id="a{{ loop.index0 }}" class="usa-accordion__content usa-prose">
+                {% macro render_dict(d) %}
+                    <ul>
+                    {% for parent, file in d.items() %}
+                        <li>
+                            {% if file %}
+                                <strong>{{ parent }}:</strong>
+                                {% if file is mapping %}
+                                    <ul>
+                                        {% for child in file %}
+                                            <li>
+                                                <a href="{{ url_for(
+                                                    "rendered.rendered_file_view",
+                                                    project_name=project.machine_name,
+                                                    filepath=directory ~ "/" ~ parent ~ "/" ~ child
+                                                ) }}">{{ child }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            {% else %}
+                                <a href="{{ url_for(
+                                    "rendered.rendered_file_view",
+                                    project_name=project.machine_name,
+                                    filepath=directory ~ "/" ~ parent
+                                ) }}">{{ parent }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% endmacro %}
+                {{ render_dict(files) }}
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}

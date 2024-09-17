@@ -28,10 +28,16 @@ class FileManager(BaseModel):
 
     def get_directory_tree(self, dir_path: Path) -> dict:
         if dir_path.is_dir():
-            return {
-                item.name: self.get_directory_tree(item) if item.is_dir() else None
-                for item in dir_path.iterdir()
-            }
+            return dict(
+                sorted(
+                    {
+                        item.name: (
+                            self.get_directory_tree(item) if item.is_dir() else None
+                        )
+                        for item in dir_path.iterdir()
+                    }.items()
+                )
+            )
         return {}
 
     def remove_file(self, source_path: Path):
@@ -80,3 +86,11 @@ class FileManager(BaseModel):
         except IOError:
             logger.error(f"Manager action: Error updating {output.name}")
             flash(message=f"Error updating {output.name}", category="error")
+
+    def read_file(self, file_path: Path) -> str:
+        rendered = self.project_path.joinpath(file_path)
+        if rendered.exists():
+            return rendered.read_text(encoding="utf-8")
+        else:
+            flash(f"File {file_path} does not exist.", category="error")
+            return ""

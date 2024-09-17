@@ -8,10 +8,10 @@
 
 a {
   &.usa-footer__logo-heading {
+    text-decoration: none;
     img {
       &.footer-logo {
         max-width: 150px;
-        text-decoration: none;
       }
     }
   }

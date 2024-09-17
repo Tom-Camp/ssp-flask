@@ -28,7 +28,7 @@ def project_list_view():
             ),
             category="info",
         )
-    return render_template("project/project_list_view.html", projects=projects)
+    return render_template("project/projects.html", projects=projects)
 
 
 @project_bp.route("/create", methods=["GET", "POST"])
