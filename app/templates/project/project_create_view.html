@@ -1,4 +1,4 @@
-{% extends 'project/projects.html' %}
+{% extends 'project/projects_list_page.html' %}
 
 {% block title %}Creat Project{% endblock %}
 
@@ -8,7 +8,7 @@
         <a href="/"><span>Home</span></a>
     </li>
     <li class="usa-breadcrumb__list-item">
-        <a href="{{ url_for("project.project_list_view") }}"><span>Projects></span></a>
+        <a href="{{ url_for("project.list_projects_view") }}"><span>Projects></span></a>
     </li>
     <li  class="usa-breadcrumb__list-item usa-current" aria-current="page">
         <span>Create Project</span>

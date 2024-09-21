@@ -12,7 +12,7 @@ project_bp = Blueprint("project", __name__, url_prefix="/project")
 
 
 @project_bp.route("/list", methods=["GET"])
-def project_list_view():
+def list_projects_view():
     """
     A page to list all the Projects.
 
@@ -28,11 +28,11 @@ def project_list_view():
             ),
             category="info",
         )
-    return render_template("project/projects.html", projects=projects)
+    return render_template("project/projects_list_page.html", projects=projects)
 
 
 @project_bp.route("/create", methods=["GET", "POST"])
-def project_create_view():
+def create_project_view():
     """
     A page to create an SSP Toolkit Project
 
@@ -57,7 +57,7 @@ def project_create_view():
 
 
 @project_bp.route("/<project_name>", methods=["GET"])
-def project_view(project_name: str):
+def show_project(project_name: str):
     """
     A view of an individual Project.
 
@@ -90,6 +90,16 @@ def project_view(project_name: str):
     return render_template("project/project_view.html", **data)
 
 
+@project_bp.route("/<project_name>/templates", methods=["GET"])
+def project_templates_base(project_name: str):
+    """
+    A page to add templates to a Project.
+
+    :param project_name: str - machine_name for the Project.
+    :return: HTML template
+    """
+
+
 @project_bp.route("/<project_name>/templates/<directory>", methods=["GET"])
 def project_templates_view(project_name: str, directory: str):
     """
@@ -97,6 +107,7 @@ def project_templates_view(project_name: str, directory: str):
 
     :param project_name: str - machine_name for the Project.
     :param directory: str - the template directory name.
+    :return: HTML template
     """
     project_path, project, manager, opencontrol, _ = get_project_data(project_name)
     allowed_directories = ["appendices", "frontmatter", "tailoring"]

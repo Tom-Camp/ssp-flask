@@ -8,7 +8,7 @@
         <a href="/">Home</a>
     </li>
     <li class="usa-breadcrumb__list-item">
-        <a href="{{ url_for("project.project_view", project_name=project.machine_name) }}">
+        <a href="{{ url_for("project.show_project", project_name=project.machine_name) }}">
             {{ project.name }}
         </a>
     </li>
