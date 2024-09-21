@@ -8,7 +8,7 @@ opencontrol_bp = Blueprint("opencontrol", __name__, url_prefix="/project")
 
 
 @opencontrol_bp.route("/<project_name>/opencontrol", methods=["GET"])
-def opencontrol_view(project_name: str):
+def show_opencontrol(project_name: str):
     """
     Returns a list of Components available to add to a Project.
 
@@ -26,7 +26,7 @@ def opencontrol_view(project_name: str):
 
 
 @opencontrol_bp.route("/<project_name>/templates/components", methods=["GET"])
-def component_template_list_view(project_name: str):
+def list_component_templates(project_name: str):
     """
     Returns a list of Components available to add to a Project.
 
@@ -79,7 +79,7 @@ def add_opencontrol_files(project_name: str, directory: str):
 
 
 @opencontrol_bp.route("/<project_name>/<key>/add", methods=["GET"])
-def opencontrol_add_elements_view(project_name: str, key: str):
+def add_opencontrol_values(project_name: str, key: str):
     """
     A view for list Components from the library.
 
@@ -113,7 +113,7 @@ def opencontrol_add_elements_view(project_name: str, key: str):
 
 
 @opencontrol_bp.route("<project_name>/component/add", methods=["POST"])
-def opencontrol_component_add_submit(project_name: str):
+def add_component_submit_handler(project_name: str):
     project_path, project, manager, opencontrol, _ = get_project_data(project_name)
 
     for filename in request.form.getlist("files"):
@@ -137,7 +137,7 @@ def opencontrol_component_add_submit(project_name: str):
 
 
 @opencontrol_bp.route("<project_name>/component/remove", methods=["POST"])
-def opencontrol_component_remove_submit(project_name: str):
+def remove_component_submit_handler(project_name: str):
     project_path, project, manager, opencontrol, _ = get_project_data(project_name)
 
     for filename in request.form.getlist("files"):
@@ -157,7 +157,7 @@ def opencontrol_component_remove_submit(project_name: str):
 
 
 @opencontrol_bp.route("<project_name>/opencontrol/add", methods=["POST"])
-def opencontrol_file_add_submit(project_name: str):
+def add_file_submit_handler(project_name: str):
     project_path, project, manager, opencontrol, _ = get_project_data(project_name)
 
     key = request.form.get("key")
@@ -185,7 +185,7 @@ def opencontrol_file_add_submit(project_name: str):
 
 
 @opencontrol_bp.route("<project_name>/opencontrol/remove", methods=["POST"])
-def opencontrol_file_remove_submit(project_name: str):
+def remove_file_submit_handler(project_name: str):
     project_path, project, manager, opencontrol, _ = get_project_data(project_name)
 
     key = request.form.get("key")
