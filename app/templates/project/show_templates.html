@@ -61,7 +61,7 @@
                         <li>
                             No {{ directory }} files have been added to your project.
                             <a class="usa-summary-box__link" href="{{ url_for(
-                                    "project.project_files_add_view",
+                                    "opencontrol.add_opencontrol_files",
                                     project_name=project.machine_name,
                                     directory=directory
                                 ) }}"
@@ -75,7 +75,7 @@
         </div>
     {% endif %}
     <a href="{{ url_for(
-        "project.project_files_add_view",
+        "opencontrol.add_opencontrol_files",
         project_name=project.machine_name,
         directory=directory
     ) }}" class="usa-button margin-top-2">

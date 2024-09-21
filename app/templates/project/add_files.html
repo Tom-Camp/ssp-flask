@@ -35,7 +35,7 @@
                 <form
                     method="POST"
                     action="{{ url_for(
-                        "project.project_files_remove_submit",
+                        "project.remove_files_submit_handler",
                         project_name=project.machine_name
                     ) }}
                 ">
@@ -80,7 +80,7 @@
                 <form
                     method="POST"
                     action="{{ url_for(
-                        "project.project_files_add_submit",
+                        "project.add_files_submit_handler",
                         project_name=project.machine_name
                     ) }}
                 ">

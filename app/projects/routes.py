@@ -124,40 +124,8 @@ def show_templates_by_directory(project_name: str, directory: str):
     return render_template("project/show_templates.html", **data)
 
 
-@project_bp.route("/<project_name>/files/add/<directory>", methods=["GET"])
-def project_files_add_view(project_name: str, directory: str):
-    """
-    A page to add OpenControl certifications and standards.
-
-    :param project_name: str - machine_name for the Project.
-    :param directory: str - either standards or certifications
-    :return: HTML template
-    """
-    project_path, project, manager, opencontrol, _ = get_project_data(project_name)
-    allowed_directories = ["appendices", "opencontrol", "frontmatter", "tailoring"]
-    if not project_path.exists() or directory not in allowed_directories:
-        abort(404)
-
-    project_templates = manager.get_files_by_directory(f"templates/{directory}")
-    library_templates = project.library.list_files(
-        directory=Path("templates").joinpath(directory).as_posix()
-    )
-    new_templates: list = [
-        file for file in library_templates if file not in project_templates
-    ]
-
-    data: dict = {
-        "directory": directory,
-        "project": project,
-        "project_templates": project_templates,
-        "templates": new_templates,
-    }
-
-    return render_template("project/add_files.html", **data)
-
-
 @project_bp.route("/<project_name>/file/add", methods=["POST"])
-def project_files_add_submit(project_name: str):
+def add_files_submit_handler(project_name: str):
     """
     Submit handler for adding template files.
 
@@ -185,7 +153,7 @@ def project_files_add_submit(project_name: str):
 
 
 @project_bp.route("/<project_name>/file/remove", methods=["POST"])
-def project_files_remove_submit(project_name: str):
+def remove_files_submit_handler(project_name: str):
     """
     Submit handler for removing template files.
 
@@ -205,7 +173,7 @@ def project_files_remove_submit(project_name: str):
 
 
 @project_bp.route("<project_name>/keys", methods=["GET"])
-def project_keys_view(project_name: str):
+def show_project_keys(project_name: str):
     project_path, project, manager, opencontrol, _ = get_project_data(project_name)
     config = Config(machine_name=project.machine_name)
 

@@ -46,6 +46,38 @@ def component_template_list_view(project_name: str):
     return render_template("opencontrol/show_component_template.html", **data)
 
 
+@opencontrol_bp.route("/<project_name>/files/add/<directory>", methods=["GET"])
+def add_opencontrol_files(project_name: str, directory: str):
+    """
+    A page to add OpenControl certifications and standards.
+
+    :param project_name: str - machine_name for the Project.
+    :param directory: str - either standards or certifications
+    :return: HTML template
+    """
+    project_path, project, manager, opencontrol, _ = get_project_data(project_name)
+    allowed_directories = ["appendices", "opencontrol", "frontmatter", "tailoring"]
+    if not project_path.exists() or directory not in allowed_directories:
+        abort(404)
+
+    project_templates = manager.get_files_by_directory(f"templates/{directory}")
+    library_templates = project.library.list_files(
+        directory=Path("templates").joinpath(directory).as_posix()
+    )
+    new_templates: list = [
+        file for file in library_templates if file not in project_templates
+    ]
+
+    data: dict = {
+        "directory": directory,
+        "project": project,
+        "project_templates": project_templates,
+        "templates": new_templates,
+    }
+
+    return render_template("project/add_files.html", **data)
+
+
 @opencontrol_bp.route("/<project_name>/<key>/add", methods=["GET"])
 def opencontrol_add_elements_view(project_name: str, key: str):
     """
