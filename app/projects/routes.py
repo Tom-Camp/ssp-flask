@@ -28,7 +28,7 @@ def list_projects_view():
             ),
             category="info",
         )
-    return render_template("project/projects_list_page.html", projects=projects)
+    return render_template("project/list_projects.html", projects=projects)
 
 
 @project_bp.route("/create", methods=["GET", "POST"])
@@ -53,7 +53,7 @@ def create_project_view():
                 url_for("project.project_view", project_name=project.machine_name)
             )
 
-    return render_template("project/project_create_view.html", form=form)
+    return render_template("project/create_project.html", form=form)
 
 
 @project_bp.route("/<project_name>", methods=["GET"])
@@ -121,7 +121,7 @@ def project_templates_view(project_name: str, directory: str):
         "project": project,
         "templates": project_templates,
     }
-    return render_template("project/project_templates.html", **data)
+    return render_template("project/show_templates.html", **data)
 
 
 @project_bp.route("/<project_name>/files/add/<directory>", methods=["GET"])
@@ -153,7 +153,7 @@ def project_files_add_view(project_name: str, directory: str):
         "templates": new_templates,
     }
 
-    return render_template("project/project_files_add_view.html", **data)
+    return render_template("project/add_files.html", **data)
 
 
 @project_bp.route("/<project_name>/file/add", methods=["POST"])
