@@ -45,7 +45,7 @@
                                         {% for child in file %}
                                             <li>
                                                 <a href="{{ url_for(
-                                                    "rendered.rendered_file_view",
+                                                    "rendered.show_rendered_file",
                                                     project_name=project.machine_name,
                                                     filepath=directory ~ "/" ~ parent ~ "/" ~ child
                                                 ) }}">{{ child }}</a>
@@ -55,7 +55,7 @@
                                 {% endif %}
                             {% else %}
                                 <a href="{{ url_for(
-                                    "rendered.rendered_file_view",
+                                    "rendered.show_rendered_file",
                                     project_name=project.machine_name,
                                     filepath=directory ~ "/" ~ parent
                                 ) }}">{{ parent }}</a>

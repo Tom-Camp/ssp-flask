@@ -9,9 +9,9 @@ rendered_bp = Blueprint("rendered", __name__, url_prefix="/project")
 
 
 @rendered_bp.route("<project_name>/rendered", methods=["GET"])
-def rendered_files(project_name: str):
+def list_rendered_files(project_name: str):
     """
-    Returns a form for editing a template.
+    Returns a dictionary of rendered files.
 
     :param project_name: str - Project machine_name
     :return: HTML template
@@ -29,7 +29,7 @@ def rendered_files(project_name: str):
 
 
 @rendered_bp.route("<project_name>/rendered/view", methods=["GET"])
-def rendered_file_view(project_name: str):
+def show_rendered_file(project_name: str):
     """
     Returns a form for editing a template.
 
