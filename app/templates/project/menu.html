@@ -29,7 +29,7 @@
             <ul class="usa-sidenav__sublist">
                 <li class="usa-sidenav__item">
                     <a href="{{ url_for(
-                        "project.project_templates_view",
+                        "project.show_templates_by_directory",
                         project_name=project.machine_name,
                         directory="appendices"
                     ) }}">
@@ -46,7 +46,7 @@
                 </li>
                 <li class="usa-sidenav__item">
                     <a href="{{ url_for(
-                        "project.project_templates_view",
+                        "project.show_templates_by_directory",
                         project_name=project.machine_name,
                         directory="frontmatter"
                     ) }}">
@@ -55,7 +55,7 @@
                 </li>
                 <li class="usa-sidenav__item">
                     <a href="{{ url_for(
-                        "project.project_templates_view",
+                        "project.show_templates_by_directory",
                         project_name=project.machine_name,
                         directory="tailoring"
                     ) }}">

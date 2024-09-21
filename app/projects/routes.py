@@ -91,7 +91,7 @@ def show_project(project_name: str):
 
 
 @project_bp.route("/<project_name>/templates", methods=["GET"])
-def project_templates_base(project_name: str):
+def show_all_templates(project_name: str):
     """
     A page to add templates to a Project.
 
@@ -101,7 +101,7 @@ def project_templates_base(project_name: str):
 
 
 @project_bp.route("/<project_name>/templates/<directory>", methods=["GET"])
-def project_templates_view(project_name: str, directory: str):
+def show_templates_by_directory(project_name: str, directory: str):
     """
     A page to add templates to a Project.
 

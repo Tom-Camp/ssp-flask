@@ -22,7 +22,7 @@ def opencontrol_view(project_name: str):
         "opencontrol": opencontrol.model_dump(),
     }
 
-    return render_template("opencontrol/opencontrol_view.html", **data)
+    return render_template("opencontrol/show_opencontrol.html", **data)
 
 
 @opencontrol_bp.route("/<project_name>/templates/components", methods=["GET"])
@@ -43,7 +43,7 @@ def component_template_list_view(project_name: str):
         "components": components,
     }
 
-    return render_template("opencontrol/components_templates_view.html", **data)
+    return render_template("opencontrol/show_component_template.html", **data)
 
 
 @opencontrol_bp.route("/<project_name>/<key>/add", methods=["GET"])
@@ -77,7 +77,7 @@ def opencontrol_add_elements_view(project_name: str, key: str):
         "project_files": project_files,
         "key": key,
     }
-    return render_template("opencontrol/components_templates_edit_view.html", **data)
+    return render_template("opencontrol/edit_component_template.html", **data)
 
 
 @opencontrol_bp.route("<project_name>/component/add", methods=["POST"])
