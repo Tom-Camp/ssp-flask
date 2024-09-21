@@ -12,7 +12,7 @@ project_bp = Blueprint("project", __name__, url_prefix="/project")
 
 
 @project_bp.route("/list", methods=["GET"])
-def project_list_view():
+def list_projects():
     """
     A page to list all the Projects.
 
@@ -28,11 +28,11 @@ def project_list_view():
             ),
             category="info",
         )
-    return render_template("project/projects.html", projects=projects)
+    return render_template("project/list_projects.html", projects=projects)
 
 
 @project_bp.route("/create", methods=["GET", "POST"])
-def project_create_view():
+def create_project():
     """
     A page to create an SSP Toolkit Project
 
@@ -53,11 +53,11 @@ def project_create_view():
                 url_for("project.project_view", project_name=project.machine_name)
             )
 
-    return render_template("project/project_create_view.html", form=form)
+    return render_template("project/create_project.html", form=form)
 
 
 @project_bp.route("/<project_name>", methods=["GET"])
-def project_view(project_name: str):
+def show_project(project_name: str):
     """
     A view of an individual Project.
 
@@ -90,13 +90,24 @@ def project_view(project_name: str):
     return render_template("project/project_view.html", **data)
 
 
+@project_bp.route("/<project_name>/templates", methods=["GET"])
+def show_all_templates(project_name: str):
+    """
+    A page to add templates to a Project.
+
+    :param project_name: str - machine_name for the Project.
+    :return: HTML template
+    """
+
+
 @project_bp.route("/<project_name>/templates/<directory>", methods=["GET"])
-def project_templates_view(project_name: str, directory: str):
+def show_templates_by_directory(project_name: str, directory: str):
     """
     A page to add templates to a Project.
 
     :param project_name: str - machine_name for the Project.
     :param directory: str - the template directory name.
+    :return: HTML template
     """
     project_path, project, manager, opencontrol, _ = get_project_data(project_name)
     allowed_directories = ["appendices", "frontmatter", "tailoring"]
@@ -110,43 +121,11 @@ def project_templates_view(project_name: str, directory: str):
         "project": project,
         "templates": project_templates,
     }
-    return render_template("project/project_templates.html", **data)
-
-
-@project_bp.route("/<project_name>/files/add/<directory>", methods=["GET"])
-def project_files_add_view(project_name: str, directory: str):
-    """
-    A page to add OpenControl certifications and standards.
-
-    :param project_name: str - machine_name for the Project.
-    :param directory: str - either standards or certifications
-    :return: HTML template
-    """
-    project_path, project, manager, opencontrol, _ = get_project_data(project_name)
-    allowed_directories = ["appendices", "opencontrol", "frontmatter", "tailoring"]
-    if not project_path.exists() or directory not in allowed_directories:
-        abort(404)
-
-    project_templates = manager.get_files_by_directory(f"templates/{directory}")
-    library_templates = project.library.list_files(
-        directory=Path("templates").joinpath(directory).as_posix()
-    )
-    new_templates: list = [
-        file for file in library_templates if file not in project_templates
-    ]
-
-    data: dict = {
-        "directory": directory,
-        "project": project,
-        "project_templates": project_templates,
-        "templates": new_templates,
-    }
-
-    return render_template("project/project_files_add_view.html", **data)
+    return render_template("project/show_templates.html", **data)
 
 
 @project_bp.route("/<project_name>/file/add", methods=["POST"])
-def project_files_add_submit(project_name: str):
+def add_files_submit_handler(project_name: str):
     """
     Submit handler for adding template files.
 
@@ -174,7 +153,7 @@ def project_files_add_submit(project_name: str):
 
 
 @project_bp.route("/<project_name>/file/remove", methods=["POST"])
-def project_files_remove_submit(project_name: str):
+def remove_files_submit_handler(project_name: str):
     """
     Submit handler for removing template files.
 
@@ -194,7 +173,7 @@ def project_files_remove_submit(project_name: str):
 
 
 @project_bp.route("<project_name>/keys", methods=["GET"])
-def project_keys_view(project_name: str):
+def show_project_keys(project_name: str):
     project_path, project, manager, opencontrol, _ = get_project_data(project_name)
     config = Config(machine_name=project.machine_name)
 

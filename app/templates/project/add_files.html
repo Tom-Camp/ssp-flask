@@ -9,13 +9,13 @@
     </li>
     <li class="usa-breadcrumb__list-item">
         <a href="{{ url_for(
-            "project.project_view",
+            "project.show_project",
             project_name=machine_name
         ) }}">{{ project.name }}</a>
     </li>
     <li class="usa-breadcrumb__list-item">
         <a href="{{ url_for(
-            "project.project_templates_view",
+            "project.show_templates_by_directory",
             project_name=project.machine_name,
             directory=directory
         ) }}">Templates</a>
@@ -35,7 +35,7 @@
                 <form
                     method="POST"
                     action="{{ url_for(
-                        "project.project_files_remove_submit",
+                        "project.remove_files_submit_handler",
                         project_name=project.machine_name
                     ) }}
                 ">
@@ -80,7 +80,7 @@
                 <form
                     method="POST"
                     action="{{ url_for(
-                        "project.project_files_add_submit",
+                        "project.add_files_submit_handler",
                         project_name=project.machine_name
                     ) }}
                 ">

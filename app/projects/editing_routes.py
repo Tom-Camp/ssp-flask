@@ -34,7 +34,7 @@ def edit_template(project_name: str):
 
 
 @editing_bp.route("<project_name>/template/submit", methods=["POST"])
-def edit_template_submit(project_name: str):
+def edit_template_submit_handler(project_name: str):
     project_path, project, manager, _, config = get_project_data(project_name)
     file_text = request.form.get("file_body")
     file_path = request.form.get("file_path")

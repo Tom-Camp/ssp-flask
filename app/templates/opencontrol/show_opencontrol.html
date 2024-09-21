@@ -9,7 +9,7 @@
     </li>
     <li class="usa-breadcrumb__list-item">
         <a href="{{ url_for(
-            "project.project_view",
+            "project.show_project",
             project_name=machine_name
         ) }}">{{ project.name }}</a>
     </li>
@@ -81,7 +81,7 @@
                     </div>
                     <div class="usa-card__footer">
                         <a class="usa-button" href="{{ url_for(
-                            "opencontrol.opencontrol_add_elements_view",
+                            "opencontrol.add_opencontrol_values",
                             project_name=project.machine_name,
                             key="certifications"
                         ) }}">Add/edit certifications</a>
@@ -104,7 +104,7 @@
                     </div>
                     <div class="usa-card__footer">
                         <a class="usa-button" href="{{ url_for(
-                            "opencontrol.opencontrol_add_elements_view",
+                            "opencontrol.add_opencontrol_values",
                             project_name=project.machine_name,
                             key="standards"
                         ) }}">Add/edit standards</a>
@@ -127,7 +127,7 @@
                     </div>
                     <div class="usa-card__footer">
                         <a class="usa-button" href="{{ url_for(
-                            "opencontrol.opencontrol_add_elements_view",
+                            "opencontrol.add_opencontrol_values",
                             project_name=project.machine_name,
                             key="components"
                         ) }}">Add/edit component</a>

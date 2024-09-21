@@ -9,7 +9,7 @@
     </li>
     <li class="usa-breadcrumb__list-item">
         <a href="{{ url_for(
-            "project.project_view",
+            "project.show_project",
             project_name=project.machine_name
         ) }}">
             <span>{{ project.name }}</span>
@@ -17,7 +17,7 @@
     </li>
     <li class="usa-breadcrumb__list-item">
         <a href="{{ url_for(
-            "opencontrol.opencontrol_view",
+            "opencontrol.show_opencontrol",
             project_name=project.machine_name
         ) }}">
             <span>OpenControl</span>
@@ -39,12 +39,12 @@
                     method="POST"
                     {% if key == "components" %}
                         action="{{ url_for(
-                            "opencontrol.opencontrol_component_remove_submit",
+                            "opencontrol.remove_component_submit_handler",
                             project_name=project.machine_name
                         ) }}"
                     {% else %}
                         action="{{ url_for(
-                            "opencontrol.opencontrol_file_remove_submit",
+                            "opencontrol.remove_file_submit_handler",
                             project_name=project.machine_name
                         ) }}"
                     {% endif %}
@@ -91,12 +91,12 @@
                     method="POST"
                     {% if key == "components" %}
                         action="{{ url_for(
-                            "opencontrol.opencontrol_component_add_submit",
+                            "opencontrol.add_component_submit_handler",
                             project_name=project.machine_name
                         ) }}"
                     {% else %}
                         action="{{ url_for(
-                            "opencontrol.opencontrol_file_add_submit",
+                            "opencontrol.add_file_submit_handler",
                             project_name=project.machine_name
                         ) }}"
                     {% endif %}

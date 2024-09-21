@@ -8,7 +8,7 @@ opencontrol_bp = Blueprint("opencontrol", __name__, url_prefix="/project")
 
 
 @opencontrol_bp.route("/<project_name>/opencontrol", methods=["GET"])
-def opencontrol_view(project_name: str):
+def show_opencontrol(project_name: str):
     """
     Returns a list of Components available to add to a Project.
 
@@ -22,11 +22,11 @@ def opencontrol_view(project_name: str):
         "opencontrol": opencontrol.model_dump(),
     }
 
-    return render_template("opencontrol/opencontrol_view.html", **data)
+    return render_template("opencontrol/show_opencontrol.html", **data)
 
 
 @opencontrol_bp.route("/<project_name>/templates/components", methods=["GET"])
-def component_template_list_view(project_name: str):
+def list_component_templates(project_name: str):
     """
     Returns a list of Components available to add to a Project.
 
@@ -43,11 +43,43 @@ def component_template_list_view(project_name: str):
         "components": components,
     }
 
-    return render_template("opencontrol/components_templates_view.html", **data)
+    return render_template("opencontrol/show_component_template.html", **data)
+
+
+@opencontrol_bp.route("/<project_name>/files/add/<directory>", methods=["GET"])
+def add_opencontrol_files(project_name: str, directory: str):
+    """
+    A page to add OpenControl certifications and standards.
+
+    :param project_name: str - machine_name for the Project.
+    :param directory: str - either standards or certifications
+    :return: HTML template
+    """
+    project_path, project, manager, opencontrol, _ = get_project_data(project_name)
+    allowed_directories = ["appendices", "opencontrol", "frontmatter", "tailoring"]
+    if not project_path.exists() or directory not in allowed_directories:
+        abort(404)
+
+    project_templates = manager.get_files_by_directory(f"templates/{directory}")
+    library_templates = project.library.list_files(
+        directory=Path("templates").joinpath(directory).as_posix()
+    )
+    new_templates: list = [
+        file for file in library_templates if file not in project_templates
+    ]
+
+    data: dict = {
+        "directory": directory,
+        "project": project,
+        "project_templates": project_templates,
+        "templates": new_templates,
+    }
+
+    return render_template("project/add_files.html", **data)
 
 
 @opencontrol_bp.route("/<project_name>/<key>/add", methods=["GET"])
-def opencontrol_add_elements_view(project_name: str, key: str):
+def add_opencontrol_values(project_name: str, key: str):
     """
     A view for list Components from the library.
 
@@ -77,11 +109,11 @@ def opencontrol_add_elements_view(project_name: str, key: str):
         "project_files": project_files,
         "key": key,
     }
-    return render_template("opencontrol/components_templates_edit_view.html", **data)
+    return render_template("opencontrol/edit_component_template.html", **data)
 
 
 @opencontrol_bp.route("<project_name>/component/add", methods=["POST"])
-def opencontrol_component_add_submit(project_name: str):
+def add_component_submit_handler(project_name: str):
     project_path, project, manager, opencontrol, _ = get_project_data(project_name)
 
     for filename in request.form.getlist("files"):
@@ -105,7 +137,7 @@ def opencontrol_component_add_submit(project_name: str):
 
 
 @opencontrol_bp.route("<project_name>/component/remove", methods=["POST"])
-def opencontrol_component_remove_submit(project_name: str):
+def remove_component_submit_handler(project_name: str):
     project_path, project, manager, opencontrol, _ = get_project_data(project_name)
 
     for filename in request.form.getlist("files"):
@@ -125,7 +157,7 @@ def opencontrol_component_remove_submit(project_name: str):
 
 
 @opencontrol_bp.route("<project_name>/opencontrol/add", methods=["POST"])
-def opencontrol_file_add_submit(project_name: str):
+def add_file_submit_handler(project_name: str):
     project_path, project, manager, opencontrol, _ = get_project_data(project_name)
 
     key = request.form.get("key")
@@ -153,7 +185,7 @@ def opencontrol_file_add_submit(project_name: str):
 
 
 @opencontrol_bp.route("<project_name>/opencontrol/remove", methods=["POST"])
-def opencontrol_file_remove_submit(project_name: str):
+def remove_file_submit_handler(project_name: str):
     project_path, project, manager, opencontrol, _ = get_project_data(project_name)
 
     key = request.form.get("key")

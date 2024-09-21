@@ -8,7 +8,7 @@
         <a href="/">Home</a>
     </li>
     <li class="usa-breadcrumb__list-item">
-        <a href="{{ url_for("project.project_view", project_name=project.machine_name) }}">
+        <a href="{{ url_for("project.show_project", project_name=project.machine_name) }}">
             {{ project.name }}
         </a>
     </li>
@@ -22,7 +22,7 @@
     <div class="grid-row grid-gap">
         <div class="grid-col-12">
             <form class="editing" method="POST" action="{{ url_for(
-                "editing.edit_template_submit",
+                "editing.edit_template_submit_handler",
                 project_name=project.machine_name
             ) }}">
                 <input type="hidden" name="file_path" value="{{ file_path }}">

@@ -8,7 +8,7 @@
         <a href="/">Home</a>
     </li>
     <li class="usa-breadcrumb__list-item">
-        <a href="{{ url_for("project.project_view", project_name=project.machine_name) }}">
+        <a href="{{ url_for("project.show_project", project_name=project.machine_name) }}">
             {{ project.name }}
         </a>
     </li>
@@ -65,7 +65,7 @@
                         <li>
                             No components have been added to your project.
                             <a class="usa-summary-box__link" href="{{ url_for(
-                                    "opencontrol.opencontrol_add_elements_view",
+                                    "opencontrol.add_opencontrol_values",
                                     project_name=project.machine_name,
                                     key="components"
                                 ) }}"
@@ -79,7 +79,7 @@
         </div>
     {% endif %}
     <a href="{{ url_for(
-        "opencontrol.opencontrol_add_elements_view",
+        "opencontrol.add_opencontrol_values",
         project_name=project.machine_name,
         key="components"
     ) }}" class="usa-button margin-top-2">

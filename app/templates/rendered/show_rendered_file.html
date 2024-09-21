@@ -9,13 +9,13 @@
     </li>
     <li class="usa-breadcrumb__list-item">
         <a href="{{ url_for(
-            "project.project_view",
+            "project.show_project",
             project_name=machine_name
         ) }}">{{ project.name }}</a>
     </li>
     <li class="usa-breadcrumb__list-item">
         <a href="{{ url_for(
-            "rendered.rendered_files",
+            "rendered.list_rendered_files",
             project_name=project.machine_name
         ) }}">Rendered files</a>
     </li>
