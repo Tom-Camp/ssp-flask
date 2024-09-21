@@ -12,7 +12,7 @@ project_bp = Blueprint("project", __name__, url_prefix="/project")
 
 
 @project_bp.route("/list", methods=["GET"])
-def list_projects_view():
+def list_projects():
     """
     A page to list all the Projects.
 
@@ -32,7 +32,7 @@ def list_projects_view():
 
 
 @project_bp.route("/create", methods=["GET", "POST"])
-def create_project_view():
+def create_project():
     """
     A page to create an SSP Toolkit Project
 

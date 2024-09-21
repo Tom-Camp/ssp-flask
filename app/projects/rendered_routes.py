@@ -25,7 +25,7 @@ def rendered_files(project_name: str):
         "rendered": dict(sorted(rendered.items())),
     }
 
-    return render_template("rendered/rendered_file_list.html", **data)
+    return render_template("rendered/list_rendered_files.html", **data)
 
 
 @rendered_bp.route("<project_name>/rendered/view", methods=["GET"])
@@ -55,4 +55,4 @@ def rendered_file_view(project_name: str):
         "yaml": True if file.suffix == ".yaml" else False,
     }
 
-    return render_template("rendered/rendered_file_view.html", **data)
+    return render_template("rendered/show_rendered_file.html", **data)
